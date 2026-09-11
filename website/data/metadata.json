@@ -1,0 +1,9 @@
+{
+  "name": "FoldQuantVLA",
+  "title": "FoldQuantVLA: Native Low-Bit Vision-Language-Action Inference with Consistent Folding and Closed-Loop Evaluation",
+  "subtitle": "Native Low-Bit Vision-Language-Action Inference with Consistent Folding and Closed-Loop Evaluation",
+  "authors": "Anonymous Authors",
+  "year": 2026,
+  "description": "Consistent folding for native low-bit VLA inference. Compiled controls, Jetson deployment, and 32,000 closed-loop LIBERO episodes across six checkpoints.",
+  "source": "Manuscript, September 2026"
+}

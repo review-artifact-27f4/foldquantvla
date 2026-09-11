@@ -1,0 +1,71 @@
+{
+  "source": "Table III",
+  "hardware": "Jetson AGX Orin (sm87)",
+  "checkpoint": "GR00T N1.6",
+  "batch_size": 1,
+  "latency_unit": "ms",
+  "size_unit": "MB",
+  "baseline": "Compiled BF16 TensorRT",
+  "rows": [
+    {
+      "key": "float",
+      "label": "Compiled BF16",
+      "gpu_ms": 130.1,
+      "e2e_ms": 150,
+      "hz": 6.7,
+      "speedup_vs_float": 1.0,
+      "engine_mb": 5325,
+      "build_s": 162
+    },
+    {
+      "key": "int8",
+      "label": "FoldQuant W8A8",
+      "gpu_ms": 117.0,
+      "e2e_ms": 137,
+      "hz": 7.3,
+      "speedup_vs_float": 1.09,
+      "engine_mb": 3618,
+      "build_s": 203
+    },
+    {
+      "key": "mixed",
+      "label": "FoldQuant head 4 / LM 8",
+      "gpu_ms": 108.9,
+      "e2e_ms": 130,
+      "hz": 7.7,
+      "speedup_vs_float": 1.15,
+      "engine_mb": 2927,
+      "build_s": 1232
+    },
+    {
+      "key": "int4",
+      "label": "FoldQuant W4A4",
+      "gpu_ms": 104.8,
+      "e2e_ms": 125,
+      "hz": 8.0,
+      "speedup_vs_float": 1.2,
+      "engine_mb": 2525,
+      "build_s": 1389
+    },
+    {
+      "key": "sq",
+      "label": "ModelOpt W8A8 SQ",
+      "gpu_ms": 121.5,
+      "e2e_ms": 142,
+      "hz": 7.0,
+      "speedup_vs_float": 1.06,
+      "engine_mb": 3901,
+      "build_s": 315
+    },
+    {
+      "key": "awq",
+      "label": "ModelOpt W4A16 AWQ",
+      "gpu_ms": 155.6,
+      "e2e_ms": 177,
+      "hz": 5.7,
+      "speedup_vs_float": 0.85,
+      "engine_mb": 3077,
+      "build_s": 1553
+    }
+  ]
+}

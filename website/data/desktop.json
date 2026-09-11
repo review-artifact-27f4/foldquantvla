@@ -1,0 +1,116 @@
+{
+  "source": "Table II",
+  "hardware": "RTX 4070 Ti SUPER (sm89)",
+  "batch_size": 1,
+  "unit": "ms per action chunk",
+  "protocol": "Three independent repeats of 60 iterations after 10 warmups; five repeats for GR00T W8A8 and W4A4. Differences below approximately 1 ms are unresolved.",
+  "rows": [
+    {
+      "key": "n17",
+      "name": "GR00T N1.7",
+      "eager": 67.8,
+      "compiled": 41.5,
+      "int8": 36.5,
+      "int4": 32.6,
+      "eager_speedup": 2.08,
+      "compiled_share_pct": 74.7,
+      "int8_to_int4_pct": 10.7,
+      "k": 8,
+      "control": "Floating-point TensorRT",
+      "note": ""
+    },
+    {
+      "key": "n16",
+      "name": "GR00T N1.6",
+      "eager": 74.2,
+      "compiled": 44.1,
+      "int8": 37.7,
+      "int4": 33.9,
+      "eager_speedup": 2.19,
+      "compiled_share_pct": 74.5,
+      "int8_to_int4_pct": 10.2,
+      "k": 8,
+      "control": "Floating-point TensorRT",
+      "note": "Re-timed end to end in the framework runtime with matched configurations."
+    },
+    {
+      "key": "n15",
+      "name": "GR00T N1.5",
+      "eager": 57.4,
+      "compiled": 40.2,
+      "int8": 33.7,
+      "int4": 30.2,
+      "eager_speedup": 1.9,
+      "compiled_share_pct": 63.2,
+      "int8_to_int4_pct": 10.5,
+      "k": 1,
+      "control": "Floating-point TensorRT",
+      "note": "Re-timed end to end in the framework runtime with matched configurations."
+    },
+    {
+      "key": "pi05",
+      "name": "π₀.₅",
+      "eager": 169.4,
+      "compiled": 100.3,
+      "int8": 89.9,
+      "int4": 76.6,
+      "eager_speedup": 2.21,
+      "compiled_share_pct": 74.5,
+      "int8_to_int4_pct": 14.8,
+      "k": 5,
+      "control": "torch.compile",
+      "note": ""
+    },
+    {
+      "key": "smol",
+      "name": "SmolVLA",
+      "eager": 210.0,
+      "compiled": 38.93,
+      "int8": 38.7,
+      "int4": 36.7,
+      "eager_speedup": 5.72,
+      "compiled_share_pct": 98.7,
+      "int8_to_int4_pct": 5.2,
+      "k": 1,
+      "control": "torch.compile",
+      "note": "Throughput diagnostic: the uniform W4A4 configuration fails fidelity and loses closed-loop success."
+    },
+    {
+      "key": "evo",
+      "name": "Evo-1",
+      "eager": 143.9,
+      "compiled": 110.7,
+      "int8": 98.8,
+      "int4": 99.3,
+      "eager_speedup": 1.45,
+      "compiled_share_pct": 74.4,
+      "int8_to_int4_pct": -0.5,
+      "k": 14,
+      "control": "Floating-point TensorRT",
+      "note": "No measured gain over W8A8: the 0.5 ms difference is unresolved. Uniform W4A4 loses 85 of 800 successes."
+    }
+  ],
+  "head_rows": [
+    {
+      "name": "GR00T N1.7",
+      "eager": 39.47,
+      "compiled": 21.76,
+      "int8": 18.49,
+      "int4": 15.84
+    },
+    {
+      "name": "GR00T N1.6",
+      "eager": 39.7,
+      "compiled": 21.72,
+      "int8": 17.77,
+      "int4": 15.15
+    },
+    {
+      "name": "GR00T N1.5",
+      "eager": 19.47,
+      "compiled": 13.9,
+      "int8": 11.35,
+      "int4": 9.39
+    }
+  ]
+}

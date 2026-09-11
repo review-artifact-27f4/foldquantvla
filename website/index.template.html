@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#F8FAF7">
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+  <meta name="referrer" content="no-referrer">
+  <title>{{title}}</title>
+  <meta name="description" content="{{description}}">
+  <meta name="author" content="Anonymous Authors">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{{title}}">
+  <meta property="og:description" content="{{description}}">
+  <meta property="og:image" content="{{social_image}}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="FoldQuantVLA. Consistent folding. Native low-bit inference. Closed-loop evaluation.">
+  <meta name="twitter:card" content="summary_large_image">
+  {{canonical}}
+  <link rel="icon" href="assets/mark.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/Inter-400.woff" as="font" type="font/woff" crossorigin>
+  <link rel="preload" href="assets/fonts/Inter-700.woff" as="font" type="font/woff" crossorigin>
+  <link rel="stylesheet" href="assets/styles.css">
+  <script src="assets/app.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <nav class="nav-shell" aria-label="Main navigation">
+    <a class="brand" href="#top" aria-label="FoldQuantVLA home"><img src="assets/mark.svg" width="33" height="33" alt=""><span>FoldQuantVLA</span></a>
+    <div class="nav-links"><a href="#overview">Overview</a><a href="#method">Method</a><a href="#robot-demos">Robot</a><a href="#results">Results</a><a href="#analysis">Analysis</a><a href="#citation">Citation</a></div>
+  </nav>
+</header>
+<main id="main">
+  <section class="hero" id="top" aria-labelledby="hero-title">
+    <div class="container hero-inner">
+      <div class="hero-note"><span class="status-dot" aria-hidden="true"></span>Native low-bit inference, measured in closed loop</div>
+      <h1 id="hero-title">FoldQuantVLA</h1>
+      <p class="paper-title">{{subtitle}}</p>
+      <p class="authors">Anonymous Authors</p>
+      <div class="hero-actions"><a class="button primary" href="#method">Explore the method <span aria-hidden="true">↗</span></a><a class="button secondary" href="#results">View results <span aria-hidden="true">↓</span></a></div>
+      <figure class="hero-figure"><picture><source media="(max-width: 700px)" srcset="assets/hero-mobile.svg"><img src="assets/hero.svg" alt="Calibrate, fold once, execute natively: a shared transform connects calibration to INT8 and INT4 execution." width="1060" height="260"></picture><figcaption>One consistent basis. From calibration to execution.</figcaption></figure>
+    </div>
+  </section>
+  <section class="highlights container" aria-label="Research highlights">
+    <div><p class="metric">{{speedup}}<span>×</span></p><h2>Faster on Jetson</h2><p>150 → 125 ms per observation-to-action chunk.<br>GR00T N1.6 · W4A4 vs compiled BF16 · batch 1</p></div>
+    <div><p class="metric">{{compression}}<span>×</span></p><h2>Smaller engine artifact</h2><p>5,325 → 2,525 MB of serialized engines.<br>Same Jetson configuration; not peak GPU memory.</p></div>
+    <div><p class="metric">{{episode_count}}</p><h2>Closed-loop episodes</h2><p>40 LIBERO campaigns × 800 episodes.<br>Six checkpoints spanning four architectures.</p></div>
+  </section>
+  <section class="section container overview" id="overview" aria-labelledby="overview-title">
+    <div class="section-heading"><p class="section-label">Overview</p><h2 id="overview-title">A consistent fold.<br>A clearer measurement.</h2></div>
+    <div class="overview-copy"><p class="lead">What does lower precision actually buy a robot policy?</p><p>FoldQuantVLA fixes a shared change of basis at each activation site, folds it into weights and normalization gains, and rounds once. A common build path produces floating-point, eight-bit, and four-bit engines for the language backbone and iterative action expert.</p><p>We evaluate the resulting engines with compiled floating-point controls and closed-loop LIBERO campaigns. The controls separate deployment speedups from precision gains; the rollouts show where offline action fidelity stops predicting task success.</p></div>
+    <div class="contributions">
+      <article><span class="contribution-symbol" aria-hidden="true">↳</span><h3>Consistent by construction</h3><p>Every projection sharing an activation site uses the same transform. Calibration, exported weights, and runtime stay in the same coordinates.</p></article>
+      <article><span class="contribution-symbol" aria-hidden="true">▦</span><h3>Native low-bit execution</h3><p>Custom TensorRT plugins fuse activation transforms and quantization with integer tensor-core GEMMs on desktop and Jetson GPUs.</p></article>
+      <article><span class="contribution-symbol" aria-hidden="true">↻</span><h3>Measured end to end</h3><p>Compiled controls, device measurements, and closed-loop outcomes reveal both the gains and the configurations that fail.</p></article>
+    </div>
+    <div class="model-strip" aria-label="Evaluated checkpoints"><span>Evaluated on</span><strong>GR00T N1.5 / N1.6 / N1.7</strong><strong>π₀.₅</strong><strong>SmolVLA</strong><strong>Evo-1</strong></div>
+  </section>
+  <section class="section method-section" id="method" aria-labelledby="method-title">
+    <div class="container">
+      <div class="section-heading"><p class="section-label">Method</p><h2 id="method-title">Fold the constants.<br>Fuse the computation.</h2><p class="section-intro">One transform per activation site. One engine for the denoising loop.</p></div>
+      <figure class="method-figure"><div class="diagram-scroll" tabindex="0" role="region" aria-label="Method diagram"><picture><source media="(max-width: 700px)" srcset="assets/method-mobile.svg"><img src="assets/method.svg" width="1040" height="495" alt="Offline calibration fixes a shared transform T, bakes its inverse into every consuming weight, then rounds and packs. Online, Tx and dynamic quantization run in one fused prologue feeding integer projections. Vision and decoding remain floating point." loading="lazy"></picture></div><figcaption>Adapted from Figure 1. The input-dependent transform still runs online, inside the fused prologue.</figcaption></figure>
+      <div class="method-details"><article><h3>A shared basis</h3><p>Scaling and rotation define the coordinates once. Every consumer of the activation must agree on that basis before rounding.</p></article><article><h3>A precise boundary</h3><p>Language and expert projections use W8A8 or W4A4. Vision, attention softmax, residuals, and decoding remain floating point.</p></article><article><h3>A reusable engine</h3><p>Dynamic per-token scaling serves each denoising step. Calibration optimality across steps requires the paper’s stated directional-distribution condition.</p></article></div>
+    </div>
+  </section>
+  <section class="section robot-section" id="robot-demos" aria-labelledby="robot-title">
+    <div class="container">
+      <div class="robot-heading"><div class="section-heading"><p class="section-label">Real-robot experiments</p><h2 id="robot-title">See the policy<br>in motion.</h2></div><p>{{robot_intro}}</p></div>
+      <div class="robot-reel">{{robot_trials}}</div>
+      <p class="robot-disclaimer">Qualitative demonstration area · quantitative real-robot robustness is not claimed by the current evaluation.</p>
+    </div>
+  </section>
+  <section class="section container results-section" id="results" aria-labelledby="results-title">
+    <div class="section-heading results-heading"><div><p class="section-label">Results</p><h2 id="results-title">Efficiency, with the controls.</h2></div><p>Explore the deployment target,<br>the precision ladder, and the closed loop.</p></div>
+    <div class="result-tabs" aria-label="Result views"><a href="#jetson" id="tab-jetson">Jetson <span>On-device deployment</span></a><a href="#desktop" id="tab-desktop">Desktop <span>Precision &amp; compilation</span></a><a href="#libero" id="tab-libero">LIBERO <span>Closed-loop success</span></a></div>
+    <section class="result-panel" id="jetson" aria-labelledby="jetson-title">
+      <div class="panel-heading"><div><h3 id="jetson-title">On the deployment target</h3><p>GR00T N1.6 · Jetson AGX Orin · batch 1</p></div><span class="source-tag">Table III</span></div>
+      <div class="chart-pair">{{jetson_charts}}</div>
+      <p class="chart-caption">Each arm uses the same device and policy. Speedups are relative to the compiled floating-point engine; engine size is the serialized TensorRT plan.</p>
+      <details class="data-details"><summary>All six deployment configurations <span>GPU time, latency, size &amp; build time</span></summary>{{jetson_table}}</details>
+    </section>
+    <section class="result-panel" id="desktop" aria-labelledby="desktop-title">
+      <div class="panel-heading"><div><h3 id="desktop-title">What lower precision adds</h3><p>RTX 4070 Ti SUPER · batch 1 · end-to-end median per action chunk</p></div><span class="source-tag">Table II</span></div>
+      <div class="filter-row enhanced-control" hidden><label for="desktop-model">Checkpoint<select id="desktop-model">{{desktop_options}}</select></label></div>
+      <div id="desktop-charts">{{desktop_charts}}</div>
+      <p class="chart-caption">Compiled controls use floating-point TensorRT for GR00T and Evo-1, and torch.compile for π₀.₅ and SmolVLA. The eager-relative ratio includes compilation benefits.</p>
+      <details class="data-details"><summary>Full desktop precision ladder <span>Six checkpoints, matched controls</span></summary>{{desktop_table}}<p class="table-note">{{desktop_protocol}}</p></details>
+      <details class="data-details"><summary>Action-head measurements <span>Head-only scope</span></summary>{{head_table}}<p class="table-note">Head-only latency has a different scope from end-to-end latency. Stage medians are not summed into a chunk time.</p></details>
+    </section>
+    <section class="result-panel" id="libero" aria-labelledby="libero-title">
+      <div class="panel-heading"><div><h3 id="libero-title">The policy has to complete the task</h3><p>Four suites · 40 tasks · 800 episodes per configuration · H100 MIG 3g.40gb</p></div><span class="source-tag">Table IV</span></div>
+      <div class="filter-row enhanced-control" hidden><label for="libero-model">Checkpoint<select id="libero-model"><option value="all">All six checkpoints</option>{{libero_options}}</select></label><label for="libero-config">Configuration<select id="libero-config"><option value="all">All configurations</option>{{libero_config_options}}</select></label><p id="libero-count" aria-live="polite">40 of 40 campaigns</p></div>
+      <div class="legend" aria-label="Configuration colors"><span><i class="swatch bf16"></i>BF16 reference</span><span><i class="swatch int8"></i>W8A8</span><span><i class="swatch mixed"></i>Head 4 / LM 8</span><span><i class="swatch int4"></i>W4A4</span></div>
+      <div class="libero-grid">{{libero_charts}}</div>
+      <p class="chart-caption">Dots show success rate; whiskers are descriptive 95% Wilson intervals. Compare each configuration with its own checkpoint’s BF16 reference. Missing arms are not evaluated.</p>
+      <div class="result-note"><strong>Precision is a configuration choice.</strong> Uniform W4A4 loses closed-loop success on Evo-1 and SmolVLA. SmolVLA has no mixed-precision closed-loop arm, and its export and quantization deficits are not isolated by this campaign.</div>
+      <details class="data-details" id="campaign-details"><summary>All 40 closed-loop campaigns <span>Counts, intervals &amp; executed prefix</span></summary>{{libero_table}}</details>
+      <p class="table-note">H100 closed-loop runs use an INT8 datapath with nibble extension for W4A4. Native INT4 execution is measured on sm89 desktop and sm87 Jetson hardware. Statistical non-separation is not evidence of equivalence.</p>
+    </section>
+  </section>
+  <section class="section analysis-section" id="analysis" aria-labelledby="analysis-title"><div class="container">
+    <div class="section-heading"><p class="section-label">What the controls reveal</p><h2 id="analysis-title">Smaller bits.<br>A more nuanced picture.</h2></div>
+    <div class="analysis-grid">
+      <article><span class="analysis-index" aria-hidden="true">↘</span><h3>Compilation explains much of the speedup.</h3><p>The compiled control already supplies 63.2–74.7% of the eager-to-W4A4 reduction on five checkpoints. On SmolVLA, it supplies 98.7%, while uniform W4A4 fails fidelity. Faster execution alone is not a successful deployment.</p><p class="source-note">Table II · matched-scope latency controls</p></article>
+      <article><span class="analysis-index" aria-hidden="true">▧</span><h3>Engine size is not peak device memory.</h3><p>Packed weights shrink the serialized artifact. Vision, unquantized operators, workspaces, and runtime context still occupy memory. The 2.11× Jetson artifact reduction is not a claim about peak GPU memory or power use.</p><p class="source-note">Table III · serialized TensorRT plan sizes</p></article>
+      <article><span class="analysis-index" aria-hidden="true">≈</span><h3>Offline fidelity screens; closed loop decides.</h3><p>Among the 24 jointly evaluated arms above 0.99 held-out action cosine, closed-loop differences span 34 episodes with no significant rank correlation. High cosine can screen a broken configuration without ranking the working ones.</p><p class="source-note">Section VI-B · held-out and closed-loop analysis</p></article>
+    </div>
+    <details class="protocol-details"><summary>Reading the evidence</summary><div class="protocol-grid"><div><h3>P1 · Engine fidelity</h3><p>32 seeded observations on H100 MIG, with a BF16 reference and a floating-point export control.</p></div><div><h3>P2 · Held-out fidelity</h3><p>32 mid-trajectory observations on RTX 4070 Ti SUPER, disjoint from the 128-observation calibration set.</p></div><div><h3>P3 · Closed loop</h3><p>40 tasks × 20 initial states per configuration. Different K values specify how many actions execute before replanning.</p></div></div><p>P1 and P2 cosine values use different observations and accumulation, and must not be merged. LIBERO measures in-distribution task success; these results do not establish real-robot robustness, power savings, or sustained thermal behavior.</p></details>
+  </div></section>
+  <section class="section container citation-section" id="citation" aria-labelledby="citation-title"><div class="section-heading"><p class="section-label">Citation</p><h2 id="citation-title">Cite this work.</h2><p>Anonymous manuscript · 2026</p></div><div class="citation-box"><div class="citation-top"><span>BibTeX</span><button id="copy-citation" type="button" hidden>Copy citation</button></div><pre><code id="bibtex">{{bibtex}}</code></pre><p id="copy-status" role="status" aria-live="polite"></p></div></section>
+</main>
+<footer class="site-footer container"><a class="brand" href="#top"><img src="assets/mark.svg" width="28" height="28" alt="">FoldQuantVLA</a><p>Consistent folding. Closed-loop evidence.</p><a href="#top">Back to top <span aria-hidden="true">↑</span></a></footer>
+</body>
+</html>

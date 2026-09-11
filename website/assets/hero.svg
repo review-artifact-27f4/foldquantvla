@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1060 260" fill="none">
+<title>A consistent fold, from calibration to native low-bit execution</title>
+<desc>Calibration fixes a shared transform for each activation site. Folded weights and normalization gains are exported. The runtime applies activation transforms and quantization in a fused prologue, followed by native integer GEMMs.</desc>
+<defs>
+ <pattern id="matrix" width="20" height="20" patternUnits="userSpaceOnUse"><rect x="3" y="3" width="12" height="12" rx="2" fill="#DF6169" opacity=".4"/></pattern>
+ <pattern id="packed" width="13" height="13" patternUnits="userSpaceOnUse"><rect x="2" y="2" width="8" height="8" rx="1.5" fill="#B9141A" opacity=".8"/></pattern>
+ <linearGradient id="sheet" x2="1" y2="1"><stop stop-color="#fff"/><stop offset="1" stop-color="#FFE2DF"/></linearGradient>
+ <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="m0 0 6 3-6 3" stroke="#A3AFA8" stroke-width="1.2"/></marker>
+</defs>
+<path d="M264 114H352M674 114H757" stroke="#A3AFA8" stroke-width="1.5" marker-end="url(#arrow)" stroke-dasharray="3 6"/>
+<g transform="translate(123 39)">
+ <rect x="40" y="0" width="104" height="132" rx="10" fill="#FEE6E4" stroke="#EFBBBB" transform="rotate(13 90 60)"/>
+ <rect x="18" y="5" width="104" height="132" rx="10" fill="#FFF4F2" stroke="#EFBBBB" transform="rotate(2 70 70)"/>
+ <rect x="0" y="12" width="104" height="132" rx="10" fill="url(#sheet)" stroke="#ED8E94" transform="rotate(-10 52 78)"/>
+ <rect x="9" y="21" width="86" height="112" fill="url(#matrix)" transform="rotate(-10 52 78)"/>
+</g>
+<g transform="translate(405 28)">
+ <path d="M22 45 110 0l88 45-88 48Z" fill="#FFF4F2" stroke="#ED8E94" stroke-width="1.5"/>
+ <path d="m22 65 88 48 88-48M22 85l88 48 88-48" stroke="#ED8E94" stroke-width="1.5"/>
+ <path d="m22 103 88 49 88-49v22l-88 49-88-49Z" fill="#F9D3D0" stroke="#D95059" stroke-width="1.5"/>
+ <path d="m110 152 0 22M52 29l89 47M81 15l89 46M140 15 51 61M169 29 80 76" stroke="#E68F94"/>
+ <path d="m22 45 0 58M198 45v58" stroke="#DCA9AD" stroke-dasharray="3 5"/>
+</g>
+<g transform="translate(786 54)">
+ <rect x="-12" y="-12" width="144" height="136" rx="20" fill="#FFF1EF" stroke="#EABDBA"/>
+ <path d="M10-20v8M34-20v8M58-20v8M82-20v8M106-20v8M10 124v8M34 124v8M58 124v8M82 124v8M106 124v8M-20 8h8M-20 32h8M-20 56h8M-20 80h8M-20 104h8M132 8h8M132 32h8M132 56h8M132 80h8M132 104h8" stroke="#C29F9C" stroke-width="2"/>
+ <rect width="120" height="112" rx="10" fill="#FFFFFF" stroke="#D95059" stroke-width="1.5"/>
+ <rect x="9" y="9" width="102" height="66" fill="url(#packed)"/>
+ <text x="60" y="96" text-anchor="middle" fill="#B9141A" font-family="sans-serif" font-weight="700" font-size="13">INT8 / INT4</text>
+</g>
+<g font-family="sans-serif" font-size="16" text-anchor="middle" fill="#17201C" font-weight="600">
+ <text x="187" y="239">Calibrate</text><text x="515" y="239">Fold once</text><text x="846" y="239">Execute natively</text>
+</g>
+</svg>

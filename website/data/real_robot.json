@@ -1,0 +1,25 @@
+{
+  "intro": "A reserved reel for qualitative real-robot experiments. Each released trial pairs the task instruction and policy configuration with two robot-mounted camera views.",
+  "trials": [
+    {
+      "key": "trial-01",
+      "title": "Real-robot experiment reel",
+      "instruction": "Task instruction, robot setup, and policy configuration will appear with the released recording.",
+      "policy": "FoldQuantVLA · low-bit policy",
+      "views": [
+        {
+          "label": "Robot camera 01",
+          "detail": "Primary onboard view",
+          "src": "",
+          "poster": ""
+        },
+        {
+          "label": "Robot camera 02",
+          "detail": "Secondary onboard view",
+          "src": "",
+          "poster": ""
+        }
+      ]
+    }
+  ]
+}

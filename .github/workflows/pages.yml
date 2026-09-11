@@ -1,0 +1,59 @@
+name: Project website
+
+on:
+  push:
+    branches: [main]
+    paths: ['website/**', '.github/workflows/pages.yml']
+  pull_request:
+    paths: ['website/**', '.github/workflows/pages.yml']
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: 'Publish the reviewed website to GitHub Pages'
+        required: true
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check manuscript data and static output
+        run: python3 -m unittest discover -s website/tests -v
+      - name: Check browser script syntax
+        run: node --check website/assets/app.js
+      - name: Build the project page
+        env:
+          SITE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
+        run: python3 website/build.py --base-url "$SITE_URL"
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist/website
+
+  deploy:
+    if: github.event_name == 'workflow_dispatch' && inputs.publish && github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    concurrency:
+      group: github-pages
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/configure-pages@v5
+      - name: Publish reviewed website
+        id: deployment
+        uses: actions/deploy-pages@v4

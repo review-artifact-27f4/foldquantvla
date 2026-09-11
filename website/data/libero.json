@@ -1,0 +1,383 @@
+{
+  "source": "Table IV",
+  "protocol": "P3: four LIBERO suites × ten tasks × twenty initial states; seed 7 unless stated.",
+  "hardware": "H100 MIG 3g.40gb",
+  "episodes_per_run": 800,
+  "interval": "95% Wilson score interval, descriptive; not a test of equivalence.",
+  "models": [
+    {
+      "key": "n17",
+      "name": "GR00T N1.7",
+      "k": 8,
+      "denoising_steps": 4,
+      "chunk_length": 16,
+      "rows": [
+        {
+          "key": "bf16",
+          "label": "BF16 PyTorch",
+          "successes": 770,
+          "rate": 96.25,
+          "ci_low": 94.7,
+          "ci_high": 97.4
+        },
+        {
+          "key": "sq",
+          "label": "ModelOpt W8A8 SQ",
+          "successes": 766,
+          "rate": 95.75,
+          "ci_low": 94.1,
+          "ci_high": 96.9
+        },
+        {
+          "key": "awq",
+          "label": "ModelOpt W4A16 AWQ",
+          "successes": 771,
+          "rate": 96.38,
+          "ci_low": 94.8,
+          "ci_high": 97.5
+        },
+        {
+          "key": "int8",
+          "label": "FoldQuant W8A8",
+          "successes": 763,
+          "rate": 95.38,
+          "ci_low": 93.7,
+          "ci_high": 96.6
+        },
+        {
+          "key": "int4",
+          "label": "FoldQuant W4A4",
+          "successes": 763,
+          "rate": 95.38,
+          "ci_low": 93.7,
+          "ci_high": 96.6
+        },
+        {
+          "key": "mixed",
+          "label": "FoldQuant head 4 / LM 8",
+          "successes": 767,
+          "rate": 95.88,
+          "ci_low": 94.3,
+          "ci_high": 97.0
+        },
+        {
+          "key": "arc",
+          "label": "W4A4 + ARC / fold-before",
+          "successes": 756,
+          "rate": 94.5,
+          "ci_low": 92.7,
+          "ci_high": 95.9
+        },
+        {
+          "key": "arc_shg",
+          "label": "W4A4 + ARC / fold-before (shg)",
+          "successes": 763,
+          "rate": 95.38,
+          "ci_low": 93.7,
+          "ci_high": 96.6
+        },
+        {
+          "key": "cascade",
+          "label": "W4A4 + cascade",
+          "successes": 754,
+          "rate": 94.25,
+          "ci_low": 92.4,
+          "ci_high": 95.7
+        }
+      ]
+    },
+    {
+      "key": "n16",
+      "name": "GR00T N1.6",
+      "k": 8,
+      "denoising_steps": 4,
+      "chunk_length": 16,
+      "rows": [
+        {
+          "key": "bf16",
+          "label": "BF16 PyTorch",
+          "successes": 771,
+          "rate": 96.38,
+          "ci_low": 94.8,
+          "ci_high": 97.5
+        },
+        {
+          "key": "sq",
+          "label": "ModelOpt W8A8 SQ",
+          "successes": 770,
+          "rate": 96.25,
+          "ci_low": 94.7,
+          "ci_high": 97.4
+        },
+        {
+          "key": "awq",
+          "label": "ModelOpt W4A16 AWQ",
+          "successes": 770,
+          "rate": 96.25,
+          "ci_low": 94.7,
+          "ci_high": 97.4
+        },
+        {
+          "key": "int8",
+          "label": "FoldQuant W8A8",
+          "successes": 766,
+          "rate": 95.75,
+          "ci_low": 94.1,
+          "ci_high": 96.9
+        },
+        {
+          "key": "int4",
+          "label": "FoldQuant W4A4",
+          "successes": 766,
+          "rate": 95.75,
+          "ci_low": 94.1,
+          "ci_high": 96.9
+        },
+        {
+          "key": "mixed",
+          "label": "FoldQuant head 4 / LM 8",
+          "successes": 774,
+          "rate": 96.75,
+          "ci_low": 95.3,
+          "ci_high": 97.8
+        },
+        {
+          "key": "arc",
+          "label": "W4A4 + ARC / fold-before",
+          "successes": 773,
+          "rate": 96.62,
+          "ci_low": 95.1,
+          "ci_high": 97.7
+        },
+        {
+          "key": "arc_shg",
+          "label": "W4A4 + ARC / fold-before (shg)",
+          "successes": 767,
+          "rate": 95.88,
+          "ci_low": 94.3,
+          "ci_high": 97.0
+        },
+        {
+          "key": "cascade",
+          "label": "W4A4 + cascade",
+          "successes": 763,
+          "rate": 95.38,
+          "ci_low": 93.7,
+          "ci_high": 96.6
+        }
+      ]
+    },
+    {
+      "key": "n15",
+      "name": "GR00T N1.5",
+      "k": 1,
+      "denoising_steps": 4,
+      "chunk_length": 16,
+      "rows": [
+        {
+          "key": "bf16",
+          "label": "BF16 PyTorch",
+          "successes": 691,
+          "rate": 86.38,
+          "ci_low": 83.8,
+          "ci_high": 88.6
+        },
+        {
+          "key": "sq",
+          "label": "ModelOpt W8A8 SQ",
+          "successes": 671,
+          "rate": 83.88,
+          "ci_low": 81.2,
+          "ci_high": 86.3
+        },
+        {
+          "key": "awq",
+          "label": "ModelOpt W4A16 AWQ",
+          "successes": 690,
+          "rate": 86.25,
+          "ci_low": 83.7,
+          "ci_high": 88.5
+        },
+        {
+          "key": "int8",
+          "label": "FoldQuant W8A8",
+          "successes": 697,
+          "rate": 87.12,
+          "ci_low": 84.6,
+          "ci_high": 89.3
+        },
+        {
+          "key": "int4",
+          "label": "FoldQuant W4A4",
+          "successes": 699,
+          "rate": 87.38,
+          "ci_low": 84.9,
+          "ci_high": 89.5
+        },
+        {
+          "key": "mixed",
+          "label": "FoldQuant head 4 / LM 8",
+          "successes": 705,
+          "rate": 88.12,
+          "ci_low": 85.7,
+          "ci_high": 90.2
+        }
+      ]
+    },
+    {
+      "key": "pi05",
+      "name": "π₀.₅",
+      "k": 5,
+      "denoising_steps": 10,
+      "chunk_length": 10,
+      "rows": [
+        {
+          "key": "bf16",
+          "label": "BF16 PyTorch",
+          "successes": 772,
+          "rate": 96.5,
+          "ci_low": 95.0,
+          "ci_high": 97.6
+        },
+        {
+          "key": "sq",
+          "label": "ModelOpt W8A8 SQ",
+          "successes": 774,
+          "rate": 96.75,
+          "ci_low": 95.3,
+          "ci_high": 97.8
+        },
+        {
+          "key": "awq",
+          "label": "ModelOpt W4A16 AWQ",
+          "successes": 784,
+          "rate": 98.0,
+          "ci_low": 96.8,
+          "ci_high": 98.8
+        },
+        {
+          "key": "int8",
+          "label": "FoldQuant W8A8",
+          "successes": 779,
+          "rate": 97.38,
+          "ci_low": 96.0,
+          "ci_high": 98.3
+        },
+        {
+          "key": "int4",
+          "label": "FoldQuant W4A4",
+          "successes": 777,
+          "rate": 97.12,
+          "ci_low": 95.7,
+          "ci_high": 98.1
+        },
+        {
+          "key": "mixed",
+          "label": "FoldQuant head 4 / LM 8",
+          "successes": 781,
+          "rate": 97.62,
+          "ci_low": 96.3,
+          "ci_high": 98.5
+        },
+        {
+          "key": "cascade",
+          "label": "W4A4 + cascade",
+          "successes": 782,
+          "rate": 97.75,
+          "ci_low": 96.5,
+          "ci_high": 98.6
+        }
+      ]
+    },
+    {
+      "key": "evo",
+      "name": "Evo-1",
+      "k": 14,
+      "denoising_steps": 50,
+      "chunk_length": 50,
+      "rows": [
+        {
+          "key": "bf16",
+          "label": "BF16 PyTorch",
+          "successes": 733,
+          "rate": 91.62,
+          "ci_low": 89.5,
+          "ci_high": 93.4
+        },
+        {
+          "key": "sq",
+          "label": "ModelOpt W8A8 SQ",
+          "successes": 732,
+          "rate": 91.5,
+          "ci_low": 89.4,
+          "ci_high": 93.2
+        },
+        {
+          "key": "awq",
+          "label": "ModelOpt W4A16 AWQ",
+          "successes": 724,
+          "rate": 90.5,
+          "ci_low": 88.3,
+          "ci_high": 92.3
+        },
+        {
+          "key": "int8",
+          "label": "FoldQuant W8A8",
+          "successes": 737,
+          "rate": 92.12,
+          "ci_low": 90.1,
+          "ci_high": 93.8
+        },
+        {
+          "key": "int4",
+          "label": "FoldQuant W4A4",
+          "successes": 648,
+          "rate": 81.0,
+          "ci_low": 78.1,
+          "ci_high": 83.6
+        },
+        {
+          "key": "mixed",
+          "label": "FoldQuant head 4 / LM 8",
+          "successes": 728,
+          "rate": 91.0,
+          "ci_low": 88.8,
+          "ci_high": 92.8
+        },
+        {
+          "key": "cascade",
+          "label": "W4A4 + cascade",
+          "successes": 381,
+          "rate": 47.62,
+          "ci_low": 44.2,
+          "ci_high": 51.1
+        }
+      ]
+    },
+    {
+      "key": "smol",
+      "name": "SmolVLA",
+      "k": 1,
+      "denoising_steps": 10,
+      "chunk_length": 50,
+      "rows": [
+        {
+          "key": "bf16",
+          "label": "BF16 PyTorch",
+          "successes": 569,
+          "rate": 71.12,
+          "ci_low": 67.9,
+          "ci_high": 74.2
+        },
+        {
+          "key": "int4",
+          "label": "FoldQuant W4A4",
+          "successes": 217,
+          "rate": 27.12,
+          "ci_low": 24.2,
+          "ci_high": 30.3
+        }
+      ]
+    }
+  ]
+}
