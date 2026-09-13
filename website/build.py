@@ -179,6 +179,19 @@ def make_robot_trials(data):
     return ''.join(trials), media
 
 
+def make_overview_media():
+    source = ROOT / 'media' / 'overview.mp4'
+    shell = '<span class="video-kicker"><i aria-hidden="true"></i> Overview film</span>'
+    if source.is_file():
+        video = ('<video controls playsinline preload="metadata" aria-label="FoldQuantVLA overview video">'
+                 '<source src="media/overview.mp4" type="video/mp4">'
+                 'This browser cannot play the overview video.</video>')
+        return f'<div class="overview-video-frame has-video">{shell}{video}</div>', source
+    placeholder = ('<span class="overview-play" aria-hidden="true">▶</span>'
+                   '<div><strong>Fold once. Execute natively.</strong><span>Overview video forthcoming</span></div>')
+    return f'<div class="overview-video-frame" role="img" aria-label="Overview video forthcoming">{shell}{placeholder}</div>', None
+
+
 def build(output, base_url=''):
     meta, jetson, desktop, libero, real_robot, resources = [load(n) for n in ('metadata', 'jetson', 'desktop', 'libero', 'real_robot', 'resources')]
     campaigns = sum(len(m['rows']) for m in libero['models'])
@@ -212,6 +225,7 @@ def build(output, base_url=''):
     tokens['libero_table'] = table(['Checkpoint','K','Configuration','Successes','Success rate','95% CI (%)'],table_rows,'Table V · All 59 closed-loop LIBERO campaigns',attrs)
     tokens['robot_intro'] = esc(real_robot['intro'])
     tokens['robot_trials'], robot_media = make_robot_trials(real_robot)
+    tokens['overview_media'], overview_media = make_overview_media()
     tokens['bibtex'] = esc('@misc{anonymous2026foldquantvla,\n  title  = {' + meta['title'] + '},\n  author = {{Anonymous Authors}},\n  year   = {2026},\n  note   = {Anonymous ICRA submission}\n}')
     page = (ROOT / 'index.template.html').read_text(encoding='utf-8')
     for key,value in tokens.items():
@@ -236,6 +250,10 @@ def build(output, base_url=''):
         destination = output / 'media' / 'real-robot' / Path(*path.parts)
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(source, destination)
+    if overview_media:
+        destination = output / 'media' / 'overview.mp4'
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(overview_media, destination)
     (output/'index.html').write_text(page,encoding='utf-8')
     (output/'.nojekyll').write_text('',encoding='utf-8')
     (output/'robots.txt').write_text('User-agent: *\nDisallow: /\n',encoding='utf-8')

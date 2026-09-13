@@ -30,6 +30,7 @@
   <nav class="nav-shell" aria-label="Main navigation">
     <a class="brand" href="#top" aria-label="FoldQuantVLA home"><img src="assets/mark.svg" width="33" height="33" alt=""><span>FoldQuantVLA</span></a>
     <div class="nav-links"><a href="#overview">Overview</a><a href="#method">Method</a><a href="#robot-demos">Robot</a><a href="#results">Results</a><a href="#analysis">Analysis</a><a href="#citation">Citation</a></div>
+    <div class="nav-actions"><a class="nav-button primary" href="#method">Explore the method <span aria-hidden="true">↗</span></a><a class="nav-button secondary" href="#results">View results <span aria-hidden="true">↓</span></a></div>
   </nav>
 </header>
 <main id="main">
@@ -40,8 +41,10 @@
       <p class="paper-title">{{subtitle}}</p>
       <p class="authors">Anonymous Authors</p>
       <nav class="resource-links" id="resources" aria-label="Research resources">{{resource_links}}</nav>
-      <div class="hero-actions"><a class="button primary" href="#method">Explore the method <span aria-hidden="true">↗</span></a><a class="button secondary" href="#results">View results <span aria-hidden="true">↓</span></a></div>
-      <figure class="hero-figure"><picture><source media="(max-width: 700px)" srcset="assets/hero-mobile.svg"><img src="assets/hero.svg" alt="Calibrate, fold once, execute natively: a shared transform connects calibration to INT8 and INT4 execution." width="1060" height="260"></picture><figcaption>One consistent basis. From calibration to execution.</figcaption></figure>
+      <figure class="overview-video">
+        {{overview_media}}
+        <figcaption>A short visual introduction to consistent folding and native low-bit VLA inference.</figcaption>
+      </figure>
     </div>
   </section>
   <section class="highlights container" aria-label="Research highlights">
@@ -62,7 +65,7 @@
   <section class="section method-section" id="method" aria-labelledby="method-title">
     <div class="container">
       <div class="section-heading"><p class="section-label">Method</p><h2 id="method-title">Fold the constants.<br>Fuse the computation.</h2><p class="section-intro">One transform per activation site. One engine for the denoising loop.</p></div>
-      <figure class="method-figure"><div class="diagram-scroll" tabindex="0" role="region" aria-label="Method diagram"><picture><source media="(max-width: 700px)" srcset="assets/method-mobile.svg"><img src="assets/method.svg" width="1040" height="495" alt="Offline calibration fixes a shared transform T, bakes its inverse into every consuming weight, then rounds and packs. Online, Tx and dynamic quantization run in one fused prologue feeding integer projections. Vision and decoding remain floating point." loading="lazy"></picture></div><figcaption>Adapted from Figure 1. The input-dependent transform still runs online, inside the fused prologue.</figcaption></figure>
+      <figure class="method-figure"><div class="diagram-scroll" tabindex="0" role="region" aria-label="FoldQuantVLA method overview"><img class="paper-overview" src="assets/method-overview.svg" width="1778" height="600" alt="Consistent folding method: channel scaling and orthogonal rotation define a shared basis, weights are folded, quantized and packed offline, then activations are transformed and quantized for integer GEMM online." loading="lazy"></div><figcaption>Method overview from the paper. Scaling and rotation preserve the floating-point map before rounding; offline packing and the online integer path share the same basis.</figcaption></figure>
       <div class="method-details"><article><h3>A shared basis</h3><p>Scaling and rotation define the coordinates once. Every consumer of the activation must agree on that basis before rounding.</p></article><article><h3>A precise boundary</h3><p>Language and expert projections use W8A8 or W4A4. Vision, attention softmax, residuals, and decoding remain floating point.</p></article><article><h3>A reusable engine</h3><p>Dynamic per-token scaling serves each denoising step. Calibration optimality across steps requires the paper’s stated directional-distribution condition.</p></article></div>
     </div>
   </section>

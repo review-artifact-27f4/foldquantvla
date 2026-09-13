@@ -31,6 +31,7 @@ The tests independently check Wilson intervals and success percentages, manuscri
 - `data/resources.json`: release-safe slots for Code, Models, Appendix, and BibTeX. Add HTTPS URLs here after review.
 - `data/real_robot.json`: trial captions and camera-view manifest for the real-robot experiment reel.
 - `media/real-robot/`: release-ready MP4/WebM recordings and optional posters. See its README for the two-step upload flow.
+- `media/overview.mp4`: optional hero overview film. Add this file and rebuild; the upload-ready placeholder is replaced automatically.
 - `index.template.html`: narrative and page structure.
 - `build.py`: dependency-free HTML/table/chart generator. Does not import FoldQuant or require GPU libraries.
 - `assets/`: styles, progressive enhancements, original SVG diagrams, social preview image, and locally hosted Inter font subsets with their SIL license.
