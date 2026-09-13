@@ -134,8 +134,8 @@ def make_robot_trials(data):
             raise ValueError('Real-robot trial keys must be unique lowercase slugs.')
         seen.add(key)
         views = trial['views']
-        if len(views) != 2:
-            raise ValueError('Each real-robot task must contain exactly two camera views.')
+        if len(views) != 1:
+            raise ValueError('Each real-robot task must contain exactly one evaluation video.')
         rendered_views = []
         for view_index, view in enumerate(views, start=1):
             src = safe_media_path(view.get('src'), set(VIDEO_TYPES))
@@ -161,9 +161,10 @@ def make_robot_trials(data):
                           '<span class="focus-corner bottom-left"></span><span class="focus-corner bottom-right"></span>'
                           '<span class="placeholder-message"><i aria-hidden="true">▶</i><strong>Video forthcoming</strong></span></div>')
                 state = 'is-placeholder'
+            media_badge = 'VIDEO' if len(views) == 1 else f'CAM {view_index:02d}'
             rendered_views.append(
                 f'<figure class="robot-view {state}{" primary-view" if view_index == 1 else ""}">'
-                f'<div class="robot-screen"><span class="camera-id"><i aria-hidden="true"></i> CAM {view_index:02d}</span>{screen}</div>'
+                f'<div class="robot-screen"><span class="camera-id"><i aria-hidden="true"></i> {media_badge}</span>{screen}</div>'
                 f'<figcaption><strong>{esc(view["label"])}</strong><span>{esc(view["detail"])}</span></figcaption></figure>')
         primary = rendered_views[0]
         secondary = ''.join(rendered_views[1:])

@@ -8,18 +8,18 @@ Recommended formats:
 - Poster: WebP, JPEG, or PNG with the same aspect ratio as the video.
 - Filenames: lowercase letters, numbers, hyphens, and dots; for example `pick-cup-external.mp4` and `pick-cup-external.webp`.
 
-For each camera view, set `src` and optionally `poster` in `website/data/real_robot.json`:
+For each task video, set `src` and optionally `poster` in `website/data/real_robot.json`:
 
 ```json
 {
-  "label": "Robot camera 01",
-  "detail": "Primary onboard view",
-  "src": "pick-cup-camera-01.mp4",
-  "poster": "pick-cup-camera-01.webp"
+  "label": "Evaluation video",
+  "detail": "SO101 · Task 01",
+  "src": "so101-task-01.mp4",
+  "poster": "so101-task-01.webp"
 }
 ```
 
-To add another experiment, duplicate a trial object and give it a unique `key`. Keep the two robot-camera views for each trial. Keep all public text anonymous and remove audio from recordings unless it is required for interpreting the experiment.
+To add another experiment, duplicate a trial object and give it a unique `key`. Keep one evaluation video for each task. Keep all public text anonymous and remove audio from recordings unless it is required for interpreting the experiment.
 
 Rebuild and preview the site after changing the manifest:
 

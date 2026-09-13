@@ -118,11 +118,11 @@ class BuildTests(unittest.TestCase):
         data = site.load('real_robot')
         self.assertEqual(len(data['trials']), 3)
         self.assertEqual([trial['platform'] for trial in data['trials']], ['SO101', 'SO101', 'ALOHA'])
-        self.assertTrue(all(len(trial['views']) == 2 for trial in data['trials']))
-        self.assertTrue(all([view['label'] for view in trial['views']] == ['Robot camera 01', 'Robot camera 02'] for trial in data['trials']))
+        self.assertTrue(all(len(trial['views']) == 1 for trial in data['trials']))
+        self.assertTrue(all(trial['views'][0]['label'] == 'Evaluation video' for trial in data['trials']))
         self.assertTrue(all(not view['src'] for trial in data['trials'] for view in trial['views']))
         self.assertIn('id="robot-demos"', self.html)
-        self.assertEqual(self.html.count('Video forthcoming'), 12)  # visible text and accessible label per slot
+        self.assertEqual(self.html.count('Video forthcoming'), 6)  # visible text and accessible label per slot
         self.assertFalse((self.output/'media').exists())
 
     def test_real_robot_media_paths_are_confined(self):
