@@ -28,9 +28,11 @@ class EvidenceTests(unittest.TestCase):
     def test_campaign_population_and_missing_measurements(self):
         data = site.load('libero')
         models = data['models']
-        self.assertEqual([len(m['rows']) for m in models], [9, 9, 6, 7, 7, 2])
-        self.assertEqual(sum(len(m['rows']) for m in models) * data['episodes_per_run'], 32000)
-        self.assertEqual({r['key'] for r in models[-1]['rows']}, {'bf16', 'int4'})
+        self.assertEqual([len(m['rows']) for m in models], [12, 16, 8, 9, 8, 6])
+        self.assertEqual(sum(len(m['rows']) for m in models) * data['episodes_per_run'], 47200)
+        self.assertEqual(data['comparison_count'], 53)
+        self.assertEqual(data['significant_loss_count'], 3)
+        self.assertEqual({r['key'] for r in models[-1]['rows']}, {'bf16', 'trt_bf16', 'sq', 'int8', 'int4', 'mixed'})
         for model in models:
             self.assertEqual(len({r['key'] for r in model['rows']}), len(model['rows']))
             self.assertLessEqual(model['k'], model['chunk_length'])
@@ -51,11 +53,13 @@ class EvidenceTests(unittest.TestCase):
         self.assertEqual(jetson['float']['e2e_ms']/jetson['int4']['e2e_ms'], 1.2)
         desktop = {r['key']: r for r in site.load('desktop')['rows']}
         self.assertEqual((desktop['n16']['eager'],desktop['n16']['compiled'],desktop['n16']['int4']), (74.2,44.1,33.9))
+        self.assertEqual(desktop['smol']['compiled_share_pct'], 99.9)
         self.assertIn('fails fidelity',desktop['smol']['note'])
         self.assertGreater(desktop['evo']['int4'],desktop['evo']['int8'])
         self.assertIn('unresolved',desktop['evo']['note'])
         libero = {m['key']: {r['key']:r['successes'] for r in m['rows']} for m in site.load('libero')['models']}
         self.assertEqual(libero['evo']['int4']-libero['evo']['bf16'],-85)
+        self.assertEqual(libero['evo']['cascade']-libero['evo']['bf16'],-352)
         self.assertEqual(libero['smol']['int4']-libero['smol']['bf16'],-352)
 
 
@@ -105,7 +109,7 @@ class BuildTests(unittest.TestCase):
         self.assertEqual(len(panels),3)
         self.assertTrue(all('hidden' not in p for p in panels))
         rows = [a for tag,a in self.doc.elements if tag == 'tr' and 'data-model' in a]
-        self.assertEqual(len(rows),40)
+        self.assertEqual(len(rows),59)
         self.assertTrue(all('hidden' not in r for r in rows))
         self.assertEqual(sum('desktop-model' in a.get('class','').split() for _,a in self.doc.elements),6)
         self.assertIn('prefers-reduced-motion:reduce',(self.output/'assets/styles.css').read_text())

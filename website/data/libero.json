@@ -1,5 +1,5 @@
 {
-  "source": "Table IV",
+  "source": "Table V and Section VI-B",
   "protocol": "P3: four LIBERO suites × ten tasks × twenty initial states; seed 7 unless stated.",
   "hardware": "H100 MIG 3g.40gb",
   "episodes_per_run": 800,
@@ -21,6 +21,14 @@
           "ci_high": 97.4
         },
         {
+          "key": "trt_bf16",
+          "label": "TRT bf16",
+          "successes": 764,
+          "rate": 95.5,
+          "ci_low": 93.8,
+          "ci_high": 96.7
+        },
+        {
           "key": "sq",
           "label": "ModelOpt W8A8 SQ",
           "successes": 766,
@@ -53,36 +61,52 @@
           "ci_high": 96.6
         },
         {
-          "key": "mixed",
-          "label": "FoldQuant head 4 / LM 8",
-          "successes": 767,
-          "rate": 95.88,
-          "ci_low": 94.3,
-          "ci_high": 97.0
-        },
-        {
           "key": "arc",
-          "label": "W4A4 + ARC / fold-before",
-          "successes": 756,
-          "rate": 94.5,
-          "ci_low": 92.7,
-          "ci_high": 95.9
-        },
-        {
-          "key": "arc_shg",
-          "label": "W4A4 + ARC / fold-before (shg)",
+          "label": "W4A4 + ARC",
           "successes": 763,
           "rate": 95.38,
           "ci_low": 93.7,
           "ci_high": 96.6
         },
         {
+          "key": "arc_sh",
+          "label": "W4A4 (sh) + ARC",
+          "successes": 756,
+          "rate": 94.5,
+          "ci_low": 92.7,
+          "ci_high": 95.9
+        },
+        {
+          "key": "arc_sr_after",
+          "label": "W4A4 (sr, fold-after) + ARC",
+          "successes": 768,
+          "rate": 96.0,
+          "ci_low": 94.4,
+          "ci_high": 97.2
+        },
+        {
+          "key": "arc_sr_before",
+          "label": "W4A4 (sr, fold-before) + ARC",
+          "successes": 757,
+          "rate": 94.62,
+          "ci_low": 92.8,
+          "ci_high": 96.0
+        },
+        {
           "key": "cascade",
-          "label": "W4A4 + cascade",
+          "label": "W4A4 (sr, fold-after) + cascade",
           "successes": 754,
           "rate": 94.25,
           "ci_low": 92.4,
           "ci_high": 95.7
+        },
+        {
+          "key": "mixed",
+          "label": "FoldQuant head 4 / LM 8",
+          "successes": 767,
+          "rate": 95.88,
+          "ci_low": 94.3,
+          "ci_high": 97.0
         }
       ]
     },
@@ -102,6 +126,14 @@
           "ci_high": 97.5
         },
         {
+          "key": "trt_bf16",
+          "label": "TRT bf16",
+          "successes": 782,
+          "rate": 97.75,
+          "ci_low": 96.5,
+          "ci_high": 98.6
+        },
+        {
           "key": "sq",
           "label": "ModelOpt W8A8 SQ",
           "successes": 770,
@@ -134,6 +166,62 @@
           "ci_high": 96.9
         },
         {
+          "key": "arc",
+          "label": "W4A4 + ARC",
+          "successes": 767,
+          "rate": 95.88,
+          "ci_low": 94.3,
+          "ci_high": 97.0
+        },
+        {
+          "key": "arc_sh",
+          "label": "W4A4 (sh) + ARC",
+          "successes": 773,
+          "rate": 96.62,
+          "ci_low": 95.1,
+          "ci_high": 97.7
+        },
+        {
+          "key": "arc_sr_after",
+          "label": "W4A4 (sr, fold-after) + ARC",
+          "successes": 759,
+          "rate": 94.88,
+          "ci_low": 93.1,
+          "ci_high": 96.2
+        },
+        {
+          "key": "arc_sr_before",
+          "label": "W4A4 (sr, fold-before) + ARC",
+          "successes": 763,
+          "rate": 95.38,
+          "ci_low": 93.7,
+          "ci_high": 96.6
+        },
+        {
+          "key": "arc_sr_before_cascade",
+          "label": "W4A4 (sr, fold-before) + ARC + cascade",
+          "successes": 765,
+          "rate": 95.62,
+          "ci_low": 94.0,
+          "ci_high": 96.8
+        },
+        {
+          "key": "arc_sr_before_int8",
+          "label": "W4A4 (sr, fold-before) + ARC, o_proj/down_proj INT8",
+          "successes": 773,
+          "rate": 96.62,
+          "ci_low": 95.1,
+          "ci_high": 97.7
+        },
+        {
+          "key": "cascade",
+          "label": "W4A4 (sr, fold-after) + cascade",
+          "successes": 763,
+          "rate": 95.38,
+          "ci_low": 93.7,
+          "ci_high": 96.6
+        },
+        {
           "key": "mixed",
           "label": "FoldQuant head 4 / LM 8",
           "successes": 774,
@@ -142,28 +230,20 @@
           "ci_high": 97.8
         },
         {
-          "key": "arc",
-          "label": "W4A4 + ARC / fold-before",
-          "successes": 773,
-          "rate": 96.62,
-          "ci_low": 95.1,
-          "ci_high": 97.7
+          "key": "lm_w4a8",
+          "label": "Head 4 (sr, fold-before) / LM W4A8 + ARC",
+          "successes": 775,
+          "rate": 96.88,
+          "ci_low": 95.4,
+          "ci_high": 97.9
         },
         {
-          "key": "arc_shg",
-          "label": "W4A4 + ARC / fold-before (shg)",
-          "successes": 767,
-          "rate": 95.88,
-          "ci_low": 94.3,
-          "ci_high": 97.0
-        },
-        {
-          "key": "cascade",
-          "label": "W4A4 + cascade",
-          "successes": 763,
-          "rate": 95.38,
-          "ci_low": 93.7,
-          "ci_high": 96.6
+          "key": "lm_w4a8_cascade",
+          "label": "Head 4 (sr, fold-before) / LM W4A8 + ARC + cascade",
+          "successes": 768,
+          "rate": 96.0,
+          "ci_low": 94.4,
+          "ci_high": 97.2
         }
       ]
     },
@@ -181,6 +261,14 @@
           "rate": 86.38,
           "ci_low": 83.8,
           "ci_high": 88.6
+        },
+        {
+          "key": "trt_bf16",
+          "label": "TRT bf16",
+          "successes": 688,
+          "rate": 86.0,
+          "ci_low": 83.4,
+          "ci_high": 88.2
         },
         {
           "key": "sq",
@@ -215,6 +303,14 @@
           "ci_high": 89.5
         },
         {
+          "key": "arc_sr_after",
+          "label": "W4A4 (sr, fold-after) + ARC",
+          "successes": 706,
+          "rate": 88.25,
+          "ci_low": 85.8,
+          "ci_high": 90.3
+        },
+        {
           "key": "mixed",
           "label": "FoldQuant head 4 / LM 8",
           "successes": 705,
@@ -238,6 +334,14 @@
           "rate": 96.5,
           "ci_low": 95.0,
           "ci_high": 97.6
+        },
+        {
+          "key": "trt_bf16",
+          "label": "TRT bf16",
+          "successes": 784,
+          "rate": 98.0,
+          "ci_low": 96.8,
+          "ci_high": 98.8
         },
         {
           "key": "sq",
@@ -272,20 +376,28 @@
           "ci_high": 98.1
         },
         {
+          "key": "cascade_sh",
+          "label": "W4A4 (sh) + cascade",
+          "successes": 782,
+          "rate": 97.75,
+          "ci_low": 96.5,
+          "ci_high": 98.6
+        },
+        {
+          "key": "cascade_sr",
+          "label": "W4A4 (sr, fold-after) + cascade",
+          "successes": 782,
+          "rate": 97.75,
+          "ci_low": 96.5,
+          "ci_high": 98.6
+        },
+        {
           "key": "mixed",
           "label": "FoldQuant head 4 / LM 8",
           "successes": 781,
           "rate": 97.62,
           "ci_low": 96.3,
           "ci_high": 98.5
-        },
-        {
-          "key": "cascade",
-          "label": "W4A4 + cascade",
-          "successes": 782,
-          "rate": 97.75,
-          "ci_low": 96.5,
-          "ci_high": 98.6
         }
       ]
     },
@@ -303,6 +415,14 @@
           "rate": 91.62,
           "ci_low": 89.5,
           "ci_high": 93.4
+        },
+        {
+          "key": "trt_bf16",
+          "label": "TRT bf16",
+          "successes": 737,
+          "rate": 92.12,
+          "ci_low": 90.1,
+          "ci_high": 93.8
         },
         {
           "key": "sq",
@@ -337,20 +457,20 @@
           "ci_high": 83.6
         },
         {
+          "key": "cascade",
+          "label": "W4A4 (sr, fold-after) + cascade",
+          "successes": 381,
+          "rate": 47.62,
+          "ci_low": 44.2,
+          "ci_high": 51.1
+        },
+        {
           "key": "mixed",
           "label": "FoldQuant head 4 / LM 8",
           "successes": 728,
           "rate": 91.0,
           "ci_low": 88.8,
           "ci_high": 92.8
-        },
-        {
-          "key": "cascade",
-          "label": "W4A4 + cascade",
-          "successes": 381,
-          "rate": 47.62,
-          "ci_low": 44.2,
-          "ci_high": 51.1
         }
       ]
     },
@@ -370,14 +490,52 @@
           "ci_high": 74.2
         },
         {
+          "key": "trt_bf16",
+          "label": "TRT bf16",
+          "successes": 574,
+          "rate": 71.75,
+          "ci_low": 68.5,
+          "ci_high": 74.8
+        },
+        {
+          "key": "sq",
+          "label": "ModelOpt W8A8 SQ",
+          "successes": 487,
+          "rate": 60.88,
+          "ci_low": 57.4,
+          "ci_high": 64.2
+        },
+        {
+          "key": "int8",
+          "label": "FoldQuant W8A8",
+          "successes": 581,
+          "rate": 72.62,
+          "ci_low": 69.4,
+          "ci_high": 75.6
+        },
+        {
           "key": "int4",
           "label": "FoldQuant W4A4",
           "successes": 217,
           "rate": 27.12,
           "ci_low": 24.2,
           "ci_high": 30.3
+        },
+        {
+          "key": "mixed",
+          "label": "FoldQuant head 4 / LM 8",
+          "successes": 584,
+          "rate": 73.0,
+          "ci_low": 69.8,
+          "ci_high": 76.0
         }
       ]
     }
-  ]
+  ],
+  "comparison_count": 53,
+  "significant_loss_count": 3,
+  "notes": {
+    "n15_trt_bf16": "The manuscript text reports 688/800 for the N1.5 floating-point TensorRT control; its per-suite counts are not printed in Table V.",
+    "smol_awq": "ModelOpt W4A16 AWQ is unavailable for SmolVLA because the evaluated exporter's block width is incompatible with hidden width 960."
+  }
 }

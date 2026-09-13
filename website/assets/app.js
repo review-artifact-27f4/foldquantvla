@@ -83,7 +83,7 @@
       });
       if (!visible) card.hidden = true;
     });
-    document.getElementById('libero-count').textContent = `${count} of 40 campaigns${count === 0 ? ' · This configuration was not evaluated for this checkpoint.' : ''}`;
+    document.getElementById('libero-count').textContent = `${count} of ${campaignRows.length} campaigns${count === 0 ? ' · This configuration was not evaluated for this checkpoint.' : ''}`;
   }
   modelSelect.addEventListener('change', filterLibero);
   configSelect.addEventListener('change', filterLibero);

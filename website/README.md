@@ -27,7 +27,8 @@ The tests independently check Wilson intervals and success percentages, manuscri
 ## Source layout
 
 - `data/metadata.json`: paper title and anonymous metadata.
-- `data/{desktop,jetson,libero}.json`: transcribed manuscript Tables II, III, IV, respectively. Provenance, units, hardware, and baseline are part of the data.
+- `data/{desktop,jetson,libero}.json`: transcribed manuscript Tables II, IV, and V, respectively. Provenance, units, hardware, and baseline are part of the data.
+- `data/resources.json`: release-safe slots for Code, Models, Appendix, and BibTeX. Add HTTPS URLs here after review.
 - `data/real_robot.json`: trial captions and camera-view manifest for the real-robot experiment reel.
 - `media/real-robot/`: release-ready MP4/WebM recordings and optional posters. See its README for the two-step upload flow.
 - `index.template.html`: narrative and page structure.

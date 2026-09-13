@@ -19,3 +19,17 @@
 @media print{.site-header,.hero-actions,.result-tabs,.enhanced-control,.site-footer{display:none!important}.result-panel[hidden],.desktop-model[hidden],tbody tr[hidden]{display:block!important}.result-panel{break-before:page}body{background:white;font-size:12px}.section{padding-block:24px}.container{width:100%}.chart-tooltip{display:none!important}}
 
 .chart-row.tooltip-dismissed .chart-tooltip,.success-row.tooltip-dismissed .chart-tooltip{visibility:hidden;opacity:0}
+
+/* Compact academic resource shelf. Empty release URLs render as inert review-safe slots. */
+.resource-links{display:grid;grid-template-columns:repeat(4,minmax(138px,1fr));gap:9px;max-width:720px;margin:24px auto 0;text-align:left}
+.resource-link{display:flex;align-items:center;gap:11px;min-height:57px;padding:9px 13px;border:1px solid #e4ded9;border-radius:10px;background:rgba(255,255,255,.78);color:var(--ink);box-shadow:0 4px 18px rgba(37,28,24,.025)}
+.resource-link:hover{background:#fff4f1;text-decoration:none;border-color:#e7bbb8}
+.resource-link.pending{color:#5f6a64;cursor:default;background:rgba(255,255,255,.48)}
+.resource-icon{display:grid;place-items:center;flex:0 0 31px;height:31px;border-radius:7px;background:#fff0ed;color:var(--link);font-size:12px;font-weight:700;font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+.resource-link>span:last-child{display:grid;line-height:1.25}
+.resource-link strong{font-size:12px;font-weight:600}
+.resource-link small{font-size:9px;color:var(--muted);margin-top:3px}
+.hero-actions{margin-top:17px}
+@media(max-width:1000px){.resource-links{max-width:660px}}
+@media(max-width:700px){.resource-links{grid-template-columns:1fr 1fr;gap:7px;margin-top:19px}.resource-link{min-height:50px;padding:7px 9px}.resource-icon{height:28px;flex-basis:28px;font-size:10px}.resource-link strong{font-size:11px}.resource-link small{font-size:8px}.hero-actions{margin-top:15px}}
+@media print{.resource-links{display:none!important}}

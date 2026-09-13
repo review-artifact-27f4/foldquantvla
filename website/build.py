@@ -11,7 +11,7 @@ from urllib.parse import urlparse
 
 ROOT = Path(__file__).resolve().parent
 CORE = ('bf16', 'int8', 'mixed', 'int4')
-COLORS = {'bf16': '#84958b', 'float': '#84958b', 'eager': '#b9c3bd', 'compiled': '#84958b', 'int8': '#507b68', 'mixed': '#b57a34', 'int4': '#d72e3b', 'sq': '#74828b', 'awq': '#9b8582', 'arc': '#bd5861', 'arc_shg': '#bd5861', 'cascade': '#bd5861'}
+COLORS = {'bf16': '#84958b', 'trt_bf16': '#66776d', 'float': '#84958b', 'eager': '#b9c3bd', 'compiled': '#84958b', 'int8': '#507b68', 'mixed': '#b57a34', 'int4': '#d72e3b', 'sq': '#74828b', 'awq': '#9b8582', 'arc': '#bd5861', 'cascade': '#bd5861'}
 SHORT = {'bf16': 'BF16', 'int8': 'W8A8', 'mixed': 'Head 4 / LM 8', 'int4': 'W4A4'}
 VIDEO_TYPES = {'.mp4': 'video/mp4', '.webm': 'video/webm'}
 POSTER_TYPES = {'.avif', '.jpg', '.jpeg', '.png', '.webp'}
@@ -81,10 +81,33 @@ def make_libero(data):
             low, high, mean = x(row['ci_low']), x(row['ci_high']), x(row['rate'])
             tip = f'{model["key"]}-{key}-tip'
             desc = f'{row["label"]}: {row["successes"]}/800 successes; {row["rate"]:.2f}%; 95% Wilson interval {row["ci_low"]:.1f}–{row["ci_high"]:.1f}%.'
-            svg = f'<svg class="interval-plot" viewBox="0 0 240 28" aria-hidden="true"><path d="M4 14H234" stroke="#e0e6e1"/><path d="M4 11v6M119 11v6M234 11v6" stroke="#b4c1b8"/><path d="M{low:.2f} 14H{high:.2f}M{low:.2f} 9v10M{high:.2f} 9v10" stroke="{COLORS[key]}" stroke-width="2"/><circle cx="{mean:.2f}" cy="14" r="4.2" fill="{COLORS[key]}"/></svg>'
+            color = COLORS.get(key, '#bd5861')
+            svg = f'<svg class="interval-plot" viewBox="0 0 240 28" aria-hidden="true"><path d="M4 14H234" stroke="#e0e6e1"/><path d="M4 11v6M119 11v6M234 11v6" stroke="#b4c1b8"/><path d="M{low:.2f} 14H{high:.2f}M{low:.2f} 9v10M{high:.2f} 9v10" stroke="{color}" stroke-width="2"/><circle cx="{mean:.2f}" cy="14" r="4.2" fill="{color}"/></svg>'
             parts.append(f'<div class="success-row" {attrs} tabindex="0" aria-describedby="{tip}"{extra}><span class="success-label">{esc(label)}</span>{svg}<strong>{row["rate"]:.2f}<small>%</small></strong><span class="chart-tooltip" role="tooltip" id="{tip}">{esc(desc)}</span></div>')
         cards.append(f'<article class="success-card" data-model="{model["key"]}"><div class="success-heading"><h4>{esc(model["name"])}</h4><span>K = {model["k"]}</span></div>{"".join(parts)}<div class="success-axis"><span>0</span><span>50</span><span>100%</span></div></article>')
     return ''.join(cards)
+
+
+def make_resources(data):
+    icons = {'code': '&lt;/&gt;', 'models': '◇', 'appendix': 'A+', 'bibtex': 'B'}
+    items = []
+    for item in data['items']:
+        icon = icons.get(item['key'], '↗')
+        content = (f'<span class="resource-icon" aria-hidden="true">{icon}</span>'
+                   f'<span><strong>{esc(item["label"])}</strong><small>{esc(item["detail"])}</small></span>')
+        href = item.get('href', '')
+        if not href:
+            items.append(f'<span class="resource-link pending" aria-disabled="true">{content}</span>')
+            continue
+        if not href.startswith('#'):
+            parsed = urlparse(href)
+            if parsed.scheme != 'https' or not parsed.netloc:
+                raise ValueError(f'Public resource links must use HTTPS: {href}')
+            attrs = ' target="_blank" rel="noopener noreferrer"'
+        else:
+            attrs = ''
+        items.append(f'<a class="resource-link" href="{esc(href)}"{attrs}>{content}</a>')
+    return ''.join(items)
 
 
 def safe_media_path(value, allowed_suffixes):
@@ -157,9 +180,9 @@ def make_robot_trials(data):
 
 
 def build(output, base_url=''):
-    meta, jetson, desktop, libero, real_robot = [load(n) for n in ('metadata', 'jetson', 'desktop', 'libero', 'real_robot')]
+    meta, jetson, desktop, libero, real_robot, resources = [load(n) for n in ('metadata', 'jetson', 'desktop', 'libero', 'real_robot', 'resources')]
     campaigns = sum(len(m['rows']) for m in libero['models'])
-    if campaigns != 40 or len(libero['models']) != 6:
+    if campaigns != 59 or campaigns * libero['episodes_per_run'] != 47200 or len(libero['models']) != 6:
         raise ValueError('Reconcile the campaign totals before changing the published highlights.')
     if base_url:
         parsed = urlparse(base_url)
@@ -167,9 +190,10 @@ def build(output, base_url=''):
             raise ValueError('--base-url must be an absolute HTTP(S) site URL without query or fragment.')
         base_url = base_url.rstrip('/') + '/'
     tokens = {k: esc(v) for k, v in meta.items()}
-    tokens.update(social_image=esc(base_url + 'assets/social-card.png'), canonical=f'<link rel="canonical" href="{esc(base_url)}">' if base_url else '', speedup=f'{jetson["rows"][3]["speedup_vs_float"]:.2f}', compression=f'{jetson["rows"][0]["engine_mb"] / jetson["rows"][3]["engine_mb"]:.2f}', episode_count=f'{campaigns * libero["episodes_per_run"]:,}')
+    tokens.update(social_image=esc(base_url + 'assets/social-card.png'), canonical=f'<link rel="canonical" href="{esc(base_url)}">' if base_url else '', speedup=f'{jetson["rows"][3]["speedup_vs_float"]:.2f}', compression=f'{jetson["rows"][0]["engine_mb"] / jetson["rows"][3]["engine_mb"]:.2f}', episode_count=f'{campaigns * libero["episodes_per_run"]:,}', campaign_count=str(campaigns), comparison_count=str(libero['comparison_count']), significant_loss_count=str(libero['significant_loss_count']))
+    tokens['resource_links'] = make_resources(resources)
     tokens['jetson_charts'] = bar_chart(jetson['rows'], 'e2e_ms', 'ms', 'Observation-to-action latency', 'jetson-latency', 200) + bar_chart(jetson['rows'], 'engine_mb', 'MB', 'Serialized engine size', 'jetson-size', 6000)
-    tokens['jetson_table'] = table(['Configuration', 'GPU (ms)', 'E2E (ms)', 'Hz', 'vs float', 'Engine (MB)', 'Build (s)'], [[r['label'], number(r['gpu_ms']),r['e2e_ms'],f'{r["hz"]:.1f}',f'{r["speedup_vs_float"]:.2f}×',f'{r["engine_mb"]:,}',f'{r["build_s"]:,}'] for r in jetson['rows']], 'Table III · Jetson AGX Orin / GR00T N1.6')
+    tokens['jetson_table'] = table(['Configuration', 'GPU (ms)', 'E2E (ms)', 'Hz', 'vs float', 'Engine (MB)', 'Build (s)'], [[r['label'], number(r['gpu_ms']),r['e2e_ms'],f'{r["hz"]:.1f}',f'{r["speedup_vs_float"]:.2f}×',f'{r["engine_mb"]:,}',f'{r["build_s"]:,}'] for r in jetson['rows']], 'Table IV · Jetson AGX Orin / GR00T N1.6')
     tokens['desktop_charts'] = make_desktop(desktop)
     tokens['desktop_options'] = ''.join(f'<option value="{r["key"]}">{esc(r["name"])}</option>' for r in desktop['rows'])
     tokens['desktop_table'] = table(['Checkpoint', 'Eager (ms)', 'Compiled (ms)', 'W8A8 (ms)', 'W4A4 (ms)', 'Eager / W4A4', 'Compile share', '8→4 reduction', 'Control'], [[r['name'],number(r['eager']),number(r['compiled']),number(r['int8']),number(r['int4']),f'{r["eager_speedup"]:.2f}×',f'{r["compiled_share_pct"]:.1f}%',f'{r["int8_to_int4_pct"]:.1f}%',r['control']] for r in desktop['rows']], 'Table II · Desktop end-to-end precision ladder')
@@ -185,10 +209,10 @@ def build(output, base_url=''):
             table_rows.append([model['name'],model['k'],row['label'],f'{row["successes"]}/800',f'{row["rate"]:.2f}%',f'[{row["ci_low"]:.1f}, {row["ci_high"]:.1f}]'])
             attrs.append(f'data-model="{model["key"]}" data-config="{row["key"]}"')
     tokens['libero_config_options'] = ''.join(f'<option value="{esc(k)}">{esc(v)}</option>' for k,v in config_labels.items())
-    tokens['libero_table'] = table(['Checkpoint','K','Configuration','Successes','Success rate','95% CI (%)'],table_rows,'Table IV · All 40 closed-loop LIBERO campaigns',attrs)
+    tokens['libero_table'] = table(['Checkpoint','K','Configuration','Successes','Success rate','95% CI (%)'],table_rows,'Table V · All 59 closed-loop LIBERO campaigns',attrs)
     tokens['robot_intro'] = esc(real_robot['intro'])
     tokens['robot_trials'], robot_media = make_robot_trials(real_robot)
-    tokens['bibtex'] = esc('@misc{anonymous2026foldquantvla,\n  title = {' + meta['title'] + '},\n  author = {{Anonymous Authors}},\n  year = {2026},\n  note = {Anonymous manuscript}\n}')
+    tokens['bibtex'] = esc('@misc{anonymous2026foldquantvla,\n  title  = {' + meta['title'] + '},\n  author = {{Anonymous Authors}},\n  year   = {2026},\n  note   = {Anonymous ICRA submission}\n}')
     page = (ROOT / 'index.template.html').read_text(encoding='utf-8')
     for key,value in tokens.items():
         page = page.replace('{{' + key + '}}',value)

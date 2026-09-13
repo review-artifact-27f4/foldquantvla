@@ -69,7 +69,7 @@
       "int8": 38.7,
       "int4": 36.7,
       "eager_speedup": 5.72,
-      "compiled_share_pct": 98.7,
+      "compiled_share_pct": 99.9,
       "int8_to_int4_pct": 5.2,
       "k": 1,
       "control": "torch.compile",

@@ -1,0 +1,28 @@
+{
+  "items": [
+    {
+      "key": "code",
+      "label": "Code",
+      "detail": "Release after review",
+      "href": ""
+    },
+    {
+      "key": "models",
+      "label": "Models",
+      "detail": "Release after review",
+      "href": ""
+    },
+    {
+      "key": "appendix",
+      "label": "Appendix",
+      "detail": "Release after review",
+      "href": ""
+    },
+    {
+      "key": "bibtex",
+      "label": "BibTeX",
+      "detail": "Copy citation",
+      "href": "#citation"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 # Manuscript source and editorial decisions
 
-Source: the ten-page September 2026 revision entitled “FoldQuantVLA: Native Low-Bit Vision-Language-Action Inference with Consistent Folding and Closed-Loop Evaluation.” The PDF was visually checked during implementation. It is not part of the website artifact.
+Source: the twelve-page 12 September 2026 revision entitled “FoldQuantVLA: Native Low-Bit Quantization of VLA Models via Consistent Folding.” The PDF was visually checked during implementation. It is not part of the website artifact.
 
 Tables take precedence over conflicting abstract/body statements, as requested. These notes are for maintainers only and are not deployed.
 
@@ -9,8 +9,8 @@ Tables take precedence over conflicting abstract/body statements, as requested. 
 | Dataset | Source | Scope |
 | --- | --- | --- |
 | Desktop | Table II, page 6 | RTX 4070 Ti SUPER, batch 1; full-chunk latency and separately labeled head-only rows |
-| Jetson | Table III, page 7 | GR00T N1.6, Jetson AGX Orin, batch 1; GPU time, observation-to-action latency, engine bytes, build time |
-| LIBERO | Table IV, page 7; K from Table I | 40 campaigns of 800 episodes, H100 MIG 3g.40gb |
+| Jetson | Table IV, page 6 | GR00T N1.6, Jetson AGX Orin, batch 1; GPU time, observation-to-action latency, engine bytes, build time |
+| LIBERO | Table V, pages 7–8; K from Table I | 59 campaigns of 800 episodes, H100 MIG 3g.40gb |
 | Method | Figure 1, page 4 | Consistent site transform, offline/online boundary, low-bit projection scope |
 | Analysis | Section VI-B, pages 7–8 | Offline fidelity is not a reliable ordering of working closed-loop arms |
 
@@ -18,9 +18,9 @@ Published percentages and one-decimal Wilson endpoints are transcribed as printe
 
 ## Deliberately excluded or qualified
 
-- “44 arm-versus-reference comparisons” is not reproducible from the 40 displayed rows, which include six BF16 references. The page reports the 40 campaigns and 32,000 episodes without that comparison count or multiplicity-derived statistical labels.
-- Mixed precision is not evaluated on SmolVLA in Table IV. No all-six mixed-precision claim appears.
-- The conclusion's 35.3 ms mixed-precision headline has no identified row/scope in the selected tables and is excluded.
+- The page reports 59 campaigns, 47,200 episodes, and 53 arm-versus-reference comparisons. Three losses survive Holm correction, all among uniform W4A4 configurations.
+- Table V does not print the N1.5 floating-point TensorRT row, but Section VI-B reports its aggregate count as 688/800. The web table includes that aggregate and computes its descriptive Wilson interval; it does not invent per-suite counts.
+- ModelOpt W4A16 AWQ is unavailable for SmolVLA under the evaluated exporter. Filtering to that checkpoint/configuration therefore shows no evaluated campaign.
 - Table II's caption gives repeated 60-iteration measurements after ten warmups. Its local protocol is used instead of the different counts in Section IV.
 - SmolVLA uniform W4A4 is marked as a throughput diagnostic, not an accurate fast policy. Evo-1 loses closed-loop successes at uniform W4A4; its 0.5 ms desktop regression versus W8A8 is below the paper's timing resolution.
 - Jetson's 2.11× reduction describes serialized engine size, not peak memory, power, thermal behavior, or robot success.
