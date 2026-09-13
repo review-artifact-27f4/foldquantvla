@@ -1,24 +1,31 @@
 {
-  "intro": "A reserved reel for qualitative real-robot experiments. Each released trial pairs the task instruction and policy configuration with two robot-mounted camera views.",
+  "intro": "Real-robot evaluation covers three tasks on two platforms: two SO101 tasks and one ALOHA task. Each task is presented with the same two robot-mounted camera views for direct qualitative comparison.",
   "trials": [
     {
-      "key": "trial-01",
-      "title": "Real-robot experiment reel",
-      "instruction": "Task instruction, robot setup, and policy configuration will appear with the released recording.",
-      "policy": "FoldQuantVLA · low-bit policy",
+      "key": "so101-task-01", "platform": "SO101", "title": "SO101 · Task 01",
+      "instruction": "Task instruction and evaluation details will appear with the released recording.",
+      "policy": "SO101 · FoldQuantVLA low-bit policy",
       "views": [
-        {
-          "label": "Robot camera 01",
-          "detail": "Primary onboard view",
-          "src": "",
-          "poster": ""
-        },
-        {
-          "label": "Robot camera 02",
-          "detail": "Secondary onboard view",
-          "src": "",
-          "poster": ""
-        }
+        {"label": "Robot camera 01", "detail": "Primary robot view", "src": "", "poster": ""},
+        {"label": "Robot camera 02", "detail": "Secondary robot view", "src": "", "poster": ""}
+      ]
+    },
+    {
+      "key": "so101-task-02", "platform": "SO101", "title": "SO101 · Task 02",
+      "instruction": "Task instruction and evaluation details will appear with the released recording.",
+      "policy": "SO101 · FoldQuantVLA low-bit policy",
+      "views": [
+        {"label": "Robot camera 01", "detail": "Primary robot view", "src": "", "poster": ""},
+        {"label": "Robot camera 02", "detail": "Secondary robot view", "src": "", "poster": ""}
+      ]
+    },
+    {
+      "key": "aloha-task-01", "platform": "ALOHA", "title": "ALOHA · Task 01",
+      "instruction": "Task instruction and evaluation details will appear with the released recording.",
+      "policy": "ALOHA · FoldQuantVLA low-bit policy",
+      "views": [
+        {"label": "Robot camera 01", "detail": "Primary robot view", "src": "", "poster": ""},
+        {"label": "Robot camera 02", "detail": "Secondary robot view", "src": "", "poster": ""}
       ]
     }
   ]

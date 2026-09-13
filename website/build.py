@@ -134,8 +134,8 @@ def make_robot_trials(data):
             raise ValueError('Real-robot trial keys must be unique lowercase slugs.')
         seen.add(key)
         views = trial['views']
-        if not 1 <= len(views) <= 3:
-            raise ValueError('Each real-robot trial must contain one to three camera views.')
+        if len(views) != 2:
+            raise ValueError('Each real-robot task must contain exactly two camera views.')
         rendered_views = []
         for view_index, view in enumerate(views, start=1):
             src = safe_media_path(view.get('src'), set(VIDEO_TYPES))
@@ -172,7 +172,7 @@ def make_robot_trials(data):
         status = 'Experiment video' if any(view.get('src') for view in views) else 'Media slot ready'
         trials.append(
             f'<article class="robot-trial" id="robot-{esc(key)}">'
-            f'<header class="robot-trial-header"><div><span>Trial {trial_index:02d}</span><h3>{esc(trial["title"])}</h3>'
+            f'<header class="robot-trial-header"><div><span>Evaluation task {trial_index:02d}</span><h3>{esc(trial["title"])}</h3>'
             f'<p>{esc(trial["instruction"])}</p></div><div class="robot-trial-meta"><span>{esc(trial["policy"])}</span>'
             f'<strong><i aria-hidden="true"></i>{status}</strong></div></header>'
             f'<div class="{media_class}">{primary}{secondary_html}</div></article>')
