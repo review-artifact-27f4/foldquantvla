@@ -168,10 +168,12 @@
     });
     document.getElementById('libero-count').textContent = `${count} of ${campaignRows.length} campaigns${count === 0 ? ' · This configuration was not evaluated for this checkpoint.' : ''}`;
   }
+  if (modelSelect && configSelect) {
   modelSelect.addEventListener('change', filterLibero);
   configSelect.addEventListener('change', filterLibero);
   document.querySelectorAll('.enhanced-control').forEach(control => { control.hidden = false; });
   filterLibero();
+  }
 
   const copyButton = document.getElementById('copy-citation');
   const status = document.getElementById('copy-status');
