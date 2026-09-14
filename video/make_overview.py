@@ -75,7 +75,7 @@ def scene_title(t, d, meta):
 
 def scene_question(t, d):
     img = canvas(); dr = ImageDraw.Draw(img); a = fade(t, d)
-    text(dr, (160, 330), 'What does four-bit actually', 76, 700, INK, 'la', a)
+    text(dr, (160, 330), 'What does low-bit actually', 76, 700, INK, 'la', a)
     text(dr, (160, 420), 'buy a robot policy?', 76, 700, RED, 'la', a)
     points = ['Latency on the device the robot actually carries', 'Success in closed loop, not only offline fidelity',
               'Every speedup against a compiled float engine']
@@ -115,7 +115,7 @@ def scene_method(t, d, figure):
 def scene_orin(t, d, orin):
     img = canvas(); dr = ImageDraw.Draw(img); a = fade(t, d)
     text(dr, (120, 90), 'Jetson AGX Orin · batch 1 · TensorRT 10.3', 30, 600, RED, 'la', a)
-    text(dr, (120, 132), 'Four-bit is faster than the float engine it replaces', 58, 700, INK, 'la', a)
+    text(dr, (120, 132), 'Native low-bit beats the float engine it replaces', 58, 700, INK, 'la', a)
     models = [m for m in orin['models'] if not m['name'].startswith('Evo')]
     top, base = 300, 900
     vmax = 240
