@@ -59,6 +59,13 @@
     </div>
     <div class="model-strip" aria-label="Evaluated checkpoints"><span>Evaluated on</span><strong>GR00T N1.5 / N1.6 / N1.7</strong><strong>π₀.₅</strong><strong>SmolVLA</strong><strong>Evo-1</strong></div>
   </section>
+  <section class="section method-section" id="method" aria-labelledby="method-title">
+    <div class="container">
+      <div class="section-heading"><p class="section-label">Method</p><h2 id="method-title">Fold the constants.<br>Fuse the computation.</h2><p class="section-intro">One transform per activation site. One engine for the denoising loop.</p></div>
+      <figure class="method-figure"><div class="diagram-scroll" tabindex="0" role="region" aria-label="FoldQuantVLA method overview"><img class="paper-overview" src="assets/method-overview.svg" width="1778" height="600" alt="Consistent folding method: channel scaling and orthogonal rotation define a shared basis, weights are folded, quantized and packed offline, then activations are transformed and quantized for integer GEMM online." loading="lazy"></div><figcaption>Method overview from the paper. Scaling and rotation preserve the floating-point map before rounding; offline packing and the online integer path share the same basis.</figcaption></figure>
+      <div class="method-details"><article><h3>A shared basis</h3><p>Scaling and rotation define the coordinates once. Every consumer of the activation must agree on that basis before rounding.</p></article><article><h3>A precise boundary</h3><p>Language and expert projections use W8A8 or W4A4. Vision, attention softmax, residuals, and decoding remain floating point.</p></article><article><h3>A reusable engine</h3><p>Dynamic per-token scaling serves each denoising step. Calibration optimality across steps requires the paper’s stated directional-distribution condition.</p></article></div>
+    </div>
+  </section>
   <section class="section benchmark-preview" id="closed-loop-preview" aria-labelledby="benchmark-preview-title">
     <div class="container">
       <div class="benchmark-intro">
@@ -73,13 +80,6 @@
         {{libero_summary}}
         <p class="benchmark-note">H is the action chunk length and K the executed prefix (Table I). BF16 is reported both in PyTorch and as the floating-point TensorRT export; FoldQuant arms run on TensorRT. SR is closed-loop success against each checkpoint’s own BF16 PyTorch reference. Median cosine is P2 decoded-action cosine against BF16 PyTorch. W4A4 + o/d INT8 is FoldQuant W4A4 with o_proj and down_proj kept at INT8; “—” marks measurements in progress. Red cells mark the uniform W4A4 losses that survive task-clustered testing with Holm correction ({{significant_loss_count}} of {{comparison_count}} comparisons, the third being Evo-1 cascade W4A4); no eight-bit, weight-only, mixed-precision or float control does, which is not a claim of equivalence.</p>
       </div>
-    </div>
-  </section>
-  <section class="section method-section" id="method" aria-labelledby="method-title">
-    <div class="container">
-      <div class="section-heading"><p class="section-label">Method</p><h2 id="method-title">Fold the constants.<br>Fuse the computation.</h2><p class="section-intro">One transform per activation site. One engine for the denoising loop.</p></div>
-      <figure class="method-figure"><div class="diagram-scroll" tabindex="0" role="region" aria-label="FoldQuantVLA method overview"><img class="paper-overview" src="assets/method-overview.svg" width="1778" height="600" alt="Consistent folding method: channel scaling and orthogonal rotation define a shared basis, weights are folded, quantized and packed offline, then activations are transformed and quantized for integer GEMM online." loading="lazy"></div><figcaption>Method overview from the paper. Scaling and rotation preserve the floating-point map before rounding; offline packing and the online integer path share the same basis.</figcaption></figure>
-      <div class="method-details"><article><h3>A shared basis</h3><p>Scaling and rotation define the coordinates once. Every consumer of the activation must agree on that basis before rounding.</p></article><article><h3>A precise boundary</h3><p>Language and expert projections use W8A8 or W4A4. Vision, attention softmax, residuals, and decoding remain floating point.</p></article><article><h3>A reusable engine</h3><p>Dynamic per-token scaling serves each denoising step. Calibration optimality across steps requires the paper’s stated directional-distribution condition.</p></article></div>
     </div>
   </section>
   <section class="section robot-section" id="robot-demos" aria-labelledby="robot-title">

@@ -1,6 +1,6 @@
 # Overview video
 
-CPU-only renderer (PIL frames + libx264); it never touches the GPU. Numbers are read from `website/data`, so the film stays consistent with the page.
+Text uses Liberation Sans (metric-compatible with Arial, SIL OFL 1.1; see `fonts/LICENSE-LiberationSans.txt`). CPU-only renderer (PIL frames + libx264); it never touches the GPU. Numbers are read from `website/data`, so the film stays consistent with the page.
 
 ```sh
 # Layout check with one sample clip in every robot cell (marked LAYOUT PREVIEW; cannot be installed)

@@ -26,7 +26,9 @@ GREY = (132, 149, 139)
 
 
 def font(size, weight=600):
-    return ImageFont.truetype(str(HERE / 'fonts' / f'Inter-{weight}.ttf'), size)
+    # Liberation Sans is metric-compatible with Arial, matching the website's Arial stack.
+    face = 'Bold' if weight >= 600 else 'Regular'
+    return ImageFont.truetype(str(HERE / 'fonts' / f'LiberationSans-{face}.ttf'), size)
 
 
 def load(name):
