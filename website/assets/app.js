@@ -96,7 +96,10 @@
         const selected = tab.dataset.latency === id;
         tab.setAttribute('aria-selected', String(selected));
         tab.tabIndex = selected ? 0 : -1;
-        document.getElementById(tab.dataset.latency).hidden = !selected;
+        const latencyPanel = document.getElementById(tab.dataset.latency);
+        latencyPanel.classList.toggle('is-inactive', !selected);
+        latencyPanel.setAttribute('aria-hidden', String(!selected));
+        latencyPanel.inert = !selected;
         if (selected && focus) tab.focus();
       });
     };
@@ -126,7 +129,7 @@
   document.querySelectorAll('select[data-family-group]').forEach(select => {
     const group = select.dataset.familyGroup;
     const panels = [...document.querySelectorAll(`.family-panel[data-family-group="${group}"]`)];
-    const show = () => panels.forEach(panel => { panel.hidden = panel.dataset.family !== select.value; });
+    const show = () => panels.forEach(panel => { const off = panel.dataset.family !== select.value; panel.classList.toggle('is-inactive', off); panel.setAttribute('aria-hidden', String(off)); panel.inert = off; });
     select.closest('.family-switch').hidden = false;
     select.addEventListener('change', show);
     show();

@@ -277,6 +277,9 @@ def main():
     out = Path(args.output); out.parent.mkdir(parents=True, exist_ok=True)
     if args.install and args.preview_clip:
         raise SystemExit('Refusing to install a layout preview into the website.')
+    arms = cfg['robot_compare']['arms']
+    if args.install and any(a.get('src') for a in arms) and not all(a.get('src') for a in arms):
+        raise SystemExit('Refusing to install a robot comparison with missing engine clips.')
     with tempfile.TemporaryDirectory() as tmp:
         work = Path(tmp); parts = []
         scenes = [('title', 4.5, lambda t, d: scene_title(t, d, meta)),
@@ -288,9 +291,12 @@ def main():
         for name, dur, fn in scenes:
             part = work / f'{len(parts):02d}_{name}.mp4'; encode_frames(part, dur, fn, args.threads); parts.append(part)
             print('rendered', name)
-        part = work / f'{len(parts):02d}_robot.mp4'
-        robot_scene(part, cfg['robot_compare'], robot['results'], args.preview_clip, args.threads, work); parts.append(part)
-        print('rendered robot')
+        if args.preview_clip or any(a.get('src') for a in cfg['robot_compare']['arms']):
+            part = work / f'{len(parts):02d}_robot.mp4'
+            robot_scene(part, cfg['robot_compare'], robot['results'], args.preview_clip, args.threads, work); parts.append(part)
+            print('rendered robot')
+        else:
+            print('skipped robot comparison (no clips yet)')
         print('rendering outro')
         part = work / f'{len(parts):02d}_outro.mp4'; encode_frames(part, 4.0, lambda t, d: scene_outro(t, d, meta), args.threads); parts.append(part)
         listing = work / 'list.txt'; listing.write_text(''.join(f"file '{p}'\n" for p in parts))

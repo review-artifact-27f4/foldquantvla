@@ -117,3 +117,10 @@
 .compact-filter select{min-width:0;min-height:34px;padding:5px 30px 5px 10px;font-size:12px}
 .compact-filter>p{margin:0 0 0 auto;padding:0;font-size:11px}
 #campaign-details .table-note{margin-top:10px}
+.metric-range{white-space:nowrap;font-size:clamp(30px,3.1vw,44px);letter-spacing:-1.6px}
+.metric-range .from{color:var(--muted);font-weight:500}.metric-range .arrow{color:var(--muted);font-weight:400;margin:0 .18em;font-size:.8em}
+.metric-range .arrow+*,.metric-range{color:inherit}.highlights>div:nth-child(4) .metric-range{color:#18864b}.highlights>div:nth-child(4) .metric-range .from,.highlights>div:nth-child(4) .metric-range .arrow{color:var(--muted)}
+/* Stable heights: stacked panels share one grid cell, inactive ones are invisible but keep their size. */
+.latency-tabs-ready .latency-stack{display:grid}.latency-tabs-ready .latency-stack>.latency-panel{grid-area:1/1}
+.latency-tabs-ready .latency-panel.is-inactive,.family-ready .family-panel.is-inactive{visibility:hidden;pointer-events:none}
+.family-ready .family-panels{display:grid}.family-ready .family-panels>.family-panel{grid-area:1/1;margin-top:0}

@@ -28,7 +28,7 @@
 <a class="skip-link" href="#main">Skip to content</a>
 <header class="site-header">
   <nav class="nav-shell" aria-label="Main navigation">
-    <a class="brand" href="#top" aria-label="FoldQuantVLA home"><img src="assets/mark.svg" width="33" height="33" alt=""><span>FoldQuantVLA</span></a>
+    <a class="brand" href="./" aria-label="FoldQuantVLA home"><img src="assets/mark.svg" width="33" height="33" alt=""><span>FoldQuantVLA</span></a>
     <div class="nav-links"><a href="#overview">Overview</a><a href="#method">Method</a><a href="#robot-demos">Real Robot</a><a href="#results">Results</a><a href="#analysis">Analysis</a><a href="#citation">Citation</a></div>
   </nav>
 </header>
@@ -46,10 +46,10 @@
     </div>
   </section>
   <section class="highlights container" aria-label="Research highlights">
-    <div><p class="metric">1.20–1.33<span class="gain">×</span></p><h2>Faster on Jetson AGX Orin</h2><p>Native W4A4 vs the TRT BF16 engine, end to end.<br>GR00T N1.5 / N1.6 / N1.7 and π₀.₅ · batch 1</p></div>
+    <div><p class="metric metric-range">1.20–1.33<span class="gain">×</span></p><h2>Faster on Jetson AGX Orin</h2><p>Native W4A4 vs the TRT BF16 engine, end to end.<br>GR00T N1.5 / N1.6 / N1.7 and π0.5 · batch 1</p></div>
     <div><p class="metric">{{compression}}<span class="gain">×</span></p><h2>Smaller engine artifact</h2><p>5,325 → 2,525 MB of serialized TensorRT plans.<br>GR00T N1.6 · not peak GPU memory.</p></div>
     <div><p class="metric sr-metric">58<span>/60</span></p><h2>Real-robot successes</h2><p>W4A4 + o/d INT8 on Jetson, GR00T N1.7, three tasks.<br>BF16 PyTorch 56/60 · TRT BF16 57/60 on the same tasks.</p></div>
-    <div><p class="metric">0.46 → 0.85</p><h2>Worst-case action cosine</h2><p>W4A4 → W4A4 + o/d INT8, GR00T N1.6 held-out.<br>Costs +0.4–1.8 ms end to end on GR00T desktop.</p></div>
+    <div><p class="metric metric-range"><span class="from">0.46</span><span class="arrow" aria-hidden="true">→</span>0.85</p><h2>Worst-case action cosine</h2><p>W4A4 → W4A4 + o/d INT8, GR00T N1.6 held-out.<br>Costs +0.4–1.8 ms end to end on GR00T desktop.</p></div>
   </section>
   <section class="section container overview" id="overview" aria-labelledby="overview-title">
     <div class="section-heading"><p class="section-label">Overview</p><h2 id="overview-title">A consistent fold.<br>A clearer measurement.</h2></div>
@@ -119,6 +119,6 @@
   </div></section>
   <section class="section container citation-section" id="citation" aria-labelledby="citation-title"><div class="section-heading"><p class="section-label">Citation</p><h2 id="citation-title">Cite this work.</h2><p>Anonymous manuscript · 2026</p></div><div class="citation-box"><div class="citation-top"><span>BibTeX</span><button id="copy-citation" type="button" hidden>Copy citation</button></div><pre><code id="bibtex">{{bibtex}}</code></pre><p id="copy-status" role="status" aria-live="polite"></p></div></section>
 </main>
-<footer class="site-footer container"><a class="brand" href="#top"><img src="assets/mark.svg" width="28" height="28" alt="">FoldQuantVLA</a><p>Consistent folding. Closed-loop evidence.</p><a href="#top">Back to top <span aria-hidden="true">↑</span></a></footer>
+<footer class="site-footer container"><a class="brand" href="./"><img src="assets/mark.svg" width="28" height="28" alt="">FoldQuantVLA</a><p>Consistent folding. Closed-loop evidence.</p><a href="#top">Back to top <span aria-hidden="true">↑</span></a></footer>
 </body>
 </html>

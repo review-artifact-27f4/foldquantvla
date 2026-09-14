@@ -80,6 +80,8 @@ class BuildTests(unittest.TestCase):
         self.assertEqual(len(ids),len(set(ids)))
         for tag, attrs in self.doc.elements:
             if tag == 'a':
+                if attrs['href'] == './':
+                    continue
                 self.assertTrue(attrs['href'].startswith('#'))
                 self.assertIn(attrs['href'][1:], ids)
             if tag in ('img','script','link'):
@@ -134,7 +136,9 @@ class BuildTests(unittest.TestCase):
         self.assertEqual(self.html.count('data-robot-task='), 4)
         self.assertEqual(self.html.count('class="robot-card"'), 4)
         self.assertEqual(self.html.count('Video forthcoming'), 8)  # visible text and accessible label per slot
-        self.assertFalse((self.output/'media').exists())
+        published = sorted(x.relative_to(self.output/'media').as_posix() for x in (self.output/'media').rglob('*') if x.is_file()) if (self.output/'media').exists() else []
+        self.assertTrue(set(published) <= {'overview.mp4'}, published)
+        self.assertFalse((self.output/'media'/'real-robot').exists())
 
     def test_real_robot_media_paths_are_confined(self):
         for value in ('../private.mp4', '/tmp/private.mp4', 'https://example.com/demo.mp4', 'demo.mov'):
