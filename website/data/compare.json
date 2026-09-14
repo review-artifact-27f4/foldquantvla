@@ -5,7 +5,6 @@
       "key": "n17",
       "name": "GR00T N1.7",
       "meta": "FoldQuant release harness · NVIDIA per-suite N1.7 LIBERO checkpoints · 20 initial states/task · H = 16, K = 8",
-      "cos_label": "libero_10 held-out verify",
       "rows": [
         {
           "method": "BF16 PyTorch",
@@ -17,7 +16,6 @@
             185,
             187
           ],
-          "cos": null,
           "ref": true
         },
         {
@@ -29,8 +27,7 @@
             194,
             178,
             178
-          ],
-          "cos": null
+          ]
         },
         {
           "method": "DuQuant",
@@ -47,8 +44,7 @@
             194,
             191,
             177
-          ],
-          "cos": 0.99901
+          ]
         },
         {
           "method": "FoldQuant W4A4 + o/d INT8",
@@ -59,17 +55,15 @@
             197,
             188,
             187
-          ],
-          "cos": 0.99961
+          ]
         }
       ],
-      "footnote": "All rows: FoldQuant release harness, NVIDIA per-suite N1.7 LIBERO checkpoints, 20 initial states per task, H = 16, K = 8. † HoloQ-VLA on N1.7 is our fake-quantized port of the method. Median cosine: libero_10 held-out verify."
+      "footnote": "All rows: FoldQuant release harness, NVIDIA per-suite N1.7 LIBERO checkpoints, 20 initial states per task, H = 16, K = 8. † HoloQ-VLA on N1.7 is our fake-quantized port of the method."
     },
     {
       "key": "pi05",
       "name": "π0.5",
       "meta": "LIBERO four suites · 200 episodes per suite",
-      "cos_label": "held-out verify",
       "rows": [
         {
           "method": "BF16 PyTorch",
@@ -81,7 +75,6 @@
             196,
             181
           ],
-          "cos": null,
           "ref": true
         },
         {
@@ -94,7 +87,6 @@
             200,
             192
           ],
-          "cos": null,
           "reported": true
         },
         {
@@ -107,7 +99,6 @@
             188,
             176
           ],
-          "cos": null,
           "reported": true
         },
         {
@@ -120,7 +111,6 @@
             160,
             112
           ],
-          "cos": null,
           "reported": true
         },
         {
@@ -133,7 +123,6 @@
             80,
             52
           ],
-          "cos": null,
           "reported": true
         },
         {
@@ -145,8 +134,7 @@
             199,
             193,
             188
-          ],
-          "cos": 1.0
+          ]
         },
         {
           "method": "FoldQuant W4A4",
@@ -157,8 +145,7 @@
             198,
             196,
             186
-          ],
-          "cos": 0.99942
+          ]
         },
         {
           "method": "FoldQuant W4A4 + o/d INT8",
@@ -169,11 +156,10 @@
             198,
             197,
             188
-          ],
-          "cos": 0.99978
+          ]
         }
       ],
-      "footnote": "BF16 / W8A8 / W4A4: Table V protocol, 800 episodes, 520-step cap, seed 7. W4A4 + o/d INT8: released openpi harness, 20 trials per task, K = 5. Reported rows: HoloQ-VLA Table 2, emulated quantization, 10 calibration samples. Median cosine: Table VI P2 for W8A8 / W4A4, released-harness verify for o/d INT8."
+      "footnote": "BF16 / W8A8 / W4A4: Table V protocol, 800 episodes, 520-step cap, seed 7. W4A4 + o/d INT8: released openpi harness, 20 trials per task, K = 5. Reported rows: HoloQ-VLA Table 2, emulated quantization, 10 calibration samples."
     }
   ]
 }

@@ -211,22 +211,19 @@ def make_benchmark_preview(compare):
                 continue
             if row['kind'] == 'pending':
                 body.append(f'<tr class="pending-row"><th scope="row">{esc(row["method"])}</th><td class="prec">{esc(row["precision"])}</td>'
-                            f'<td colspan="6" class="pending-cell">{esc(row["status"].capitalize())}…</td></tr>')
+                            f'<td colspan="5" class="pending-cell">{esc(row["status"].capitalize())}…</td></tr>')
                 continue
             total = sum(row['suites'])
             suites = ''.join(f'<td>{n}</td>' for n in row['suites'])
-            cos = 'Reference' if row.get('ref') else ('—' if row['cos'] is None else f'{row["cos"]:.5f}')
-            if row.get('reported'):
-                cos = '—'
             tag = f'<small>{esc(row["tag"])}</small>' if row.get('tag') else ''
             body.append(f'<tr class="{row["kind"]}"><th scope="row">{esc(row["method"])}{tag}</th><td class="prec">{esc(row["precision"])}</td>{suites}'
-                        f'<td><strong>{total / 8:.2f}%</strong><small>{total}/800</small></td><td>{cos}</td></tr>')
+                        f'<td><strong>{total / 8:.2f}%</strong><small>{total}/800</small></td></tr>')
         panels.append(
             f'<section class="benchmark-panel" id="benchmark-{panel["key"]}" aria-labelledby="benchmark-tab-{panel["key"]}">'
             f'<header><div><h3>{esc(panel["name"])}</h3><p>{esc(panel["meta"])}</p></div><span>200 episodes / suite</span></header>'
             f'<div class="benchmark-table-scroll" tabindex="0" role="region" aria-label="{esc(panel["name"])} LIBERO comparison">'
             '<table class="compare-table"><thead><tr><th scope="col">Arm</th><th scope="col">Prec.</th><th scope="col">Spatial</th><th scope="col">Object</th>'
-            f'<th scope="col">Goal</th><th scope="col">Long</th><th scope="col">Success rate ↑</th><th scope="col">Median cos ↑<small>{esc(panel["cos_label"])}</small></th></tr></thead>'
+            f'<th scope="col">Goal</th><th scope="col">Long</th><th scope="col">Success rate ↑</th></tr></thead>'
             f'<tbody>{"".join(body)}</tbody></table></div>'
             + (f'<p class="latency-note">{esc(panel["footnote"])}</p>' if panel.get('footnote') else '') + '</section>')
     return ''.join(panels)
