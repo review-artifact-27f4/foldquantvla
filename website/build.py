@@ -228,8 +228,12 @@ def make_benchmark_preview(compare):
                 body.append(f'<tr class="pending-row"><th scope="row">{esc(row["method"])}</th><td class="prec">{esc(row["precision"])}</td>'
                             f'<td colspan="5" class="pending-cell">{esc(row["status"].capitalize())}…</td></tr>')
                 continue
+            suites = ''.join('<td class="na pending-cell">Measuring…</td>' if n is None else f'<td>{n / 2:.1f}%</td>' for n in row['suites'])
+            if any(n is None for n in row['suites']):
+                body.append(f'<tr class="{row["kind"]}"><th scope="row">{esc(row["method"])}</th><td class="prec">{esc(row["precision"])}</td>{suites}'
+                            '<td class="na pending-cell">Measuring…</td></tr>')
+                continue
             total = sum(row['suites'])
-            suites = ''.join(f'<td>{n / 2:.1f}%</td>' for n in row['suites'])
             tag = f'<small>{esc(row["tag"])}</small>' if row.get('tag') else ''
             body.append(f'<tr class="{row["kind"]}"><th scope="row">{esc(row["method"])}{tag}</th><td class="prec">{esc(row["precision"])}</td>{suites}'
                         f'<td><strong>{total / 8:.2f}%</strong></td></tr>')
