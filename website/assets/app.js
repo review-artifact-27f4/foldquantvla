@@ -123,12 +123,15 @@
     selectLatency(hashTab ? hashTab.dataset.latency : 'jetson');
   }
 
-  document.querySelectorAll('.family-toggle').forEach(button => {
-    const detail = document.getElementById(button.getAttribute('aria-controls'));
-    const set = open => { button.setAttribute('aria-expanded', String(open)); detail.hidden = !open; };
-    set(false);
-    button.addEventListener('click', () => set(button.getAttribute('aria-expanded') !== 'true'));
+  document.querySelectorAll('select[data-family-group]').forEach(select => {
+    const group = select.dataset.familyGroup;
+    const panels = [...document.querySelectorAll(`.family-panel[data-family-group="${group}"]`)];
+    const show = () => panels.forEach(panel => { panel.hidden = panel.dataset.family !== select.value; });
+    select.closest('.family-switch').hidden = false;
+    select.addEventListener('change', show);
+    show();
   });
+  if (document.querySelector('select[data-family-group]')) document.documentElement.classList.add('family-ready');
 
   const desktopSelect = document.getElementById('desktop-model');
   function filterDesktop() {
