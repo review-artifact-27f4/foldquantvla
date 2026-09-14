@@ -28,8 +28,8 @@
         "e2e": 34.0
       },
       "ModelOpt W4A16 AWQ": {
-        "gpu": null,
-        "e2e": 60.0,
+        "gpu": 52.2,
+        "e2e": 60.3,
         "framework_runtime": true
       }
     },
