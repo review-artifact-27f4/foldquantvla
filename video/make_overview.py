@@ -167,7 +167,7 @@ def scene_fidelity(t, d):
     img = canvas(); dr = ImageDraw.Draw(img); a = fade(t, d)
     text(dr, (120, 90), 'Selective INT8 on o_proj / down_proj', 30, 600, RED, 'la', a)
     text(dr, (120, 132), 'Two INT8 sites fix the worst case', 58, 700, INK, 'la', a)
-    cards = [('GR00T N1.6', 0.46067, 0.84984, '+1.4 ms'), ('GR00T N1.7', 0.80213, 0.91244, '+0.6 ms')]
+    cards = [('GR00T N1.6', 0.46067, 0.84984, '+1.3 ms'), ('GR00T N1.7', 0.80213, 0.91244, '+1.8 ms')]
     for i, (name, before, after, cost) in enumerate(cards):
         x = 120 + i * 860; k = a * ease((t - 0.6 - 0.4 * i) / 1.0)
         dr.rounded_rectangle((x, 290, x + 800, 900), 22, fill=blend((255, 255, 255), a), outline=blend(LINE, a), width=2)
