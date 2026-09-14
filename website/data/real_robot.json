@@ -5,7 +5,7 @@
       "key": "t1",
       "platform": "ALOHA",
       "title": "ALOHA · Banana",
-      "instruction": "Single-arm ALOHA: pick up the banana and place it in the pot, then close the pot with the lid.",
+      "instruction": "Use the right gripper to pick up the banana and place it into the pot. Then pick up the lid with the right gripper and place it on top of the pot to close it.",
       "policy": "GR00T N1.7 · Jetson AGX Orin",
       "views": [
         {
@@ -14,13 +14,14 @@
           "src": "aloha-banana/bf16-pytorch.mp4",
           "poster": ""
         }
-      ]
+      ],
+      "prompt": "Use the right gripper to pick up the banana and place it into the pot. Then pick up the lid with the right gripper and place it on top of the pot to close it."
     },
     {
       "key": "t2",
       "platform": "SO101",
       "title": "SO101 · Banana",
-      "instruction": "SO-101: pick up the banana.",
+      "instruction": "Pick up the banana and place it in the bot, then close the lid",
       "policy": "GR00T N1.7 · Jetson AGX Orin",
       "views": [
         {
@@ -29,13 +30,14 @@
           "src": "",
           "poster": ""
         }
-      ]
+      ],
+      "prompt": "Pick up the banana and place it in the bot, then close the lid"
     },
     {
       "key": "t3",
       "platform": "SO101",
       "title": "SO101 · All blocks into cup",
-      "instruction": "SO-101: place every block into the cup.",
+      "instruction": "Pick all cubes and place into cup",
       "policy": "GR00T N1.7 · Jetson AGX Orin",
       "views": [
         {
@@ -44,13 +46,14 @@
           "src": "",
           "poster": ""
         }
-      ]
+      ],
+      "prompt": "Pick all cubes and place into cup"
     },
     {
       "key": "t4",
       "platform": "SO101",
       "title": "SO101 · Blue block on red",
-      "instruction": "SO-101: stack the blue block on the red block.",
+      "instruction": "Pick blue cube and place on red cube",
       "policy": "GR00T N1.7 · Jetson AGX Orin",
       "views": [
         {
@@ -59,7 +62,8 @@
           "src": "",
           "poster": ""
         }
-      ]
+      ],
+      "prompt": "Pick blue cube and place on red cube"
     }
   ],
   "results": {
@@ -202,7 +206,8 @@
           "ours": true
         }
       ],
-      "tab": "ALOHA · Banana"
+      "tab": "ALOHA · Banana",
+      "prompt": "Use the right gripper to pick up the banana and place it into the pot. Then pick up the lid with the right gripper and place it on top of the pot to close it."
     },
     {
       "key": "so101-banana",
@@ -239,7 +244,8 @@
           "result_label": "FoldQuant W4A4 + o/d INT8",
           "ours": true
         }
-      ]
+      ],
+      "prompt": "Pick up the banana and place it in the bot, then close the lid"
     },
     {
       "key": "so101-blocks-cup",
@@ -276,7 +282,8 @@
           "result_label": "FoldQuant W4A4 + o/d INT8",
           "ours": true
         }
-      ]
+      ],
+      "prompt": "Pick all cubes and place into cup"
     },
     {
       "key": "so101-blue-on-red",
@@ -318,7 +325,8 @@
           "result_label": "FoldQuant W4A4 + o/d INT8",
           "ours": true
         }
-      ]
+      ],
+      "prompt": "Pick blue cube and place on red cube"
     }
   ]
 }

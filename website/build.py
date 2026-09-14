@@ -319,7 +319,7 @@ def make_robot_trials(data):
             f'{rendered_views[0]}'
             f'<div class="robot-card-body"><h3>{esc(platform)} · {esc(name)}</h3>'
             f'<span class="robot-tag">{esc(platform)}</span>'
-            f'<p>{esc(trial["instruction"])}</p></div></article>')
+            f'<p class="robot-prompt"><span>Prompt</span>“{esc(trial["prompt"])}”</p></div></article>')
     return ''.join(trials), ''.join(task_tabs), media
 
 
@@ -349,7 +349,7 @@ def make_robot_compare(data):
         tab_id = f'task-{comp["key"]}'
         task_tabs.append(f'<button type="button" data-task-panel="{tab_id}">{esc(comp.get("tab", comp["title"]))}</button>')
         html_parts.append(f'<section class="compare-task" id="{tab_id}" aria-label="{esc(comp["title"])}">'
-                          f'<div class="compare-head"><h3>{esc(comp["title"])}</h3><p>{esc(comp["meta"])}</p></div>'
+                          f'<div class="compare-head"><h3>{esc(comp["title"])}</h3><p class="robot-prompt"><span>Prompt</span>“{esc(comp["prompt"])}”</p><p>{esc(comp["meta"])}</p></div>'
                           f'<div class="compare-grid" style="--cols:{len(comp["arms"])}">{"".join(panels)}</div></section>')
     if not html_parts:
         return '', media
