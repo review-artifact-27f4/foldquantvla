@@ -61,7 +61,7 @@
 @media(max-width:700px){.libero-own{margin-top:44px}.libero-summary{font-size:11px}.libero-summary th,.libero-summary td{padding:10px 10px}}
 
 .robot-section{background:#fff;border-bottom:1px solid var(--line)}.robot-heading{margin-bottom:34px}.robot-heading .section-intro{font-size:16px;margin-top:14px}
-.robot-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+.robot-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
 .robot-card{min-width:0;display:flex;flex-direction:column;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;transition:box-shadow .2s,transform .2s}
 .robot-card:hover{box-shadow:0 12px 30px rgba(23,32,28,.09);transform:translateY(-2px)}
 .robot-screen{position:relative;aspect-ratio:16/10;background:#16231c;overflow:hidden}

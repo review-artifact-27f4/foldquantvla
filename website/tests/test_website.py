@@ -128,14 +128,14 @@ class BuildTests(unittest.TestCase):
 
     def test_real_robot_reel_is_ready_without_publishing_private_media(self):
         data = site.load('real_robot')
-        self.assertEqual(len(data['trials']), 3)
-        self.assertEqual([trial['platform'] for trial in data['trials']], ['SO101', 'SO101', 'ALOHA'])
+        self.assertEqual(len(data['trials']), 4)
+        self.assertEqual([trial['platform'] for trial in data['trials']], ['SO101', 'SO101', 'SO101', 'ALOHA'])
         self.assertTrue(all(len(trial['views']) == 1 for trial in data['trials']))
         self.assertTrue(all(trial['views'][0]['label'] == 'Evaluation video' for trial in data['trials']))
         self.assertTrue(all(not view['src'] for trial in data['trials'] for view in trial['views']))
         self.assertIn('id="robot-demos"', self.html)
-        self.assertEqual(self.html.count('data-robot-task='), 3)
-        self.assertEqual(self.html.count('class="robot-card"'), 3)
+        self.assertEqual(self.html.count('data-robot-task='), 4)
+        self.assertEqual(self.html.count('class="robot-card"'), 4)
         self.assertEqual(self.html.count('Video forthcoming'), 6)  # visible text and accessible label per slot
         self.assertFalse((self.output/'media').exists())
 

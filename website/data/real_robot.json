@@ -1,5 +1,5 @@
 {
-  "intro": "Two SO101 tasks and one ALOHA task, each run with the FoldQuantVLA low-bit policy.",
+  "intro": "Three SO101 tasks and one ALOHA task, each run with the FoldQuantVLA low-bit policy.",
   "trials": [
     {
       "key": "so101-task-01",
@@ -26,6 +26,21 @@
         {
           "label": "Evaluation video",
           "detail": "SO101 · Task 02",
+          "src": "",
+          "poster": ""
+        }
+      ]
+    },
+    {
+      "key": "so101-task-03",
+      "platform": "SO101",
+      "title": "SO101 · Task 03",
+      "instruction": "Task description will appear with the released recording.",
+      "policy": "SO101 · FoldQuantVLA low-bit policy",
+      "views": [
+        {
+          "label": "Evaluation video",
+          "detail": "SO101 · Task 03",
           "src": "",
           "poster": ""
         }
