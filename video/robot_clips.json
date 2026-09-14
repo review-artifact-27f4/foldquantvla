@@ -12,23 +12,28 @@
       "arms": [
         {
           "key": "bf16-pytorch",
-          "dir": "banana_pytorch"
+          "dir": "banana_pytorch",
+          "episode": 2
         },
         {
           "key": "trt-bf16",
-          "dir": "banana_trt_bf16"
+          "dir": "banana_trt_bf16",
+          "episode": 2
         },
         {
           "key": "foldquant-w8a8",
-          "dir": "banana_w8a8"
+          "dir": "banana_w8a8",
+          "episode": 0
         },
         {
           "key": "foldquant-w4a4",
-          "dir": "banana_w4a4"
+          "dir": "banana_w4a4",
+          "episode": 2
         },
         {
           "key": "foldquant-w4a4-od-int8",
-          "dir": "banana_w4a4res8"
+          "dir": "banana_w4a4res8",
+          "episode": 3
         }
       ]
     }
