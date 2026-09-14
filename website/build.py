@@ -11,6 +11,8 @@ from urllib.parse import urlparse
 
 ROOT = Path(__file__).resolve().parent
 CORE = ('bf16', 'int8', 'mixed', 'int4')
+# Checkpoints reported in the paper; SmolVLA and Evo-1 stay in the data files only.
+PAPER_CHECKPOINTS = ('n17', 'n16', 'n15', 'pi05')
 COLORS = {'bf16': '#84958b', 'trt_bf16': '#66776d', 'float': '#84958b', 'eager': '#b9c3bd', 'compiled': '#84958b', 'int8': '#507b68', 'mixed': '#b57a34', 'int4': '#d72e3b', 'sq': '#74828b', 'awq': '#9b8582', 'arc': '#bd5861', 'cascade': '#bd5861'}
 SHORT = {'bf16': 'BF16', 'int8': 'W8A8', 'mixed': 'Head W4A4 + LLM W8A8', 'int4': 'W4A4'}
 VIDEO_TYPES = {'.mp4': 'video/mp4', '.webm': 'video/webm'}
@@ -90,7 +92,7 @@ def make_libero(data):
 
 def make_libero_summary(data, fidelity):
     body = []
-    for model in data['models']:
+    for model in [m for m in data['models'] if m['key'] in PAPER_CHECKPOINTS]:
         rows = {r['key']: r for r in model['rows']}
         cos = fidelity['models'][model['key']]
         def sr(key):
@@ -106,7 +108,7 @@ def make_libero_summary(data, fidelity):
     head = ('<thead><tr><th scope="col" rowspan="2">Checkpoint</th><th scope="col" rowspan="2">H</th><th scope="col" rowspan="2">K</th><th scope="colgroup" colspan="2">BF16 SR</th>'
             '<th scope="colgroup" colspan="2">FoldQuant W8A8</th><th scope="colgroup" colspan="2">FoldQuant W4A4</th><th scope="colgroup" colspan="2">FoldQuant W4A4 + o/d INT8</th></tr>'
             '<tr><th scope="col">PyTorch</th><th scope="col">TensorRT</th><th scope="col">SR ↑</th><th scope="col">Median cos ↑</th><th scope="col">SR ↑</th><th scope="col">Median cos ↑</th><th scope="col">SR ↑</th><th scope="col">Median cos ↑</th></tr></thead>')
-    return (f'<div class="benchmark-table-scroll" tabindex="0" role="region" aria-label="FoldQuantVLA LIBERO results across six checkpoints">'
+    return (f'<div class="benchmark-table-scroll" tabindex="0" role="region" aria-label="FoldQuantVLA LIBERO results across four checkpoints">'
             f'<table class="libero-summary">{head}<tbody>{"".join(body)}</tbody></table></div>')
 
 
@@ -171,15 +173,17 @@ def make_latency_tables(jetson, desktop):
 
     orin = load('jetson_orin')
     jpanels = []
-    for model in orin['models']:
+    orin_models = [m for m in orin['models'] if not m['name'].startswith(('Evo', 'SmolVLA'))]
+    for model in orin_models:
         values = {r['label']: {'gpu': r['gpu_ms'], 'e2e': r['e2e_ms']} for r in model['arms']}
         jpanels.append(panel('jetson', model['name'], head, family_rows(values)))
-    jetson_html = switcher('jetson', [m['name'] for m in orin['models']]) + '<div class="family-panels">' + ''.join(jpanels) + '</div>'
+    jetson_html = switcher('jetson', [m['name'] for m in orin_models]) + '<div class="family-panels">' + ''.join(jpanels) + '</div>'
 
     sweep = load('desktop_sweep')
     marks = {'smol': '†', 'evo': '‡'}
     dpanels = []
-    for r in desktop['rows']:
+    desktop_rows = [r for r in desktop['rows'] if r['key'] in PAPER_CHECKPOINTS]
+    for r in desktop_rows:
         key = r['key']
         fam = sweep['families'][key]
         values = {}
@@ -212,7 +216,7 @@ def make_latency_tables(jetson, desktop):
             bits.append(closed_loop[key])
         foot = f'<p class="family-note">{esc(" · ".join(bits))}</p>'
         dpanels.append(panel('desktop', r['name'], head, family_rows(values), foot))
-    desktop_html = switcher('desktop', [r['name'] for r in desktop['rows']]) + '<div class="family-panels">' + ''.join(dpanels) + '</div>'
+    desktop_html = switcher('desktop', [r['name'] for r in desktop_rows]) + '<div class="family-panels">' + ''.join(dpanels) + '</div>'
     return jetson_html, desktop_html, ''
 
 

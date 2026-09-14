@@ -57,7 +57,7 @@
       <article><span class="contribution-symbol" aria-hidden="true">▦</span><h3>Native low-bit execution</h3><p>Custom TensorRT plugins fuse activation transforms and quantization with integer tensor-core GEMMs on desktop and Jetson GPUs.</p></article>
       <article><span class="contribution-symbol" aria-hidden="true">↻</span><h3>Measured end to end</h3><p>Compiled controls, device measurements, and closed-loop outcomes reveal both the gains and the configurations that fail.</p></article>
     </div>
-    <div class="model-strip" aria-label="Evaluated checkpoints"><span>Evaluated on</span><strong>GR00T N1.5 / N1.6 / N1.7</strong><strong>π₀.₅</strong><strong>SmolVLA</strong><strong>Evo-1</strong></div>
+    <div class="model-strip" aria-label="Evaluated checkpoints"><span>Evaluated on</span><strong>GR00T N1.5 / N1.6 / N1.7</strong><strong>π0.5</strong></div>
   </section>
   <section class="section method-section" id="method" aria-labelledby="method-title">
     <div class="container">
@@ -76,9 +76,9 @@
       <div class="benchmark-panels">{{benchmark_preview}}</div>
       <p class="benchmark-note">FoldQuant rows are real INT4 / INT8 TensorRT engines. N1.7 paired W4A4 + o/d INT8 − W4A4: +6 episodes, t(39) = 0.58, p = 0.57. π₀.₅ released-harness pair: +4, t(39) = 0.81, p = 0.42.</p>
       <div class="libero-own" id="libero">
-        <div class="panel-heading"><div><h3 id="libero-title">FoldQuantVLA across six checkpoints</h3><p>LIBERO · four suites · 40 tasks · 800 episodes per configuration · H100 MIG 3g.40gb</p></div><span class="source-tag">Table V · Table VI</span></div>
+        <div class="panel-heading"><div><h3 id="libero-title">FoldQuantVLA across four checkpoints</h3><p>LIBERO · four suites · 40 tasks · 800 episodes per configuration · H100 MIG 3g.40gb</p></div><span class="source-tag">Table V · Table VI</span></div>
         {{libero_summary}}
-        <p class="benchmark-note">H is the action chunk length and K the executed prefix (Table I). BF16 is reported both in PyTorch and as the floating-point TensorRT export; FoldQuant arms run on TensorRT. SR is closed-loop success against each checkpoint’s own BF16 PyTorch reference. Median cosine is P2 decoded-action cosine against BF16 PyTorch. W4A4 + o/d INT8 is FoldQuant W4A4 with o_proj and down_proj kept at INT8. SmolVLA and Evo-1 are not in the paper: they sit below the 0.99 offline screen and are reported here for completeness. N1.7 and π0.5 o/d INT8 SR come from the HoloQ-VLA comparison harness above until their Table V campaigns close. N1.5, SmolVLA and Evo-1 o/d INT8 campaigns were not run: N1.5 and SmolVLA are K = 1 campaigns of about 20 h, and SmolVLA and Evo-1 sit below the 0.99 offline screen. Red cells mark the uniform W4A4 losses that survive task-clustered testing with Holm correction ({{significant_loss_count}} of {{comparison_count}} comparisons, the third being Evo-1 cascade W4A4); no eight-bit, weight-only, mixed-precision or float control does, which is not a claim of equivalence.</p>
+        <p class="benchmark-note">H is the action chunk length and K the executed prefix (Table I). BF16 is reported both in PyTorch and as the floating-point TensorRT export; FoldQuant arms run on TensorRT. SR is closed-loop success against each checkpoint’s own BF16 PyTorch reference. Median cosine is P2 decoded-action cosine against BF16 PyTorch. W4A4 + o/d INT8 is FoldQuant W4A4 with o_proj and down_proj kept at INT8. N1.7 and π0.5 o/d INT8 SR come from the HoloQ-VLA comparison harness above until their Table V campaigns close. The N1.5 o/d INT8 campaign was not run (K = 1, about 20 h). On these four checkpoints no quantized arm shows a success loss that survives task-clustered testing with Holm correction; this is not a claim of equivalence.</p>
       </div>
     </div>
   </section>
@@ -96,12 +96,12 @@
     <div class="latency-tabs" aria-label="Latency view" hidden><button id="latency-tab-jetson" data-latency="jetson">Jetson AGX Orin</button><button id="latency-tab-desktop" data-latency="desktop">RTX 4070 Ti SUPER · desktop</button></div>
     <div class="latency-stack">
     <section class="benchmark-panel latency-panel" id="jetson" aria-labelledby="jetson-title">
-      <header><div><h3 id="jetson-title">Jetson AGX Orin · on-device</h3><p>Five checkpoints · TensorRT 10.3 · batch 1 · observation-to-action chunk</p></div><span class="source-tag">Table IV</span></header>
+      <header><div><h3 id="jetson-title">Jetson AGX Orin · on-device</h3><p>Four checkpoints · TensorRT 10.3 · batch 1 · observation-to-action chunk</p></div></header>
       {{jetson_summary}}
-      <p class="latency-note">“GPU” is device time and “E2E” observation-to-action; Hz is 1000 / E2E. “vs TRT BF16” is relative to the unquantized TensorRT engine of the same checkpoint. Evo-1 Orin engines, float included, sit 0.01–0.02 below the desktop engines on action cosine — a TensorRT 10.3 backbone port effect. SmolVLA does not build on TensorRT 10.3. N1.6 plans: 5,325 / 3,618 / 2,525 / 3,901 / 3,077 MB for TRT BF16, W8A8, W4A4, SQ, AWQ.</p>
+      <p class="latency-note">“GPU” is device time and “E2E” observation-to-action; Hz is 1000 / E2E. “vs TRT BF16” is relative to the unquantized TensorRT engine of the same checkpoint. N1.6 plans: 5,325 / 3,618 / 2,525 / 3,901 / 3,077 MB for TRT BF16, W8A8, W4A4, SQ, AWQ.</p>
     </section>
     <section class="benchmark-panel latency-panel" id="desktop" aria-labelledby="desktop-title">
-      <header><div><h3 id="desktop-title">RTX 4070 Ti SUPER · desktop</h3><p>Six checkpoints · batch 1 · one exclusive-GPU sweep per family in the FoldQuant release timer</p></div><span class="source-tag">Release timer</span></header>
+      <header><div><h3 id="desktop-title">RTX 4070 Ti SUPER · desktop</h3><p>Four checkpoints · TensorRT 10.15 · batch 1 · observation-to-action chunk</p></div></header>
       {{desktop_summary}}
       <p class="latency-note">“GPU” is the sum of model components and “E2E” the whole call; Hz is 1000 / E2E; “vs TRT BF16” divides the TRT BF16 E2E of the same run. torch.compile hides components, so its GPU time is n/a. These timers differ from the framework runtime of paper Table II, so absolute values do not match that table; compare arms within a family.</p>
     </section>
@@ -110,9 +110,9 @@
   <section class="section analysis-section" id="analysis" aria-labelledby="analysis-title"><div class="container">
     <div class="section-heading"><p class="section-label">What the controls reveal</p><h2 id="analysis-title">Smaller bits.<br>A more nuanced picture.</h2></div>
     <div class="analysis-grid">
-      <article><span class="analysis-index" aria-hidden="true">↘</span><h3>Compilation explains much of the speedup.</h3><p>The compiled control already supplies 63.2–74.7% of the eager-to-W4A4 reduction on five checkpoints. On SmolVLA, it supplies 99.9%, while uniform W4A4 fails fidelity. Faster execution alone is not a successful deployment.</p><p class="source-note">Table II · matched-scope latency controls</p></article>
+      <article><span class="analysis-index" aria-hidden="true">↘</span><h3>Compilation explains much of the speedup.</h3><p>The compiled control already supplies 63.2–74.7% of the eager-to-W4A4 reduction on the four checkpoints. Reporting speedups against compiled float engines keeps graph optimisation from being credited to quantization.</p><p class="source-note">Table II · matched-scope latency controls</p></article>
       <article><span class="analysis-index" aria-hidden="true">▧</span><h3>Engine size is not peak device memory.</h3><p>Packed weights shrink the serialized artifact. Vision, unquantized operators, workspaces, and runtime context still occupy memory. The 2.11× Jetson artifact reduction is not a claim about peak GPU memory or power use.</p><p class="source-note">Table III · serialized TensorRT plan sizes</p></article>
-      <article><span class="analysis-index" aria-hidden="true">≈</span><h3>Offline fidelity screens; closed loop decides.</h3><p>After removing the three arms below 0.99 action cosine, the remaining 26 arms span success differences from −20 to +15 episodes with no significant rank correlation. High cosine can screen a broken configuration without ranking the working ones.</p><p class="source-note">Section VI-D · held-out and closed-loop analysis</p></article>
+      <article><span class="analysis-index" aria-hidden="true">≈</span><h3>Offline fidelity screens; closed loop decides.</h3><p>Above 0.99 held-out action cosine, success differences between arms stay within closed-loop noise and are not ordered by cosine. High cosine screens a broken configuration without ranking the working ones.</p><p class="source-note">Section VI-D · held-out and closed-loop analysis</p></article>
     </div>
   </div></section>
   <section class="section container citation-section" id="citation" aria-labelledby="citation-title"><div class="section-heading"><p class="section-label">Citation</p><h2 id="citation-title">Cite this work.</h2><p>Anonymous manuscript · 2026</p></div><div class="citation-box"><div class="citation-top"><span>BibTeX</span><button id="copy-citation" type="button" hidden>Copy citation</button></div><pre><code id="bibtex">{{bibtex}}</code></pre><p id="copy-status" role="status" aria-live="polite"></p></div></section>

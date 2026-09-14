@@ -322,7 +322,7 @@
     },
     {
       "key": "pi05",
-      "name": "π₀.₅",
+      "name": "π0.5",
       "k": 5,
       "denoising_steps": 10,
       "chunk_length": 10,

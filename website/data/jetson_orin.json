@@ -167,7 +167,7 @@
       ]
     },
     {
-      "name": "π₀.₅",
+      "name": "π0.5",
       "arms": [
         {
           "label": "TRT BF16 (float engine)",

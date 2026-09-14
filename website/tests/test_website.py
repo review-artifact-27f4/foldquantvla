@@ -112,7 +112,7 @@ class BuildTests(unittest.TestCase):
         panels = [a for _,a in self.doc.elements if a.get('id') in ('jetson','desktop','libero')]
         self.assertEqual(len(panels),3)
         self.assertTrue(all('hidden' not in p for p in panels))
-        self.assertEqual(sum(a.get('data-family-group') == 'desktop' and 'family-panel' in a.get('class','') for _,a in self.doc.elements),6)
+        self.assertEqual(sum(a.get('data-family-group') == 'desktop' and 'family-panel' in a.get('class','') for _,a in self.doc.elements),4)
         self.assertIn('prefers-reduced-motion:reduce',(self.output/'assets/styles.css').read_text())
         benchmark_panels = [a for _,a in self.doc.elements if a.get('id') in ('benchmark-n17','benchmark-pi05')]
         self.assertEqual(len(benchmark_panels), 2)

@@ -4,6 +4,6 @@
   "subtitle": "Native Low-Bit Quantization of VLA Models via Consistent Folding",
   "authors": "Anonymous Authors",
   "year": 2026,
-  "description": "Consistent folding for native W8A8 and W4A4 VLA inference, evaluated with compiled controls and 47,200 closed-loop LIBERO episodes across six checkpoints.",
+  "description": "Consistent folding for native W8A8 and W4A4 VLA inference, evaluated with compiled controls and 47,200 closed-loop LIBERO episodes across GR00T N1.5 / N1.6 / N1.7 and π0.5.",
   "source": "Anonymous ICRA submission, September 2026"
 }
