@@ -23,10 +23,10 @@
           "precision": "int4",
           "kind": "",
           "suites": [
-            195,
-            194,
-            178,
-            178
+            188,
+            197,
+            179,
+            180
           ]
         },
         {
@@ -63,7 +63,7 @@
           ]
         }
       ],
-      "footnote": "All rows: FoldQuant release harness, NVIDIA per-suite N1.7 LIBERO checkpoints, 20 initial states per task, H = 16, K = 8. † HoloQ-VLA and DuQuant on N1.7 are our emulated ports of those methods."
+      "footnote": "All five rows share one harness and one released code path: NVIDIA per-suite N1.7 LIBERO checkpoints, 20 initial states per task, H = 16, K = 8. † HoloQ-VLA and DuQuant are our emulated implementations of those methods in the same release repository."
     },
     {
       "key": "pi05",
