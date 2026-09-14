@@ -34,7 +34,7 @@
           "precision": "int4",
           "kind": "",
           "suites": [
-            null,
+            194,
             null,
             null,
             167
@@ -63,7 +63,7 @@
           ]
         }
       ],
-      "footnote": "All rows: FoldQuant release harness, NVIDIA per-suite N1.7 LIBERO checkpoints, 20 initial states per task, H = 16, K = 8. † HoloQ-VLA and DuQuant on N1.7 are our emulated ports of those methods; the DuQuant spatial, object and goal suites are still running."
+      "footnote": "All rows: FoldQuant release harness, NVIDIA per-suite N1.7 LIBERO checkpoints, 20 initial states per task, H = 16, K = 8. † HoloQ-VLA and DuQuant on N1.7 are our emulated ports of those methods; the DuQuant object and goal suites are still running."
     },
     {
       "key": "pi05",
