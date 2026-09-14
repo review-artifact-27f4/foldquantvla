@@ -74,7 +74,7 @@
       </div>
       <div class="benchmark-tabs" aria-label="Checkpoint" hidden><button id="benchmark-tab-n17" data-benchmark="benchmark-n17">GR00T N1.7</button><button id="benchmark-tab-pi05" data-benchmark="benchmark-pi05">π₀.₅</button></div>
       <div class="benchmark-panels">{{benchmark_preview}}</div>
-      <p class="benchmark-note"><strong>Same-harness comparison.</strong> † HoloQ-VLA on GR00T N1.7 is our port of the method (fake-quantized), not the authors’ release. FoldQuant rows are real INT4 TensorRT engines. N1.7: paired W4A4 + o/d INT8 − W4A4 = +6 episodes, t(39) = 0.58, p = 0.57. π₀.₅: +4, t(39) = 0.81, p = 0.42. π₀.₅ groups come from different harnesses; compare within a group. HoloQ-VLA Table 2 percentages are converted to successes out of 200 per suite. Median cosine uses the release-harness verify set (Table VI P2 for the Table V group).</p>
+      <p class="benchmark-note">FoldQuant rows are real INT4 / INT8 TensorRT engines. N1.7 paired W4A4 + o/d INT8 − W4A4: +6 episodes, t(39) = 0.58, p = 0.57. π₀.₅ released-harness pair: +4, t(39) = 0.81, p = 0.42.</p>
       <div class="libero-own" id="libero">
         <div class="panel-heading"><div><h3 id="libero-title">FoldQuantVLA across six checkpoints</h3><p>LIBERO · four suites · 40 tasks · 800 episodes per configuration · H100 MIG 3g.40gb</p></div><span class="source-tag">Table V · Table VI</span></div>
         {{libero_summary}}

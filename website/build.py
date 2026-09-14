@@ -138,6 +138,9 @@ def make_latency_tables(jetson, desktop):
         for label, prec, kind in ARMS:
             v = values.get(label)
             cls = f' class="{kind}"' if kind else ''
+            if v and v.get('na'):
+                rows.append(f'<tr{cls}><th scope="row">{label}</th><td class="prec">{prec}</td><td colspan="4" class="na">—</td></tr>')
+                continue
             if not v or v.get('e2e') is None:
                 rows.append(f'<tr{cls}><th scope="row">{label}</th><td class="prec">{prec}</td><td colspan="4" class="na pending-cell">Measuring…</td></tr>')
                 continue
@@ -177,10 +180,15 @@ def make_latency_tables(jetson, desktop):
         for label, v in fam.items():
             values[label] = {'gpu': v['gpu'], 'e2e': v['e2e'], 'mark': '§' if v.get('framework_runtime') else '',
                              'comparable': not v.get('framework_runtime')}
+        if key == 'pi05':
+            values['ModelOpt W8A8 SQ'] = {'na': True}
+            values['ModelOpt W4A16 AWQ'] = {'na': True}
         w4, od = fam['FoldQuant W4A4']['e2e'], fam['FoldQuant W4A4 + o/d INT8']['e2e']
         bits = [f'o/d INT8 vs W4A4: {"+" if od >= w4 else "−"}{abs(od - w4):.1f} ms E2E']
         if any(v.get('framework_runtime') for v in fam.values()):
             bits.append('§ torch.compile from the framework runtime (Table II), not this timer')
+        if key == 'pi05':
+            bits.append('ModelOpt SQ / AWQ are not buildable on a 16 GB GPU; the paper’s π₀.₅ ModelOpt arms were built on an H100 40 GB partition')
         if sweep['notes'].get(key):
             bits.append(sweep['notes'][key])
         closed_loop = {'smol': '† Uniform W4A4 fails fidelity and loses closed-loop success, so its speed is a throughput diagnostic.',
@@ -210,7 +218,8 @@ def make_benchmark_preview(compare):
             cos = 'Reference' if row.get('ref') else ('—' if row['cos'] is None else f'{row["cos"]:.5f}')
             if row.get('reported'):
                 cos = '—'
-            body.append(f'<tr class="{row["kind"]}"><th scope="row">{esc(row["method"])}</th><td class="prec">{esc(row["precision"])}</td>{suites}'
+            tag = f'<small>{esc(row["tag"])}</small>' if row.get('tag') else ''
+            body.append(f'<tr class="{row["kind"]}"><th scope="row">{esc(row["method"])}{tag}</th><td class="prec">{esc(row["precision"])}</td>{suites}'
                         f'<td><strong>{total / 8:.2f}%</strong><small>{total}/800</small></td><td>{cos}</td></tr>')
         panels.append(
             f'<section class="benchmark-panel" id="benchmark-{panel["key"]}" aria-labelledby="benchmark-tab-{panel["key"]}">'
@@ -218,7 +227,8 @@ def make_benchmark_preview(compare):
             f'<div class="benchmark-table-scroll" tabindex="0" role="region" aria-label="{esc(panel["name"])} LIBERO comparison">'
             '<table class="compare-table"><thead><tr><th scope="col">Arm</th><th scope="col">Prec.</th><th scope="col">Spatial</th><th scope="col">Object</th>'
             f'<th scope="col">Goal</th><th scope="col">Long</th><th scope="col">Success rate ↑</th><th scope="col">Median cos ↑<small>{esc(panel["cos_label"])}</small></th></tr></thead>'
-            f'<tbody>{"".join(body)}</tbody></table></div></section>')
+            f'<tbody>{"".join(body)}</tbody></table></div>'
+            + (f'<p class="latency-note">{esc(panel["footnote"])}</p>' if panel.get('footnote') else '') + '</section>')
     return ''.join(panels)
 
 

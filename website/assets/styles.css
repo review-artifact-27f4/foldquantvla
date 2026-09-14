@@ -121,3 +121,4 @@
 .family-ready .family-panels{display:grid}.family-ready .family-panels>.family-panel{grid-area:1/1;margin-top:0}
 .overview-video-frame.has-video{aspect-ratio:16/9;min-height:0;background:#f8faf7}.overview-video-frame.has-video:before{content:none;display:none}.overview-video-frame.has-video video{object-fit:contain}
 .latency-stack>.latency-panel,.latency-stack>.latency-panel+.latency-panel{margin-top:0}
+.compare-table th small{display:block;font-size:10px;font-weight:400;color:var(--muted);margin-top:2px}
