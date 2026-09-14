@@ -34,9 +34,9 @@ The tests independently check Wilson intervals and success percentages, manuscri
 - `media/overview.mp4`: optional hero overview film. Add this file and rebuild; the upload-ready placeholder is replaced automatically.
 - `index.template.html`: narrative and page structure.
 - `build.py`: dependency-free HTML/table/chart generator. Does not import FoldQuant or require GPU libraries.
-- `assets/`: styles, progressive enhancements, original SVG diagrams, social preview image, and locally hosted Inter font subsets with their SIL license.
+- `assets/`: styles, progressive enhancements, original SVG diagrams, social preview image .
 
-Typography uses Inter, distributed under the SIL Open Font License in `assets/fonts/OFL.txt`. The diagrams are original adaptations of the paper's method, not copied reference-site assets.
+Typography uses the system Arial stack (Helvetica / Liberation Sans fallbacks); no web fonts are loaded. The diagrams are original adaptations of the paper's method, not copied reference-site assets.
 
 ## Publication
 
