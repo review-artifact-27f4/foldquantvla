@@ -67,9 +67,66 @@
     {
       "key": "pi05",
       "name": "π₀.₅",
-      "meta": "FoldQuant release harness · openpi client · 20 trials/task · K = 5 · seed 7",
-      "cos_label": "16-observation held-out verify",
+      "meta": "Three sources, grouped: compare each arm with the reference inside its own group",
+      "cos_label": "held-out verify / Table VI",
       "rows": [
+        {
+          "kind": "group",
+          "label": "Table V protocol · 800 episodes · 520-step cap · seed 7 · H100 MIG"
+        },
+        {
+          "method": "BF16 PyTorch",
+          "precision": "bf16",
+          "kind": "baseline",
+          "suites": [
+            199,
+            196,
+            196,
+            181
+          ],
+          "cos": null,
+          "ref": true
+        },
+        {
+          "method": "TRT BF16 (float engine)",
+          "precision": "bf16",
+          "kind": "",
+          "suites": [
+            200,
+            200,
+            198,
+            186
+          ],
+          "cos": null
+        },
+        {
+          "method": "FoldQuant W8A8",
+          "precision": "int8",
+          "kind": "ours",
+          "suites": [
+            199,
+            199,
+            193,
+            188
+          ],
+          "cos": 1.0
+        },
+        {
+          "method": "FoldQuant W4A4",
+          "precision": "int4",
+          "kind": "ours",
+          "suites": [
+            197,
+            198,
+            196,
+            186
+          ],
+          "cos": 0.99942
+        },
+        {
+          "kind": "group",
+          "label": "FoldQuant release harness · openpi client · 20 trials/task · K = 5 · RTX 4070 Ti SUPER"
+        },
         {
           "method": "FoldQuant W4A4",
           "precision": "int4",
@@ -105,6 +162,76 @@
           "precision": "int4",
           "kind": "pending",
           "status": "measuring"
+        },
+        {
+          "kind": "group",
+          "label": "Reported in HoloQ-VLA Table 2 · their harness · emulated quantization"
+        },
+        {
+          "method": "FP16",
+          "precision": "fp16",
+          "kind": "baseline",
+          "suites": [
+            198,
+            195,
+            197,
+            187
+          ],
+          "cos": null,
+          "ref": true,
+          "reported": true
+        },
+        {
+          "method": "HoloQ-VLA",
+          "precision": "—",
+          "kind": "",
+          "suites": [
+            198,
+            194,
+            200,
+            192
+          ],
+          "cos": null,
+          "reported": true
+        },
+        {
+          "method": "DuQuant",
+          "precision": "—",
+          "kind": "",
+          "suites": [
+            192,
+            198,
+            188,
+            176
+          ],
+          "cos": null,
+          "reported": true
+        },
+        {
+          "method": "QuantVLA",
+          "precision": "—",
+          "kind": "",
+          "suites": [
+            188,
+            196,
+            160,
+            112
+          ],
+          "cos": null,
+          "reported": true
+        },
+        {
+          "method": "SmoothQuant",
+          "precision": "—",
+          "kind": "",
+          "suites": [
+            166,
+            176,
+            80,
+            52
+          ],
+          "cos": null,
+          "reported": true
         }
       ]
     }

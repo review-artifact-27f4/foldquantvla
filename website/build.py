@@ -198,6 +198,9 @@ def make_benchmark_preview(compare):
     for panel in compare['panels']:
         body = []
         for row in panel['rows']:
+            if row['kind'] == 'group':
+                body.append(f'<tr class="group-row"><th scope="rowgroup" colspan="8">{esc(row["label"])}</th></tr>')
+                continue
             if row['kind'] == 'pending':
                 body.append(f'<tr class="pending-row"><th scope="row">{esc(row["method"])}</th><td class="prec">{esc(row["precision"])}</td>'
                             f'<td colspan="6" class="pending-cell">{esc(row["status"].capitalize())}…</td></tr>')
@@ -205,6 +208,8 @@ def make_benchmark_preview(compare):
             total = sum(row['suites'])
             suites = ''.join(f'<td>{n}</td>' for n in row['suites'])
             cos = 'Reference' if row.get('ref') else ('—' if row['cos'] is None else f'{row["cos"]:.5f}')
+            if row.get('reported'):
+                cos = '—'
             body.append(f'<tr class="{row["kind"]}"><th scope="row">{esc(row["method"])}</th><td class="prec">{esc(row["precision"])}</td>{suites}'
                         f'<td><strong>{total / 8:.2f}%</strong><small>{total}/800</small></td><td>{cos}</td></tr>')
         panels.append(
