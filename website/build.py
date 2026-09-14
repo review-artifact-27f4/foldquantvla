@@ -122,18 +122,27 @@ def make_latency_tables(jetson, desktop):
     jhead = ('<thead><tr><th scope="col">Configuration</th><th scope="col">GPU (ms) ↓</th><th scope="col">E2E (ms) ↓</th><th scope="col">Rate (Hz) ↑</th>'
              '<th scope="col">vs BF16 ↑</th><th scope="col">Engine (MB) ↓</th><th scope="col">Build (s)</th></tr></thead>')
     marks = {'smol': '†', 'evo': '‡'}
-    drows = []
-    for r in desktop['rows']:
-        mark = marks.get(r['key'], '')
-        drows.append(f'<tr class="desktop-row"><th scope="row">{esc(r["name"])}<sup>{mark}</sup></th><td>{ms(r["eager"])}</td><td>{ms(r["compiled"])}</td>'
-                     f'<td>{ms(r["int8"])}</td><td class="ours-col"><strong>{ms(r["int4"])}</strong></td>'
-                     f'<td class="gain"><strong>{r["eager_speedup"]:.2f}×</strong></td><td>{r["compiled_share_pct"]:.1f}%</td><td>{"−" if r["int8_to_int4_pct"] < 0 else ""}{abs(r["int8_to_int4_pct"]):.1f}%</td></tr>')
+    sel = desktop['selective_int8']
+    dash = '<td class="na">—</td>'
+    def ladder(rows, name_of, mark_of, sel_ms, fmt=ms):
+        out = []
+        for r in rows:
+            out.append(f'<tr class="desktop-row"><th scope="row">{esc(name_of(r))}<sup>{mark_of(r)}</sup></th><td>{fmt(r["eager"])}</td><td>{fmt(r["compiled"])}</td>'
+                       f'<td>{fmt(r["int8"])}</td><td class="ours-col"><strong>{fmt(r["int4"])}</strong></td>'
+                       f'<td class="gain"><strong>{r["eager_speedup"]:.2f}×</strong></td><td>{r["compiled_share_pct"]:.1f}%</td>'
+                       f'<td>{"−" if r["int8_to_int4_pct"] < 0 else ""}{abs(r["int8_to_int4_pct"]):.1f}%</td></tr>')
+            if r.get('key', '') == sel['checkpoint'] or name_of(r) == 'GR00T N1.6':
+                out.append(f'<tr class="sub-row"><th scope="row">↳ {esc(sel["label"])}</th>{dash*3}'
+                           f'<td class="ours-col"><strong>{fmt(sel_ms)}</strong></td>{dash*3}</tr>')
+        return out
+    drows = ladder(desktop['rows'], lambda r: r['name'], lambda r: marks.get(r['key'], ''), sel['e2e_ms'])
+    hrows = [x.replace('class="desktop-row"', 'class="head-row"') for x in ladder(desktop['head_rows'], lambda r: r['name'], lambda r: '', sel['head_ms'], lambda v: f'{v:.2f}')]
     dhead = ('<thead><tr><th scope="col">Checkpoint</th><th scope="col">Eager (ms) ↓</th><th scope="col">Compiled (ms) ↓</th><th scope="col">W8A8 (ms) ↓</th>'
              '<th scope="col" class="ours-col">W4A4 (ms) ↓</th><th scope="col">vs eager ↑</th><th scope="col">Compile share</th><th scope="col">8→4 gain</th></tr></thead>')
     def wrap(label, head, rows):
         return (f'<div class="benchmark-table-scroll" tabindex="0" role="region" aria-label="{esc(label)}">'
                 f'<table class="results-table">{head}<tbody>{"".join(rows)}</tbody></table></div>')
-    return wrap('Jetson AGX Orin latency', jhead, jrows), wrap('Desktop latency ladder', dhead, drows)
+    return wrap('Jetson AGX Orin latency', jhead, jrows), wrap('Desktop latency ladder', dhead, drows), wrap('Desktop action-head latency', dhead, hrows)
 
 
 def make_benchmark_preview(data, fidelity):
@@ -270,7 +279,7 @@ def build(output, base_url=''):
     tokens['resource_links'] = make_resources(resources)
     tokens['jetson_charts'] = bar_chart(jetson['rows'], 'e2e_ms', 'ms', 'Observation-to-action latency', 'jetson-latency', 200) + bar_chart(jetson['rows'], 'engine_mb', 'MB', 'Serialized engine size', 'jetson-size', 6000)
     tokens['jetson_table'] = table(['Configuration', 'GPU (ms)', 'E2E (ms)', 'Hz', 'vs float', 'Engine (MB)', 'Build (s)'], [[r['label'], number(r['gpu_ms']),r['e2e_ms'],f'{r["hz"]:.1f}',f'{r["speedup_vs_float"]:.2f}×',f'{r["engine_mb"]:,}',f'{r["build_s"]:,}'] for r in jetson['rows']], 'Table IV · Jetson AGX Orin / GR00T N1.6')
-    tokens['jetson_summary'], tokens['desktop_summary'] = make_latency_tables(jetson, desktop)
+    tokens['jetson_summary'], tokens['desktop_summary'], tokens['head_summary'] = make_latency_tables(jetson, desktop)
     tokens['desktop_options'] = ''.join(f'<option value="{r["key"]}">{esc(r["name"])}</option>' for r in desktop['rows'])
     tokens['desktop_table'] = table(['Checkpoint', 'Eager (ms)', 'Compiled (ms)', 'W8A8 (ms)', 'W4A4 (ms)', 'Eager / W4A4', 'Compile share', '8→4 reduction', 'Control'], [[r['name'],number(r['eager']),number(r['compiled']),number(r['int8']),number(r['int4']),f'{r["eager_speedup"]:.2f}×',f'{r["compiled_share_pct"]:.1f}%',f'{r["int8_to_int4_pct"]:.1f}%',r['control']] for r in desktop['rows']], 'Table II · Desktop end-to-end precision ladder')
     tokens['head_table'] = table(['Checkpoint','Eager (ms)','Compiled float (ms)','W8A8 (ms)','W4A4 (ms)'], [[r['name']]+[f'{r[k]:.2f}' for k in ('eager','compiled','int8','int4')] for r in desktop['head_rows']], 'Table II · Action-head-only latency')

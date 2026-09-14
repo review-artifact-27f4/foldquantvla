@@ -97,7 +97,7 @@
     </div>
   </section>
   <section class="section container results-section" id="results" aria-labelledby="results-title">
-    <div class="section-heading results-heading"><div><p class="section-label">Results · Latency</p><h2 id="results-title">Efficiency, with the controls.</h2></div><p>The same table on both targets: on-device<br>deployment and the desktop precision ladder.</p></div>
+    <div class="section-heading results-heading"><div><p class="section-label">Results · Latency</p><h2 id="results-title">Efficiency, with the controls.</h2></div><p>One table format for every target: on-device,<br>desktop end to end, and the action head.</p></div>
     <div class="latency-stack">
     <section class="benchmark-panel latency-panel" id="jetson" aria-labelledby="jetson-title">
       <header><div><h3 id="jetson-title">Jetson AGX Orin · on-device</h3><p>GR00T N1.6 · batch 1 · observation-to-action chunk</p></div><span class="source-tag">Table IV</span></header>
@@ -109,8 +109,12 @@
       {{desktop_summary}}
       <p class="latency-note">Compiled controls use floating-point TensorRT for GR00T and Evo-1, and torch.compile for π₀.₅ and SmolVLA. Compile share is the part of the eager-to-W4A4 reduction already delivered by compilation. † Uniform W4A4 fails fidelity on SmolVLA. ‡ Evo-1’s 0.5 ms W4A4 regression is below timing resolution. {{desktop_protocol}}</p>
     </section>
+    <section class="benchmark-panel latency-panel" id="action-head" aria-labelledby="head-title">
+      <header><div><h3 id="head-title">RTX 4070 Ti SUPER · action head only</h3><p>GR00T checkpoints · batch 1 · head-only median</p></div><span class="source-tag">Table II</span></header>
+      {{head_summary}}
+      <p class="latency-note">Head-only latency has a different scope and denominator from end-to-end latency; stage medians are not summed into a chunk time. The o/d proj INT8 row keeps o_proj and down_proj at INT8 inside the W4A4 arm on GR00T N1.6 (Section VI-C, same protocol).</p>
+    </section>
     </div>
-    <details class="data-details latency-head"><summary>Action-head measurements <span>Head-only scope</span></summary>{{head_table}}<p class="table-note">Head-only latency has a different scope from end-to-end latency. Stage medians are not summed into a chunk time.</p></details>
   </section>
   <section class="section analysis-section" id="analysis" aria-labelledby="analysis-title"><div class="container">
     <div class="section-heading"><p class="section-label">What the controls reveal</p><h2 id="analysis-title">Smaller bits.<br>A more nuanced picture.</h2></div>

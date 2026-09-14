@@ -53,7 +53,7 @@
   window.addEventListener('hashchange', revealHash);
 
   const benchmarkTabs = [...document.querySelectorAll('.benchmark-tabs button')];
-  const benchmarkPanels = [...document.querySelectorAll('.benchmark-panel')];
+  const benchmarkPanels = [...document.querySelectorAll('.benchmark-panels .benchmark-panel')];
   function selectBenchmark(id, focus = false) {
     benchmarkTabs.forEach(tab => {
       const selected = tab.dataset.benchmark === id;

@@ -80,3 +80,4 @@
 .results-table sup{font-size:9px;color:var(--muted);margin-left:2px}
 .latency-note{padding:12px 27px 16px;border-top:1px solid var(--line);font-size:11px;line-height:1.7;color:var(--muted)}.latency-head{margin-top:24px}
 @media(max-width:700px){.results-table{font-size:11px}.results-table th,.results-table td{padding:10px 11px}.latency-note{padding:11px 16px 14px;font-size:10px}}
+.results-table tbody tr.sub-row{background:#fbfcfb}.results-table tbody tr.sub-row th{font-weight:500;color:var(--muted);padding-left:30px}.results-table td.na{color:#a3aea8}

@@ -96,21 +96,37 @@
       "eager": 39.47,
       "compiled": 21.76,
       "int8": 18.49,
-      "int4": 15.84
+      "int4": 15.84,
+      "eager_speedup": 2.49,
+      "compiled_share_pct": 74.9,
+      "int8_to_int4_pct": 14.3
     },
     {
       "name": "GR00T N1.6",
       "eager": 39.7,
       "compiled": 21.72,
       "int8": 17.77,
-      "int4": 15.15
+      "int4": 15.15,
+      "eager_speedup": 2.62,
+      "compiled_share_pct": 73.2,
+      "int8_to_int4_pct": 14.7
     },
     {
       "name": "GR00T N1.5",
       "eager": 19.47,
       "compiled": 13.9,
       "int8": 11.35,
-      "int4": 9.39
+      "int4": 9.39,
+      "eager_speedup": 2.07,
+      "compiled_share_pct": 55.3,
+      "int8_to_int4_pct": 17.3
     }
-  ]
+  ],
+  "selective_int8": {
+    "checkpoint": "n16",
+    "label": "W4A4 + o/d proj INT8",
+    "e2e_ms": 35.3,
+    "head_ms": 15.94,
+    "source": "Section VI-C, same runtime and protocol as Table II"
+  }
 }
