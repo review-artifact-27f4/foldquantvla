@@ -9,7 +9,7 @@
       "rows": [
         {
           "method": "BF16 PyTorch",
-          "precision": "BF16",
+          "precision": "bf16",
           "kind": "baseline",
           "suites": [
             197,
@@ -22,7 +22,7 @@
         },
         {
           "method": "HoloQ-VLA†",
-          "precision": "W4A4",
+          "precision": "int4",
           "kind": "",
           "suites": [
             195,
@@ -34,7 +34,7 @@
         },
         {
           "method": "FoldQuant W4A4",
-          "precision": "W4A4",
+          "precision": "int4",
           "kind": "ours",
           "suites": [
             197,
@@ -46,7 +46,7 @@
         },
         {
           "method": "FoldQuant W4A4 + o/d INT8",
-          "precision": "W4A4 + INT8",
+          "precision": "int4",
           "kind": "ours",
           "suites": [
             193,
@@ -58,7 +58,7 @@
         },
         {
           "method": "DuQuant",
-          "precision": "W4A4",
+          "precision": "int4",
           "kind": "pending",
           "status": "measuring"
         }
@@ -72,7 +72,7 @@
       "rows": [
         {
           "method": "FoldQuant W4A4",
-          "precision": "W4A4",
+          "precision": "int4",
           "kind": "ours",
           "suites": [
             196,
@@ -84,7 +84,7 @@
         },
         {
           "method": "FoldQuant W4A4 + o/d INT8",
-          "precision": "W4A4 + INT8",
+          "precision": "int4",
           "kind": "ours",
           "suites": [
             199,
@@ -96,13 +96,13 @@
         },
         {
           "method": "HoloQ-VLA",
-          "precision": "W4A4",
+          "precision": "int4",
           "kind": "pending",
           "status": "measuring"
         },
         {
           "method": "DuQuant",
-          "precision": "W4A4",
+          "precision": "int4",
           "kind": "pending",
           "status": "measuring"
         }
