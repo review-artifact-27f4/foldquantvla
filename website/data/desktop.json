@@ -170,6 +170,14 @@
         "n15": {
           "display": "33.3",
           "note": "four-suite N1.5 fine-tune, release harness, 1 repeat; same run W4A4 32.7"
+        },
+        "smol": {
+          "display": "36.9",
+          "note": "smolvla_libero, release harness, 1 repeat; same run W4A4 36.4"
+        },
+        "evo": {
+          "display": "measuring",
+          "note": "running"
         }
       },
       "head_ms": {

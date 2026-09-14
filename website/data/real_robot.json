@@ -1,65 +1,153 @@
 {
-  "intro": "Three SO101 tasks and one ALOHA task, each run with the FoldQuantVLA low-bit policy.",
+  "intro": "GR00T N1.7 deployed on Jetson AGX Orin: one single-arm ALOHA task and three SO-101 tasks, 20 episodes per task.",
   "trials": [
     {
-      "key": "so101-task-01",
-      "platform": "SO101",
-      "title": "SO101 · Task 01",
-      "instruction": "Task description will appear with the released recording.",
-      "policy": "SO101 · FoldQuantVLA low-bit policy",
-      "views": [
-        {
-          "label": "Evaluation video",
-          "detail": "SO101 · Task 01",
-          "src": "",
-          "poster": ""
-        }
-      ]
-    },
-    {
-      "key": "so101-task-02",
-      "platform": "SO101",
-      "title": "SO101 · Task 02",
-      "instruction": "Task description will appear with the released recording.",
-      "policy": "SO101 · FoldQuantVLA low-bit policy",
-      "views": [
-        {
-          "label": "Evaluation video",
-          "detail": "SO101 · Task 02",
-          "src": "",
-          "poster": ""
-        }
-      ]
-    },
-    {
-      "key": "so101-task-03",
-      "platform": "SO101",
-      "title": "SO101 · Task 03",
-      "instruction": "Task description will appear with the released recording.",
-      "policy": "SO101 · FoldQuantVLA low-bit policy",
-      "views": [
-        {
-          "label": "Evaluation video",
-          "detail": "SO101 · Task 03",
-          "src": "",
-          "poster": ""
-        }
-      ]
-    },
-    {
-      "key": "aloha-task-01",
+      "key": "t1",
       "platform": "ALOHA",
-      "title": "ALOHA · Task 01",
-      "instruction": "Task description will appear with the released recording.",
-      "policy": "ALOHA · FoldQuantVLA low-bit policy",
+      "title": "ALOHA · Banana",
+      "instruction": "Single-arm ALOHA: pick up the banana.",
+      "policy": "GR00T N1.7 · Jetson AGX Orin",
       "views": [
         {
           "label": "Evaluation video",
-          "detail": "ALOHA · Task 01",
+          "detail": "ALOHA · Banana",
+          "src": "",
+          "poster": ""
+        }
+      ]
+    },
+    {
+      "key": "t2",
+      "platform": "SO101",
+      "title": "SO101 · Banana",
+      "instruction": "SO-101: pick up the banana.",
+      "policy": "GR00T N1.7 · Jetson AGX Orin",
+      "views": [
+        {
+          "label": "Evaluation video",
+          "detail": "SO101 · Banana",
+          "src": "",
+          "poster": ""
+        }
+      ]
+    },
+    {
+      "key": "t3",
+      "platform": "SO101",
+      "title": "SO101 · All blocks into cup",
+      "instruction": "SO-101: place every block into the cup.",
+      "policy": "GR00T N1.7 · Jetson AGX Orin",
+      "views": [
+        {
+          "label": "Evaluation video",
+          "detail": "SO101 · All blocks into cup",
+          "src": "",
+          "poster": ""
+        }
+      ]
+    },
+    {
+      "key": "t4",
+      "platform": "SO101",
+      "title": "SO101 · Blue block on red",
+      "instruction": "SO-101: stack the blue block on the red block.",
+      "policy": "GR00T N1.7 · Jetson AGX Orin",
+      "views": [
+        {
+          "label": "Evaluation video",
+          "detail": "SO101 · Blue block on red",
           "src": "",
           "poster": ""
         }
       ]
     }
-  ]
+  ],
+  "results": {
+    "policy": "GR00T N1.7 on Jetson AGX Orin",
+    "episodes_per_task": 20,
+    "arms": [
+      {
+        "label": "BF16 PyTorch",
+        "kind": "baseline",
+        "tasks": [
+          18,
+          18,
+          20,
+          14
+        ],
+        "wilson": [
+          78.5,
+          93.1
+        ]
+      },
+      {
+        "label": "TRT BF16 (float engine)",
+        "kind": "",
+        "tasks": [
+          19,
+          18,
+          20,
+          15
+        ],
+        "wilson": [
+          81.5,
+          94.8
+        ]
+      },
+      {
+        "label": "FoldQuant W8A8",
+        "kind": "ours",
+        "tasks": [
+          17,
+          19,
+          20,
+          14
+        ],
+        "wilson": [
+          78.5,
+          93.1
+        ]
+      },
+      {
+        "label": "FoldQuant W4A4",
+        "kind": "ours",
+        "tasks": [
+          15,
+          17,
+          19,
+          null
+        ],
+        "wilson": [
+          73.9,
+          91.9
+        ]
+      },
+      {
+        "label": "FoldQuant W4A4 + o/d INT8",
+        "kind": "ours",
+        "tasks": [
+          19,
+          19,
+          20,
+          null
+        ],
+        "wilson": [
+          88.6,
+          99.1
+        ]
+      }
+    ],
+    "cosine": {
+      "ALOHA": {
+        "int8": 0.99999,
+        "int4": 0.9993,
+        "res8": 0.99966
+      },
+      "SO-101": {
+        "int8": 0.99999,
+        "int4": 0.99929,
+        "res8": 0.99983
+      }
+    }
+  }
 }

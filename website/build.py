@@ -100,7 +100,7 @@ def make_libero_summary(data, fidelity):
             loss = ' class="loss"' if key == 'int4' and model['key'] in ('smol', 'evo') else ''
             return f'<td{loss}><strong>{row["rate"]:.2f}%</strong><small>{row["successes"]}/800</small></td>'
         body.append(f'<tr><th scope="row">{esc(model["name"])}</th><td>{model["chunk_length"]}</td><td>{model["k"]}</td>{sr("bf16")}{sr("trt_bf16")}'
-                    f'{sr("int8")}<td>{cos["int8"]:.5f}</td>{sr("int4")}<td>{cos["int4"]:.5f}</td>{sr("arc_sr_before_int8")}{"<td class=\"na\">—</td>" if cos.get("res8") is None else f"<td>{cos['res8']:.5f}</td>"}</tr>')
+                    f'{sr("int8")}<td>{cos["int8"]:.5f}</td>{sr("int4")}<td>{cos["int4"]:.5f}</td>{('<td class="na pending-cell">Measuring…</td>' if model['key'] == 'n17' else sr("arc_sr_before_int8"))}{"<td class=\"na\">—</td>" if cos.get("res8") is None else f"<td>{cos['res8']:.5f}</td>"}</tr>')
     head = ('<thead><tr><th scope="col" rowspan="2">Checkpoint</th><th scope="col" rowspan="2">H</th><th scope="col" rowspan="2">K</th><th scope="colgroup" colspan="2">BF16 SR</th>'
             '<th scope="colgroup" colspan="2">FoldQuant W8A8</th><th scope="colgroup" colspan="2">FoldQuant W4A4</th><th scope="colgroup" colspan="2">FoldQuant W4A4 + o/d INT8</th></tr>'
             '<tr><th scope="col">PyTorch</th><th scope="col">TensorRT</th><th scope="col">SR ↑</th><th scope="col">Median cos ↑</th><th scope="col">SR ↑</th><th scope="col">Median cos ↑</th><th scope="col">SR ↑</th><th scope="col">Median cos ↑</th></tr></thead>')
@@ -114,17 +114,18 @@ def make_latency_tables(jetson, desktop):
         return t + "0" if t.endswith(".") else t
     dash = '<td class="na">—</td>'
     ours = {'int8', 'mixed', 'int4'}
-    jsel = jetson['selective_int8']
+    orin = load('jetson_orin')
     jrows = []
-    for r in jetson['rows']:
-        kind = ' class="ours"' if r['key'] in ours else (' class="baseline"' if r['key'] == 'float' else '')
-        gain = ' class="gain"' if r['speedup_vs_float'] > 1 else (' class="loss"' if r['speedup_vs_float'] < 1 else '')
-        jrows.append(f'<tr{kind}><th scope="row">{esc(r["label"])}</th><td class="prec">{esc(r["precision"])}</td><td>{ms(r["gpu_ms"])}</td><td><strong>{r["e2e_ms"]}</strong></td>'
-                     f'<td>{r["hz"]:.1f}</td><td{gain}><strong>{r["speedup_vs_float"]:.2f}×</strong></td><td>{r["engine_mb"]:,}</td><td>{r["build_s"]:,}</td></tr>')
-        if r['key'] == jsel['after']:
-            jrows.append(f'<tr class="sub-row pending-row"><th scope="row">↳ {esc(jsel["label"])}</th><td colspan="7" class="na pending-cell">{esc(jsel["status"])}</td></tr>')
-    jhead = ('<thead><tr><th scope="col">Configuration</th><th scope="col">Prec.</th><th scope="col">GPU (ms) ↓</th><th scope="col">E2E (ms) ↓</th><th scope="col">Rate (Hz) ↑</th>'
-             '<th scope="col">vs TRT BF16 ↑</th><th scope="col">Engine (MB) ↓</th><th scope="col">Build (s)</th></tr></thead>')
+    for model in orin['models']:
+        jrows.append(f'<tr class="group-row"><th scope="rowgroup" colspan="7">{esc(model["name"])}</th></tr>')
+        for r in model['arms']:
+            kind = f' class="{r["kind"]}"' if r['kind'] else ''
+            gain = ' class="gain"' if r['speedup'] > 1.005 else (' class="loss"' if r['speedup'] < 0.995 else '')
+            jrows.append(f'<tr{kind}><th scope="row">{esc(r["label"])}</th><td class="prec">{esc(r["precision"])}</td><td>{r["gpu_ms"]:.1f}</td>'
+                         f'<td><strong>{r["e2e_ms"]}</strong></td><td>{r["hz"]:.1f}</td><td{gain}><strong>{r["speedup"]:.2f}×</strong></td><td>{r["cos"]:.5f}</td></tr>')
+        jrows.append('<tr class="sub-row pending-row"><th scope="row">↳ FoldQuant W4A4 + o/d INT8</th><td class="prec">int4</td><td colspan="5" class="pending-cell">Measuring…</td></tr>')
+    jhead = ('<thead><tr><th scope="col">Arm</th><th scope="col">Prec.</th><th scope="col">GPU (ms) ↓</th><th scope="col">E2E (ms) ↓</th><th scope="col">Rate (Hz) ↑</th>'
+             '<th scope="col">vs TRT BF16 ↑</th><th scope="col">cos vs sm89 ↑</th></tr></thead>')
     marks = {'smol': '†', 'evo': '‡'}
     sel = desktop['selective_int8']
     head_keys = {'GR00T N1.7': 'n17', 'GR00T N1.6': 'n16', 'GR00T N1.5': 'n15'}
@@ -135,6 +136,8 @@ def make_latency_tables(jetson, desktop):
             pre = sel['preliminary']['e2e_ms' if cls == 'desktop-row' else 'head_ms'].get(key_of(r))
             if v is not None:
                 sel_cell = f'<td class="ours-col"><strong>{fmt(v)}</strong></td>'
+            elif pre and pre['display'] == 'measuring':
+                sel_cell = '<td class="na pending-cell">Measuring…</td>'
             elif pre:
                 sel_cell = f'<td class="ours-col"><strong>{esc(pre["display"])}</strong></td>'
             else:
@@ -154,29 +157,26 @@ def make_latency_tables(jetson, desktop):
     return wrap('Jetson AGX Orin latency', jhead, jrows), wrap('Desktop latency ladder', dhead, drows), wrap('Desktop action-head latency', dhead, hrows)
 
 
-def make_benchmark_preview(data, fidelity):
+def make_benchmark_preview(compare):
     panels = []
-    for model_key in ('n17', 'pi05'):
-        model = next(model for model in data['models'] if model['key'] == model_key)
-        rows = {row['key']: row for row in model['rows']}
-        selected = [rows['bf16'], rows['int8'], rows['int4']]
+    for panel in compare['panels']:
         body = []
-        for row in selected:
-            kind = 'baseline' if row['key'] == 'bf16' else ('ours' if row['key'] == 'int4' else '')
-            precision = 'BF16' if row['key'] == 'bf16' else ('W8A8' if row['key'] == 'int8' else 'W4A4')
-            cosine = fidelity['models'][model_key][row['key']]
-            body.append(
-                f'<tr class="{kind}"><th scope="row">{esc(row["label"])}</th><td>{precision}</td>'
-                f'<td>{row["successes"]}/800</td><td><strong>{row["rate"]:.2f}%</strong></td>'
-                f'<td>{"Reference" if cosine is None else f"{cosine:.5f}"}</td></tr>')
-        for method in ('DuQuant', 'HoloQVLA'):
-            body.append(
-                f'<tr class="pending-row"><th scope="row">{method}</th><td>W4A4</td><td>Evaluation pending</td><td>—</td><td>—</td></tr>')
+        for row in panel['rows']:
+            if row['kind'] == 'pending':
+                body.append(f'<tr class="pending-row"><th scope="row">{esc(row["method"])}</th><td>{esc(row["precision"])}</td>'
+                            f'<td colspan="6" class="pending-cell">{esc(row["status"].capitalize())}…</td></tr>')
+                continue
+            total = sum(row['suites'])
+            suites = ''.join(f'<td>{n}</td>' for n in row['suites'])
+            cos = 'Reference' if row.get('ref') else ('—' if row['cos'] is None else f'{row["cos"]:.5f}')
+            body.append(f'<tr class="{row["kind"]}"><th scope="row">{esc(row["method"])}</th><td>{esc(row["precision"])}</td>{suites}'
+                        f'<td><strong>{total / 8:.2f}%</strong><small>{total}/800</small></td><td>{cos}</td></tr>')
         panels.append(
-            f'<section class="benchmark-panel" id="benchmark-{model_key}" aria-labelledby="benchmark-tab-{model_key}">'
-            f'<header><div><h3>{esc(model["name"])}</h3><p>K = {model["k"]} · 40 tasks · 20 initial states</p></div><span>800 episodes / arm</span></header>'
-            f'<div class="benchmark-table-scroll" tabindex="0" role="region" aria-label="{esc(model["name"])} LIBERO success comparison">'
-            '<table><thead><tr><th scope="col">Method</th><th scope="col">Precision</th><th scope="col">Successes</th><th scope="col">Success rate ↑</th><th scope="col">Median action cosine ↑</th></tr></thead>'
+            f'<section class="benchmark-panel" id="benchmark-{panel["key"]}" aria-labelledby="benchmark-tab-{panel["key"]}">'
+            f'<header><div><h3>{esc(panel["name"])}</h3><p>{esc(panel["meta"])}</p></div><span>200 episodes / suite</span></header>'
+            f'<div class="benchmark-table-scroll" tabindex="0" role="region" aria-label="{esc(panel["name"])} LIBERO comparison">'
+            '<table class="compare-table"><thead><tr><th scope="col">Method</th><th scope="col">Precision</th><th scope="col">Spatial</th><th scope="col">Object</th>'
+            f'<th scope="col">Goal</th><th scope="col">Long</th><th scope="col">Success rate ↑</th><th scope="col">Median cos ↑<small>{esc(panel["cos_label"])}</small></th></tr></thead>'
             f'<tbody>{"".join(body)}</tbody></table></div></section>')
     return ''.join(panels)
 
@@ -260,6 +260,29 @@ def make_robot_trials(data):
     return ''.join(trials), ''.join(task_tabs), media
 
 
+def make_robot_results(data):
+    res = data['results']
+    head = ''.join(f'<th scope="col">{esc(t["platform"])} · {esc(t["title"].split("·")[-1].strip())}</th>' for t in data['trials'])
+    body = []
+    for arm in res['arms']:
+        cells, done, total = [], 0, 0
+        for n in arm['tasks']:
+            if n is None:
+                cells.append('<td class="na pending-cell">Measuring…</td>')
+            else:
+                cells.append(f'<td>{n}/{res["episodes_per_task"]}</td>'); done += n; total += res['episodes_per_task']
+        lo, hi = arm['wilson']
+        scope = '' if total == res['episodes_per_task'] * len(arm['tasks']) else '<small>tasks 1–3</small>'
+        kind = f' class="{arm["kind"]}"' if arm['kind'] else ''
+        body.append(f'<tr{kind}><th scope="row">{esc(arm["label"])}</th>{"".join(cells)}'
+                    f'<td><strong>{100 * done / total:.1f}%</strong><small>{done}/{total} · [{lo:.1f}, {hi:.1f}]</small>{scope}</td></tr>')
+    return (f'<div class="benchmark-panel robot-results"><header><div><h3>Real-robot success</h3><p>{esc(res["policy"])} · {res["episodes_per_task"]} episodes per task</p></div><span class="source-tag">Real robot</span></header>'
+            f'<div class="benchmark-table-scroll" tabindex="0" role="region" aria-label="Real-robot success"><table class="results-table">'
+            f'<thead><tr><th scope="col">Arm</th>{head}<th scope="col">Success ↑ · Wilson 95%</th></tr></thead><tbody>{"".join(body)}</tbody></table></div>'
+            '<p class="latency-note">Logged-observation action cosine against BF16 PyTorch — ALOHA: W8A8 0.99999 · W4A4 0.99930 · W4A4 + o/d INT8 0.99966; '
+            'SO-101: 0.99999 · 0.99929 · 0.99983; TRT BF16 0.99999. π₀.₅ real-robot runs on three SO-101 tasks are in progress.</p></div>')
+
+
 def make_overview_media():
     source = ROOT / 'media' / 'overview.mp4'
     shell = '<span class="video-kicker"><i aria-hidden="true"></i> Overview film</span>'
@@ -294,7 +317,7 @@ def build(output, base_url=''):
     tokens['head_table'] = table(['Checkpoint','Eager (ms)','Compiled float (ms)','W8A8 (ms)','W4A4 (ms)'], [[r['name']]+[f'{r[k]:.2f}' for k in ('eager','compiled','int8','int4')] for r in desktop['head_rows']], 'Table II · Action-head-only latency')
     tokens['desktop_protocol'] = esc(desktop['protocol'])
     tokens['libero_summary'] = make_libero_summary(libero, fidelity)
-    tokens['benchmark_preview'] = make_benchmark_preview(libero, fidelity)
+    tokens['benchmark_preview'] = make_benchmark_preview(load('compare'))
     tokens['libero_options'] = ''.join(f'<option value="{m["key"]}">{esc(m["name"])}</option>' for m in libero['models'])
     config_labels = {}
     table_rows, attrs = [], []
@@ -307,6 +330,7 @@ def build(output, base_url=''):
     tokens['libero_table'] = table(['Checkpoint','K','Configuration','Successes','Success rate','95% CI (%)'],table_rows,'Table V · All 59 closed-loop LIBERO campaigns',attrs)
     tokens['robot_intro'] = esc(real_robot['intro'])
     tokens['robot_trials'], tokens['robot_task_tabs'], robot_media = make_robot_trials(real_robot)
+    tokens['robot_results'] = make_robot_results(real_robot)
     tokens['overview_media'], overview_media = make_overview_media()
     tokens['bibtex'] = esc('@misc{anonymous2026foldquantvla,\n  title  = {' + meta['title'] + '},\n  author = {{Anonymous Authors}},\n  year   = {2026},\n  note   = {Anonymous ICRA submission}\n}')
     page = (ROOT / 'index.template.html').read_text(encoding='utf-8')

@@ -66,11 +66,11 @@
     <div class="container">
       <div class="benchmark-intro">
         <div class="section-heading"><p class="section-label">Closed-loop benchmark · LIBERO</p><h2 id="benchmark-preview-title">Success survives<br>the precision change.</h2></div>
-        <div><p>Across 800 episodes per configuration, FoldQuantVLA W4A4 remains close to its checkpoint-specific BF16 reference on GR00T N1.7 and π₀.₅.</p><p>The comparison uses task-clustered testing with Holm correction. DuQuant W4A4 and HoloQVLA W4A4 slots are reserved for the matched evaluation now in progress.</p></div>
+        <div><p>One harness, one checkpoint, every arm: FoldQuantVLA against a four-bit baseline on the same rollouts, suite by suite.</p><p>These runs use the FoldQuant release harness rather than the Table V campaign, so compare rows within a panel. DuQuant and HoloQ-VLA reproductions are still running.</p></div>
       </div>
       <div class="benchmark-tabs" aria-label="Checkpoint" hidden><button id="benchmark-tab-n17" data-benchmark="benchmark-n17">GR00T N1.7</button><button id="benchmark-tab-pi05" data-benchmark="benchmark-pi05">π₀.₅</button></div>
       <div class="benchmark-panels">{{benchmark_preview}}</div>
-      <p class="benchmark-note"><strong>Current evidence.</strong> Success values come from Table V. Median action cosine is the P2 decoded-action cosine against BF16 PyTorch over 32 held-out mid-trajectory observations (Table VI). Pending rows do not enter the 53 reported comparisons or the 47,200-episode total.</p>
+      <p class="benchmark-note"><strong>Same-harness comparison.</strong> † HoloQ-VLA on GR00T N1.7 is our port of the method (fake-quantized), not the authors’ release. FoldQuant rows are real INT4 TensorRT engines. N1.7: paired W4A4 + o/d INT8 − W4A4 = +6 episodes, t(39) = 0.58, p = 0.57. π₀.₅: +4, t(39) = 0.81, p = 0.42. Median cosine uses each panel’s held-out verify set, so it is not comparable with Table VI.</p>
       <div class="libero-own" id="libero">
         <div class="panel-heading"><div><h3 id="libero-title">FoldQuantVLA across six checkpoints</h3><p>LIBERO · four suites · 40 tasks · 800 episodes per configuration · H100 MIG 3g.40gb</p></div><span class="source-tag">Table V · Table VI</span></div>
         {{libero_summary}}
@@ -93,6 +93,7 @@
     <div class="container">
       <div class="section-heading robot-heading"><p class="section-label">Real-world tasks</p><h2 id="robot-title">Four tasks, two robot platforms</h2><p class="section-intro">{{robot_intro}}</p></div>
       <div class="robot-grid">{{robot_trials}}</div>
+      {{robot_results}}
       
     </div>
   </section>
@@ -101,9 +102,9 @@
     <div class="latency-tabs" aria-label="Latency view" hidden><button id="latency-tab-jetson" data-latency="jetson">Jetson AGX Orin</button><button id="latency-tab-desktop" data-latency="desktop">Desktop · end-to-end</button><button id="latency-tab-head" data-latency="action-head">Desktop · action head</button></div>
     <div class="latency-stack">
     <section class="benchmark-panel latency-panel" id="jetson" aria-labelledby="jetson-title">
-      <header><div><h3 id="jetson-title">Jetson AGX Orin · on-device</h3><p>GR00T N1.6 · batch 1 · observation-to-action chunk</p></div><span class="source-tag">Table IV</span></header>
+      <header><div><h3 id="jetson-title">Jetson AGX Orin · on-device</h3><p>Five checkpoints · TensorRT 10.3 · batch 1 · observation-to-action chunk</p></div><span class="source-tag">Table IV</span></header>
       {{jetson_summary}}
-      <p class="latency-note">“vs TRT BF16” is relative to the unquantized floating-point TensorRT engine of the same build path — not eager PyTorch and not torch.compile — so no row credits graph optimisation to quantization. Engine size is the serialized TensorRT plan, not peak GPU memory.</p>
+      <p class="latency-note">“GPU” is device time and “E2E” observation-to-action. “vs TRT BF16” is relative to the unquantized TensorRT engine of the same checkpoint, not to eager or torch.compile. “cos vs sm89” compares each Orin engine with the desktop engine of the same arm. * Every Evo-1 Orin engine, float included, sits 0.01–0.02 below sm89 on cosine, a TensorRT 10.3 backbone port effect rather than quantization. SmolVLA does not build on TensorRT 10.3. N1.6 plans are 5,325 / 3,618 / 2,525 / 3,901 / 3,077 MB in row order.</p>
     </section>
     <section class="benchmark-panel latency-panel" id="desktop" aria-labelledby="desktop-title">
       <header><div><h3 id="desktop-title">RTX 4070 Ti SUPER · desktop</h3><p>Six checkpoints · batch 1 · end-to-end median per action chunk</p></div><span class="source-tag">Table II</span></header>

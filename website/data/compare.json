@@ -1,0 +1,112 @@
+{
+  "source": "NUMBERS_UPDATE_2026-09-14 §2–3 (same-harness runs; not Table V)",
+  "panels": [
+    {
+      "key": "n17",
+      "name": "GR00T N1.7",
+      "meta": "FoldQuant release harness · NVIDIA per-suite N1.7 LIBERO checkpoints · 20 initial states/task · H = 16, K = 8",
+      "cos_label": "libero_10 held-out verify",
+      "rows": [
+        {
+          "method": "BF16 PyTorch",
+          "precision": "BF16",
+          "kind": "baseline",
+          "suites": [
+            197,
+            197,
+            185,
+            187
+          ],
+          "cos": null,
+          "ref": true
+        },
+        {
+          "method": "HoloQ-VLA†",
+          "precision": "W4A4",
+          "kind": "",
+          "suites": [
+            195,
+            194,
+            178,
+            178
+          ],
+          "cos": null
+        },
+        {
+          "method": "FoldQuant W4A4",
+          "precision": "W4A4",
+          "kind": "ours",
+          "suites": [
+            197,
+            194,
+            191,
+            177
+          ],
+          "cos": 0.99901
+        },
+        {
+          "method": "FoldQuant W4A4 + o/d INT8",
+          "precision": "W4A4 + INT8",
+          "kind": "ours",
+          "suites": [
+            193,
+            197,
+            188,
+            187
+          ],
+          "cos": 0.99961
+        },
+        {
+          "method": "DuQuant",
+          "precision": "W4A4",
+          "kind": "pending",
+          "status": "measuring"
+        }
+      ]
+    },
+    {
+      "key": "pi05",
+      "name": "π₀.₅",
+      "meta": "FoldQuant release harness · openpi client · 20 trials/task · K = 5 · seed 7",
+      "cos_label": "16-observation held-out verify",
+      "rows": [
+        {
+          "method": "FoldQuant W4A4",
+          "precision": "W4A4",
+          "kind": "ours",
+          "suites": [
+            196,
+            199,
+            192,
+            191
+          ],
+          "cos": 0.99955
+        },
+        {
+          "method": "FoldQuant W4A4 + o/d INT8",
+          "precision": "W4A4 + INT8",
+          "kind": "ours",
+          "suites": [
+            199,
+            198,
+            197,
+            188
+          ],
+          "cos": 0.99978
+        },
+        {
+          "method": "HoloQ-VLA",
+          "precision": "W4A4",
+          "kind": "pending",
+          "status": "measuring"
+        },
+        {
+          "method": "DuQuant",
+          "precision": "W4A4",
+          "kind": "pending",
+          "status": "measuring"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,280 @@
+{
+  "source": "table_latency_orin.tex (Jetson AGX Orin sm_87, TensorRT 10.3, batch 1)",
+  "models": [
+    {
+      "name": "GR00T N1.7",
+      "arms": [
+        {
+          "label": "TRT BF16 (float engine)",
+          "precision": "bf16",
+          "gpu_ms": 119.1,
+          "e2e_ms": 146,
+          "hz": 6.8,
+          "speedup": 1.0,
+          "cos": 0.99998,
+          "kind": "baseline"
+        },
+        {
+          "label": "FoldQuant W8A8",
+          "precision": "int8",
+          "gpu_ms": 100.5,
+          "e2e_ms": 127,
+          "hz": 7.9,
+          "speedup": 1.15,
+          "cos": 0.99997,
+          "kind": "ours"
+        },
+        {
+          "label": "FoldQuant W4A4",
+          "precision": "int4",
+          "gpu_ms": 91.8,
+          "e2e_ms": 119,
+          "hz": 8.4,
+          "speedup": 1.23,
+          "cos": 0.99898,
+          "kind": "ours"
+        },
+        {
+          "label": "ModelOpt W8A8 SQ",
+          "precision": "int8",
+          "gpu_ms": 109.5,
+          "e2e_ms": 137,
+          "hz": 7.3,
+          "speedup": 1.07,
+          "cos": 0.99396,
+          "kind": ""
+        },
+        {
+          "label": "ModelOpt W4A16 AWQ",
+          "precision": "int4",
+          "gpu_ms": 139.1,
+          "e2e_ms": 167,
+          "hz": 6.0,
+          "speedup": 0.87,
+          "cos": 0.99967,
+          "kind": ""
+        }
+      ]
+    },
+    {
+      "name": "GR00T N1.6",
+      "arms": [
+        {
+          "label": "TRT BF16 (float engine)",
+          "precision": "bf16",
+          "gpu_ms": 130.1,
+          "e2e_ms": 150,
+          "hz": 6.7,
+          "speedup": 1.0,
+          "cos": 0.99999,
+          "kind": "baseline"
+        },
+        {
+          "label": "FoldQuant W8A8",
+          "precision": "int8",
+          "gpu_ms": 117.0,
+          "e2e_ms": 137,
+          "hz": 7.3,
+          "speedup": 1.09,
+          "cos": 0.99999,
+          "kind": "ours"
+        },
+        {
+          "label": "FoldQuant W4A4",
+          "precision": "int4",
+          "gpu_ms": 104.8,
+          "e2e_ms": 125,
+          "hz": 8.0,
+          "speedup": 1.2,
+          "cos": 0.99801,
+          "kind": "ours"
+        },
+        {
+          "label": "ModelOpt W8A8 SQ",
+          "precision": "int8",
+          "gpu_ms": 121.5,
+          "e2e_ms": 142,
+          "hz": 7.0,
+          "speedup": 1.06,
+          "cos": 0.99967,
+          "kind": ""
+        },
+        {
+          "label": "ModelOpt W4A16 AWQ",
+          "precision": "int4",
+          "gpu_ms": 155.6,
+          "e2e_ms": 177,
+          "hz": 5.7,
+          "speedup": 0.85,
+          "cos": 0.99981,
+          "kind": ""
+        }
+      ]
+    },
+    {
+      "name": "GR00T N1.5",
+      "arms": [
+        {
+          "label": "TRT BF16 (float engine)",
+          "precision": "bf16",
+          "gpu_ms": 107.0,
+          "e2e_ms": 135,
+          "hz": 7.4,
+          "speedup": 1.0,
+          "cos": 0.99999,
+          "kind": "baseline"
+        },
+        {
+          "label": "FoldQuant W8A8",
+          "precision": "int8",
+          "gpu_ms": 94.7,
+          "e2e_ms": 123,
+          "hz": 8.1,
+          "speedup": 1.1,
+          "cos": 0.99999,
+          "kind": "ours"
+        },
+        {
+          "label": "FoldQuant W4A4",
+          "precision": "int4",
+          "gpu_ms": 82.1,
+          "e2e_ms": 111,
+          "hz": 9.0,
+          "speedup": 1.22,
+          "cos": 0.99873,
+          "kind": "ours"
+        },
+        {
+          "label": "ModelOpt W8A8 SQ",
+          "precision": "int8",
+          "gpu_ms": 105.4,
+          "e2e_ms": 134,
+          "hz": 7.5,
+          "speedup": 1.01,
+          "cos": 0.98073,
+          "kind": ""
+        },
+        {
+          "label": "ModelOpt W4A16 AWQ",
+          "precision": "int4",
+          "gpu_ms": 144.8,
+          "e2e_ms": 174,
+          "hz": 5.7,
+          "speedup": 0.78,
+          "cos": 0.99937,
+          "kind": ""
+        }
+      ]
+    },
+    {
+      "name": "π₀.₅",
+      "arms": [
+        {
+          "label": "TRT BF16 (float engine)",
+          "precision": "bf16",
+          "gpu_ms": 224.7,
+          "e2e_ms": 229,
+          "hz": 4.4,
+          "speedup": 1.0,
+          "cos": 0.99999,
+          "kind": "baseline"
+        },
+        {
+          "label": "FoldQuant W8A8",
+          "precision": "int8",
+          "gpu_ms": 221.1,
+          "e2e_ms": 226,
+          "hz": 4.4,
+          "speedup": 1.01,
+          "cos": 0.99999,
+          "kind": "ours"
+        },
+        {
+          "label": "FoldQuant W4A4",
+          "precision": "int4",
+          "gpu_ms": 167.6,
+          "e2e_ms": 172,
+          "hz": 5.8,
+          "speedup": 1.33,
+          "cos": 0.999,
+          "kind": "ours"
+        },
+        {
+          "label": "ModelOpt W8A8 SQ",
+          "precision": "int8",
+          "gpu_ms": 206.1,
+          "e2e_ms": 211,
+          "hz": 4.7,
+          "speedup": 1.09,
+          "cos": 0.99982,
+          "kind": ""
+        },
+        {
+          "label": "ModelOpt W4A16 AWQ",
+          "precision": "int4",
+          "gpu_ms": 321.6,
+          "e2e_ms": 326,
+          "hz": 3.1,
+          "speedup": 0.7,
+          "cos": 0.99985,
+          "kind": ""
+        }
+      ]
+    },
+    {
+      "name": "Evo-1*",
+      "arms": [
+        {
+          "label": "TRT BF16 (float engine)",
+          "precision": "bf16",
+          "gpu_ms": 315.0,
+          "e2e_ms": 334,
+          "hz": 3.0,
+          "speedup": 1.0,
+          "cos": 0.9769,
+          "kind": "baseline"
+        },
+        {
+          "label": "FoldQuant W8A8",
+          "precision": "int8",
+          "gpu_ms": 354.6,
+          "e2e_ms": 373,
+          "hz": 2.7,
+          "speedup": 0.9,
+          "cos": 0.9765,
+          "kind": "ours"
+        },
+        {
+          "label": "FoldQuant W4A4",
+          "precision": "int4",
+          "gpu_ms": 319.4,
+          "e2e_ms": 338,
+          "hz": 3.0,
+          "speedup": 0.99,
+          "cos": 0.9623,
+          "kind": "ours"
+        },
+        {
+          "label": "ModelOpt W8A8 SQ",
+          "precision": "int8",
+          "gpu_ms": 340.0,
+          "e2e_ms": 359,
+          "hz": 2.8,
+          "speedup": 0.93,
+          "cos": 0.9764,
+          "kind": ""
+        },
+        {
+          "label": "ModelOpt W4A16 AWQ",
+          "precision": "int4",
+          "gpu_ms": 353.1,
+          "e2e_ms": 372,
+          "hz": 2.7,
+          "speedup": 0.9,
+          "cos": 0.972,
+          "kind": ""
+        }
+      ]
+    }
+  ]
+}

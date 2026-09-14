@@ -88,3 +88,6 @@
 .results-table td.pending-cell{text-align:left;font-style:italic}
 @media(max-width:700px){.latency-tabs{display:grid;grid-template-columns:1fr;width:100%}.latency-tabs button{min-width:0}}
 .results-table td.prelim strong{color:#4f8a66;font-weight:500}.results-table td.prelim sup{color:var(--muted)}
+.results-table tr.group-row th{background:var(--tint);font-size:12px;font-weight:700;color:var(--ink);text-align:left;padding-top:10px;padding-bottom:10px}
+.compare-table th small,.results-table td small,.compare-table td small{display:block;font-size:10px;font-weight:400;color:var(--muted)}
+.compare-table td strong{display:block}.robot-results{margin-top:30px}.pending-cell{font-style:italic;color:#8c9891}
