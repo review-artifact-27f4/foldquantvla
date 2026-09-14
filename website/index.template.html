@@ -102,7 +102,7 @@
     <div class="latency-tabs" aria-label="Latency view" hidden><button id="latency-tab-jetson" data-latency="jetson">Jetson AGX Orin</button><button id="latency-tab-desktop" data-latency="desktop">Desktop · end-to-end</button><button id="latency-tab-head" data-latency="action-head">Desktop · action head</button></div>
     <div class="latency-stack">
     <section class="benchmark-panel latency-panel" id="jetson" aria-labelledby="jetson-title">
-      <header><div><h3 id="jetson-title">Jetson AGX Orin · on-device</h3><p>Five checkpoints · TensorRT 10.3 · batch 1 · observation-to-action chunk</p></div><span class="source-tag">Table IV</span></header>
+      <header><div><h3 id="jetson-title">Jetson AGX Orin · on-device</h3><p>Five checkpoints · TensorRT 10.3 · batch 1 · E2E observation-to-action, with speedup vs TRT BF16 · expand a family for GPU time, Hz and cosine</p></div><span class="source-tag">Table IV</span></header>
       {{jetson_summary}}
       <p class="latency-note">“GPU” is device time and “E2E” observation-to-action. “vs TRT BF16” is relative to the unquantized TensorRT engine of the same checkpoint, not to eager or torch.compile. “cos vs sm89” compares each Orin engine with the desktop engine of the same arm. * Every Evo-1 Orin engine, float included, sits 0.01–0.02 below sm89 on cosine, a TensorRT 10.3 backbone port effect rather than quantization. SmolVLA does not build on TensorRT 10.3. N1.6 plans are 5,325 / 3,618 / 2,525 / 3,901 / 3,077 MB in row order.</p>
     </section>

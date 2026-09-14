@@ -116,41 +116,68 @@ def make_latency_tables(jetson, desktop):
     ours = {'int8', 'mixed', 'int4'}
     orin = load('jetson_orin')
     jrows = []
-    for model in orin['models']:
-        jrows.append(f'<tr class="group-row"><th scope="rowgroup" colspan="7">{esc(model["name"])}</th></tr>')
-        for r in model['arms']:
-            kind = f' class="{r["kind"]}"' if r['kind'] else ''
-            gain = ' class="gain"' if r['speedup'] > 1.005 else (' class="loss"' if r['speedup'] < 0.995 else '')
-            jrows.append(f'<tr{kind}><th scope="row">{esc(r["label"])}</th><td class="prec">{esc(r["precision"])}</td><td>{r["gpu_ms"]:.1f}</td>'
-                         f'<td><strong>{r["e2e_ms"]}</strong></td><td>{r["hz"]:.1f}</td><td{gain}><strong>{r["speedup"]:.2f}×</strong></td><td>{r["cos"]:.5f}</td></tr>')
-        jrows.append('<tr class="sub-row pending-row"><th scope="row">↳ FoldQuant W4A4 + o/d INT8</th><td class="prec">int4</td><td colspan="5" class="pending-cell">Measuring…</td></tr>')
-    jhead = ('<thead><tr><th scope="col">Arm</th><th scope="col">Prec.</th><th scope="col">GPU (ms) ↓</th><th scope="col">E2E (ms) ↓</th><th scope="col">Rate (Hz) ↑</th>'
-             '<th scope="col">vs TRT BF16 ↑</th><th scope="col">cos vs sm89 ↑</th></tr></thead>')
+    for i, model in enumerate(orin['models']):
+        arms = model['arms']
+        by = {r['label']: r for r in arms}
+        def cell(r, ours=False):
+            gain = ' gain' if r['speedup'] > 1.005 else (' loss' if r['speedup'] < 0.995 else '')
+            return (f'<td class="{"ours-col" if ours else ""}"><strong>{r["e2e_ms"]}</strong>'
+                    f'<small class="{gain.strip()}">{r["speedup"]:.2f}×</small></td>')
+        detail_id = f'orin-detail-{i}'
+        w4 = by['FoldQuant W4A4']
+        jrows.append(
+            f'<tr class="family-row"><th scope="row"><button type="button" class="family-toggle" aria-expanded="true" aria-controls="{detail_id}">'
+            f'<span aria-hidden="true">▸</span>{esc(model["name"])}</button></th>'
+            f'{cell(by["TRT BF16 (float engine)"])}{cell(by["FoldQuant W8A8"])}{cell(w4, True)}'
+            '<td class="na pending-cell">Measuring…</td>'
+            f'{cell(by["ModelOpt W8A8 SQ"])}{cell(by["ModelOpt W4A16 AWQ"])}</tr>')
+        inner = ''.join(
+            f'<tr class="{r["kind"]}"><th scope="row">{esc(r["label"])}</th><td class="prec">{esc(r["precision"])}</td><td>{r["gpu_ms"]:.1f}</td>'
+            f'<td>{r["e2e_ms"]}</td><td>{r["hz"]:.1f}</td><td>{r["speedup"]:.2f}×</td><td>{r["cos"]:.5f}</td></tr>' for r in arms)
+        jrows.append(
+            f'<tr class="family-detail" id="{detail_id}"><td colspan="7"><table class="detail-table"><thead><tr><th scope="col">Arm</th><th scope="col">Prec.</th>'
+            '<th scope="col">GPU (ms)</th><th scope="col">E2E (ms)</th><th scope="col">Hz</th><th scope="col">vs TRT BF16</th><th scope="col">cos vs sm89</th></tr></thead>'
+            f'<tbody>{inner}</tbody></table></td></tr>')
+    jhead = ('<thead><tr><th scope="col">Checkpoint</th><th scope="col">TRT BF16 (ms) ↓</th><th scope="col">W8A8 (ms) ↓</th><th scope="col" class="ours-col">W4A4 (ms) ↓</th>'
+             '<th scope="col" class="ours-col">W4A4 + o/d INT8 (ms) ↓</th><th scope="col">ModelOpt W8A8 SQ (ms) ↓</th><th scope="col">ModelOpt W4A16 AWQ (ms) ↓</th></tr></thead>')
     marks = {'smol': '†', 'evo': '‡'}
     sel = desktop['selective_int8']
     head_keys = {'GR00T N1.7': 'n17', 'GR00T N1.6': 'n16', 'GR00T N1.5': 'n15'}
     def ladder(rows, key_of, mark_of, sel_map, fmt, cls):
         out = []
-        for r in rows:
+        for i, r in enumerate(rows):
             v = sel_map.get(key_of(r))
             pre = sel['preliminary']['e2e_ms' if cls == 'desktop-row' else 'head_ms'].get(key_of(r))
             if v is not None:
-                sel_cell = f'<td class="ours-col"><strong>{fmt(v)}</strong></td>'
+                sel_cell, sel_val = f'<td class="ours-col"><strong>{fmt(v)}</strong></td>', v
             elif pre and pre['display'] == 'measuring':
-                sel_cell = '<td class="na pending-cell">Measuring…</td>'
+                sel_cell, sel_val = '<td class="na pending-cell">Measuring…</td>', None
             elif pre:
-                sel_cell = f'<td class="ours-col"><strong>{esc(pre["display"])}</strong></td>'
+                sel_cell, sel_val = f'<td class="ours-col"><strong>{esc(pre["display"])}</strong></td>', float(pre['display'])
             else:
-                sel_cell = '<td class="na" title="Measurement pending">—</td>'
-            out.append(f'<tr class="{cls}"><th scope="row">{esc(r["name"])}<sup>{mark_of(r)}</sup></th><td>{fmt(r["eager"])}</td><td>{fmt(r["torch_compile"])}{"<sup>§</sup>" if r.get("key") == "n17" or (r.get("name") == "GR00T N1.7" and cls == "desktop-row") else ""}</td><td>{fmt(r["trt_bf16"])}</td>'
-                       f'<td>{fmt(r["int8"])}</td><td class="ours-col"><strong>{fmt(r["int4"])}</strong></td>{sel_cell}'
-                       f'<td class="gain"><strong>{r["eager_speedup"]:.2f}×</strong></td><td class="{"gain" if r["trt_bf16"] / r["int4"] >= 1.005 else ""}"><strong>{r["trt_bf16"] / r["int4"]:.2f}×</strong></td><td>{r["compiled_share_pct"]:.1f}%</td>'
-                       f'<td>{"−" if r["int8_to_int4_pct"] < 0 else ""}{abs(r["int8_to_int4_pct"]):.1f}%</td></tr>')
+                sel_cell, sel_val = '<td class="na">—</td>', None
+            x_trt = r['trt_bf16'] / r['int4']
+            sec = '§' if r.get('key') == 'n17' else ''
+            detail_id = f'{cls}-detail-{i}'
+            out.append(f'<tr class="family-row {cls}"><th scope="row"><button type="button" class="family-toggle" aria-expanded="true" aria-controls="{detail_id}">'
+                       f'<span aria-hidden="true">▸</span>{esc(r["name"])}<sup>{mark_of(r)}</sup></button></th>'
+                       f'<td>{fmt(r["eager"])}</td><td>{fmt(r["torch_compile"])}{f"<sup>{sec}</sup>" if sec else ""}</td><td>{fmt(r["trt_bf16"])}</td><td>{fmt(r["int8"])}</td>'
+                       f'<td class="ours-col"><strong>{fmt(r["int4"])}</strong><small class="{"gain" if x_trt >= 1.005 else ""}">{x_trt:.2f}×</small></td>{sel_cell}</tr>')
+            facts = [('W4A4 vs eager', f'{r["eager_speedup"]:.2f}×', 'gain'), ('W4A4 vs TRT BF16', f'{x_trt:.2f}×', 'gain' if x_trt >= 1.005 else ''),
+                     ('Compile share*', f'{r["compiled_share_pct"]:.1f}%', ''), ('8→4 gain', f'{"−" if r["int8_to_int4_pct"] < 0 else ""}{abs(r["int8_to_int4_pct"]):.1f}%', '')]
+            if sel_val is not None:
+                m = re.search(r'same runs? W4A4 ([0-9.]+)', pre['note']) if pre else None
+                base = float(m.group(1)) if m else (r['int4'] if pre is None else None)
+                if base is not None:
+                    facts.append(('o/d INT8 cost vs W4A4 (same run)' if pre else 'o/d INT8 cost vs W4A4', f'+{sel_val - base:.1f} ms' if cls == 'desktop-row' else f'+{sel_val - base:.2f} ms', ''))
+            items = ''.join(f'<div><dt>{esc(k)}</dt><dd class="{c}">{esc(val)}</dd></div>' for k, val, c in facts)
+            note = f'<p>{esc(r["note"])}</p>' if r.get('note') else ''
+            out.append(f'<tr class="family-detail" id="{detail_id}"><td colspan="7"><dl class="detail-facts">{items}</dl>{note}</td></tr>')
         return out
     drows = ladder(desktop['rows'], lambda r: r['key'], lambda r: marks.get(r['key'], ''), sel['e2e_ms'], ms, 'desktop-row')
     hrows = ladder(desktop['head_rows'], lambda r: head_keys[r['name']], lambda r: '', sel['head_ms'], lambda v: f'{v:.2f}', 'head-row')
     dhead = ('<thead><tr><th scope="col">Checkpoint</th><th scope="col">Eager (ms) ↓</th><th scope="col">torch.compile (ms) ↓</th><th scope="col">TRT BF16 (ms) ↓</th><th scope="col">W8A8 (ms) ↓</th>'
-             '<th scope="col" class="ours-col">W4A4 (ms) ↓</th><th scope="col" class="ours-col">W4A4 + o/d INT8 (ms) ↓</th><th scope="col">W4A4 vs eager ↑</th><th scope="col">W4A4 vs TRT BF16 ↑</th><th scope="col">Compile share*</th><th scope="col">8→4 gain</th></tr></thead>')
+             '<th scope="col" class="ours-col">W4A4 (ms) ↓<small>× vs TRT BF16</small></th><th scope="col" class="ours-col">W4A4 + o/d INT8 (ms) ↓</th></tr></thead>')
     def wrap(label, head, rows):
         return (f'<div class="benchmark-table-scroll" tabindex="0" role="region" aria-label="{esc(label)}">'
                 f'<table class="results-table">{head}<tbody>{"".join(rows)}</tbody></table></div>')

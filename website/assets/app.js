@@ -123,6 +123,13 @@
     selectLatency(hashTab ? hashTab.dataset.latency : 'jetson');
   }
 
+  document.querySelectorAll('.family-toggle').forEach(button => {
+    const detail = document.getElementById(button.getAttribute('aria-controls'));
+    const set = open => { button.setAttribute('aria-expanded', String(open)); detail.hidden = !open; };
+    set(false);
+    button.addEventListener('click', () => set(button.getAttribute('aria-expanded') !== 'true'));
+  });
+
   const desktopSelect = document.getElementById('desktop-model');
   function filterDesktop() {
     document.querySelectorAll('.desktop-model').forEach(panel => {
