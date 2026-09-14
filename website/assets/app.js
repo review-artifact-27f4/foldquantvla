@@ -204,7 +204,24 @@
   document.addEventListener('keydown', event => {
     if (event.key === 'Escape') document.querySelectorAll('.chart-row, .success-row').forEach(row => row.classList.add('tooltip-dismissed'));
   });
-  const experimentVideos = [...document.querySelectorAll('.robot-card video')];
+  document.querySelectorAll('.robot-compare').forEach(block => {
+    const buttons = [...block.querySelectorAll('.compare-tabs button')];
+    const bar = block.querySelector('.compare-tabs');
+    const select = id => buttons.forEach(b => {
+      const on = b.dataset.compare === id;
+      b.setAttribute('aria-selected', String(on));
+      const clip = document.getElementById(b.dataset.compare);
+      clip.classList.toggle('is-inactive', !on);
+      clip.inert = !on;
+      const v = clip.querySelector('video');
+      if (v) { if (on) { v.play().catch(() => {}); } else { v.pause(); } }
+    });
+    bar.hidden = false; bar.setAttribute('role', 'tablist');
+    buttons.forEach(b => { b.setAttribute('role', 'tab'); b.addEventListener('click', () => select(b.dataset.compare)); });
+    block.classList.add('compare-ready');
+    select(buttons[0].dataset.compare);
+  });
+  const experimentVideos = [...document.querySelectorAll('.robot-card video, .compare-clip video')];
   const robotTabs = [...document.querySelectorAll('.robot-task-tabs button')];
   const robotPanels = [...document.querySelectorAll('.robot-trial')];
   function selectRobotTask(id, focus = false) {

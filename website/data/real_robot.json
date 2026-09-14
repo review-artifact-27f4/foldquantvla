@@ -10,8 +10,8 @@
       "views": [
         {
           "label": "Evaluation video",
-          "detail": "ALOHA · Banana",
-          "src": "",
+          "detail": "ALOHA · Banana · robot cameras",
+          "src": "aloha-banana/bf16-pytorch.mp4",
           "poster": ""
         }
       ]
@@ -165,5 +165,43 @@
       }
     },
     "note": "Arms interleaved with matched object placements. W4A4 + o/d INT8 vs W4A4: +20 / +10 / +5 / +15 pp per task, +12.5 pp on average. ModelOpt W8A8 SQ stopped after one task (SO-101 blue on red): jerky motion risked the hardware. It is not in any total. Median logged-observation action cosine vs BF16 PyTorch — ALOHA: TRT BF16 0.99999 · W8A8 0.99999 · W4A4 0.99962 · W4A4 + o/d INT8 0.99975; SO-101: TRT BF16 1.00000 · ModelOpt SQ 0.99892 · W8A8 1.00000 · W4A4 0.99961 · W4A4 + o/d INT8 0.99988. π0.5 real-robot runs are in progress."
-  }
+  },
+  "comparisons": [
+    {
+      "key": "aloha-banana",
+      "title": "ALOHA · Banana into pot, then close the lid",
+      "meta": "Same episode index for every engine · robot cameras: high (left) and wrist (right) · 4× speed",
+      "task_index": 0,
+      "arms": [
+        {
+          "key": "bf16-pytorch",
+          "label": "BF16 PyTorch",
+          "result_label": "BF16 PyTorch"
+        },
+        {
+          "key": "trt-bf16",
+          "label": "TRT BF16",
+          "result_label": "TRT BF16 (float engine)"
+        },
+        {
+          "key": "foldquant-w8a8",
+          "label": "FoldQuant W8A8",
+          "result_label": "FoldQuant W8A8",
+          "ours": true
+        },
+        {
+          "key": "foldquant-w4a4",
+          "label": "FoldQuant W4A4",
+          "result_label": "FoldQuant W4A4",
+          "ours": true
+        },
+        {
+          "key": "foldquant-w4a4-od-int8",
+          "label": "FoldQuant W4A4 + o/d INT8",
+          "result_label": "FoldQuant W4A4 + o/d INT8",
+          "ours": true
+        }
+      ]
+    }
+  ]
 }

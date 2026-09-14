@@ -323,6 +323,34 @@ def make_robot_trials(data):
     return ''.join(trials), ''.join(task_tabs), media
 
 
+def make_robot_compare(data):
+    """Per-engine clips for one task; missing clips render as placeholders."""
+    html_parts, media = [], []
+    res = {a['label']: a for a in data['results']['arms']}
+    per = data['results']['episodes_per_task']
+    for comp in data.get('comparisons', []):
+        tabs, panels = [], []
+        for i, arm in enumerate(comp['arms']):
+            rel = f'{comp["key"]}/{arm["key"]}.mp4'
+            src = safe_media_path(rel, set(VIDEO_TYPES)) if (ROOT / 'media' / 'real-robot' / rel).is_file() else None
+            if src:
+                media.append(src)
+                screen = (f'<video muted loop playsinline controls preload="none" aria-label="{esc(arm["label"])} on {esc(comp["title"])}">'
+                          f'<source src="media/real-robot/{esc(rel)}" type="video/mp4"></video>')
+            else:
+                screen = '<div class="robot-placeholder" role="img" aria-label="Video forthcoming"><span class="placeholder-message"><i aria-hidden="true">▶</i><strong>Video forthcoming</strong></span></div>'
+            r = res.get(arm['result_label'])
+            n = r['tasks'][comp['task_index']] if r else None
+            sr = f'{100 * n / per:.0f}% SR on this task' if isinstance(n, int) else ''
+            pid = f'compare-{comp["key"]}-{arm["key"]}'
+            tabs.append(f'<button type="button" id="{pid}-tab" data-compare="{pid}" class="{"ours" if arm.get("ours") else ""}">{esc(arm["label"])}</button>')
+            panels.append(f'<figure class="compare-clip" id="{pid}"><div class="compare-screen">{screen}</div>'
+                          f'<figcaption><strong>{esc(arm["label"])}</strong><span>{esc(sr)}</span></figcaption></figure>')
+        html_parts.append(f'<div class="benchmark-panel robot-compare"><header><div><h3>{esc(comp["title"])}</h3><p>{esc(comp["meta"])}</p></div></header>'
+                          f'<div class="compare-tabs" aria-label="Engine" hidden>{"".join(tabs)}</div><div class="compare-clips">{"".join(panels)}</div></div>')
+    return ''.join(html_parts), media
+
+
 def make_robot_results(data):
     res = data['results']
     per = res['episodes_per_task']
@@ -396,6 +424,8 @@ def build(output, base_url=''):
     tokens['robot_intro'] = esc(real_robot['intro'])
     tokens['robot_trials'], tokens['robot_task_tabs'], robot_media = make_robot_trials(real_robot)
     tokens['robot_results'] = make_robot_results(real_robot)
+    tokens['robot_compare'], compare_media = make_robot_compare(real_robot)
+    robot_media = list(robot_media) + compare_media
     tokens['overview_media'], overview_media = make_overview_media()
     tokens['bibtex'] = esc('@misc{anonymous2026foldquantvla,\n  title  = {' + meta['title'] + '},\n  author = {{Anonymous Authors}},\n  year   = {2026},\n  note   = {Anonymous ICRA submission}\n}')
     page = (ROOT / 'index.template.html').read_text(encoding='utf-8')

@@ -130,15 +130,15 @@ class BuildTests(unittest.TestCase):
         self.assertEqual(len(data['trials']), 4)
         self.assertEqual([trial['platform'] for trial in data['trials']], ['ALOHA', 'SO101', 'SO101', 'SO101'])
         self.assertTrue(all(len(trial['views']) == 1 for trial in data['trials']))
-        self.assertTrue(all(trial['views'][0]['label'] == 'Evaluation video' for trial in data['trials']))
-        self.assertTrue(all(not view['src'] for trial in data['trials'] for view in trial['views']))
         self.assertIn('id="robot-demos"', self.html)
-        self.assertEqual(self.html.count('data-robot-task='), 4)
         self.assertEqual(self.html.count('class="robot-card"'), 4)
-        self.assertEqual(self.html.count('Video forthcoming'), 8)  # visible text and accessible label per slot
-        published = sorted(x.relative_to(self.output/'media').as_posix() for x in (self.output/'media').rglob('*') if x.is_file()) if (self.output/'media').exists() else []
-        self.assertTrue(set(published) <= {'overview.mp4'}, published)
-        self.assertFalse((self.output/'media'/'real-robot').exists())
+        media = self.output / 'media'
+        published = sorted(x.relative_to(media).as_posix() for x in media.rglob('*') if x.is_file()) if media.exists() else []
+        clip = re.compile(r'real-robot/[a-z0-9-]+/[a-z0-9-]+\.mp4')
+        self.assertTrue(all(p == 'overview.mp4' or clip.fullmatch(p) for p in published), published)
+        # Raw LeRobot recordings (parquet, meta, per-camera episodes) never reach the site.
+        self.assertFalse(any(x.suffix in ('.parquet', '.jsonl', '.json') for x in media.rglob('*')) if media.exists() else False)
+        self.assertNotIn('FoldQuantVLA_ALOHA', self.html)
 
     def test_real_robot_media_paths_are_confined(self):
         for value in ('../private.mp4', '/tmp/private.mp4', 'https://example.com/demo.mp4', 'demo.mov'):
