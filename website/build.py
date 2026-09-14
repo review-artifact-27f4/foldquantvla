@@ -200,33 +200,17 @@ def make_robot_trials(data):
                 state = 'has-video'
             else:
                 screen = ('<div class="robot-placeholder" role="img" aria-label="Video forthcoming">'
-                          '<svg class="robot-schematic" viewBox="0 0 280 180" aria-hidden="true">'
-                          '<path d="M58 151h164M90 148l12-29 38-8 25-37 38 11"/>'
-                          '<circle cx="102" cy="119" r="8"/><circle cx="140" cy="111" r="8"/>'
-                          '<circle cx="165" cy="74" r="8"/><path d="m203 85 18-12m-18 12 16 8"/>'
-                          '</svg><span class="focus-corner top-left"></span><span class="focus-corner top-right"></span>'
-                          '<span class="focus-corner bottom-left"></span><span class="focus-corner bottom-right"></span>'
                           '<span class="placeholder-message"><i aria-hidden="true">▶</i><strong>Video forthcoming</strong></span></div>')
                 state = 'is-placeholder'
-            media_badge = 'VIDEO' if len(views) == 1 else f'CAM {view_index:02d}'
-            rendered_views.append(
-                f'<figure class="robot-view {state}{" primary-view" if view_index == 1 else ""}">'
-                f'<div class="robot-screen"><span class="camera-id"><i aria-hidden="true"></i> {media_badge}</span>{screen}</div>'
-                f'<figcaption><strong>{esc(view["label"])}</strong><span>{esc(view["detail"])}</span></figcaption></figure>')
-        primary = rendered_views[0]
-        secondary = ''.join(rendered_views[1:])
-        media_class = 'robot-media-grid single-view' if len(views) == 1 else 'robot-media-grid'
-        secondary_html = '' if len(views) == 1 else f'<div class="robot-secondary{" one-view" if len(views) == 2 else ""}">{secondary}</div>'
-        status = 'Experiment video' if any(view.get('src') for view in views) else 'Media slot ready'
-        task_tabs.append(
-            f'<button type="button" id="robot-tab-{esc(key)}" data-robot-task="robot-{esc(key)}">'
-            f'<span>{esc(trial["platform"])}</span>{esc(trial["title"].split("·")[-1].strip())}</button>')
+            rendered_views.append(f'<div class="robot-screen {state}">{screen}</div>')
+        platform = trial['platform']
+        name = trial['title'].split('·')[-1].strip()
         trials.append(
-            f'<article class="robot-trial" id="robot-{esc(key)}">'
-            f'<header class="robot-trial-header"><div><span>Evaluation task {trial_index:02d}</span><h3>{esc(trial["title"])}</h3>'
-            f'<p>{esc(trial["instruction"])}</p></div><div class="robot-trial-meta"><span>{esc(trial["policy"])}</span>'
-            f'<strong><i aria-hidden="true"></i>{status}</strong></div></header>'
-            f'<div class="{media_class}">{primary}{secondary_html}</div></article>')
+            f'<article class="robot-card" id="robot-{esc(key)}" data-robot-task="robot-{esc(key)}">'
+            f'{rendered_views[0]}'
+            f'<div class="robot-card-body"><h3>{esc(platform)} · {esc(name)}</h3>'
+            f'<span class="robot-tag">{esc(platform)}</span>'
+            f'<p>{esc(trial["instruction"])}</p></div></article>')
     return ''.join(trials), ''.join(task_tabs), media
 
 

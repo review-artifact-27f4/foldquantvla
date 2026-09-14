@@ -152,7 +152,7 @@
   document.addEventListener('keydown', event => {
     if (event.key === 'Escape') document.querySelectorAll('.chart-row, .success-row').forEach(row => row.classList.add('tooltip-dismissed'));
   });
-  const experimentVideos = [...document.querySelectorAll('.robot-view video')];
+  const experimentVideos = [...document.querySelectorAll('.robot-card video')];
   const robotTabs = [...document.querySelectorAll('.robot-task-tabs button')];
   const robotPanels = [...document.querySelectorAll('.robot-trial')];
   function selectRobotTask(id, focus = false) {

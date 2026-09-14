@@ -1,23 +1,50 @@
 {
-  "intro": "Real-robot evaluation covers three tasks on two platforms: two SO101 tasks and one ALOHA task. Each task is presented as one evaluation video.",
+  "intro": "Two SO101 tasks and one ALOHA task, each run with the FoldQuantVLA low-bit policy.",
   "trials": [
     {
-      "key": "so101-task-01", "platform": "SO101", "title": "SO101 · Task 01",
-      "instruction": "Task instruction and evaluation details will appear with the released recording.",
+      "key": "so101-task-01",
+      "platform": "SO101",
+      "title": "SO101 · Task 01",
+      "instruction": "Task description will appear with the released recording.",
       "policy": "SO101 · FoldQuantVLA low-bit policy",
-      "views": [{"label": "Evaluation video", "detail": "SO101 · Task 01", "src": "", "poster": ""}]
+      "views": [
+        {
+          "label": "Evaluation video",
+          "detail": "SO101 · Task 01",
+          "src": "",
+          "poster": ""
+        }
+      ]
     },
     {
-      "key": "so101-task-02", "platform": "SO101", "title": "SO101 · Task 02",
-      "instruction": "Task instruction and evaluation details will appear with the released recording.",
+      "key": "so101-task-02",
+      "platform": "SO101",
+      "title": "SO101 · Task 02",
+      "instruction": "Task description will appear with the released recording.",
       "policy": "SO101 · FoldQuantVLA low-bit policy",
-      "views": [{"label": "Evaluation video", "detail": "SO101 · Task 02", "src": "", "poster": ""}]
+      "views": [
+        {
+          "label": "Evaluation video",
+          "detail": "SO101 · Task 02",
+          "src": "",
+          "poster": ""
+        }
+      ]
     },
     {
-      "key": "aloha-task-01", "platform": "ALOHA", "title": "ALOHA · Task 01",
-      "instruction": "Task instruction and evaluation details will appear with the released recording.",
+      "key": "aloha-task-01",
+      "platform": "ALOHA",
+      "title": "ALOHA · Task 01",
+      "instruction": "Task description will appear with the released recording.",
       "policy": "ALOHA · FoldQuantVLA low-bit policy",
-      "views": [{"label": "Evaluation video", "detail": "ALOHA · Task 01", "src": "", "poster": ""}]
+      "views": [
+        {
+          "label": "Evaluation video",
+          "detail": "ALOHA · Task 01",
+          "src": "",
+          "poster": ""
+        }
+      ]
     }
   ]
 }

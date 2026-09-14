@@ -91,14 +91,13 @@
   </section>
   <section class="section robot-section" id="robot-demos" aria-labelledby="robot-title">
     <div class="container">
-      <div class="robot-heading"><div class="section-heading"><p class="section-label">Real-robot evaluation</p><h2 id="robot-title">Three tasks.<br>Two robot platforms.</h2></div><p>{{robot_intro}}</p></div>
-      <div class="robot-task-tabs" aria-label="Real-robot tasks" hidden>{{robot_task_tabs}}</div>
-      <div class="robot-reel">{{robot_trials}}</div>
-      <p class="robot-disclaimer">Evaluation set · SO101: two tasks · ALOHA: one task · one video per task.</p>
+      <div class="section-heading robot-heading"><p class="section-label">Real-world tasks</p><h2 id="robot-title">Three tasks, two robot platforms</h2><p class="section-intro">{{robot_intro}}</p></div>
+      <div class="robot-grid">{{robot_trials}}</div>
+      
     </div>
   </section>
   <section class="section container results-section" id="results" aria-labelledby="results-title">
-    <div class="section-heading results-heading"><div><p class="section-label">Results</p><h2 id="results-title">Efficiency, with the controls.</h2></div><p>Explore the deployment target<br>and the precision ladder.</p></div>
+    <div class="section-heading results-heading"><div><p class="section-label">Results · Latency</p><h2 id="results-title">Efficiency, with the controls.</h2></div><p>Latency on two targets: Jetson AGX Orin<br>and an RTX 4070 Ti SUPER desktop.</p></div>
     <div class="result-tabs" aria-label="Result views"><a href="#jetson" id="tab-jetson">Jetson <span>On-device deployment</span></a><a href="#desktop" id="tab-desktop">Desktop <span>Precision &amp; compilation</span></a></div>
     <section class="result-panel" id="jetson" aria-labelledby="jetson-title">
       <div class="panel-heading"><div><h3 id="jetson-title">On the deployment target</h3><p>GR00T N1.6 · Jetson AGX Orin · batch 1</p></div><span class="source-tag">Table IV</span></div>

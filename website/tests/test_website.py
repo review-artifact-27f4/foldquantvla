@@ -135,7 +135,7 @@ class BuildTests(unittest.TestCase):
         self.assertTrue(all(not view['src'] for trial in data['trials'] for view in trial['views']))
         self.assertIn('id="robot-demos"', self.html)
         self.assertEqual(self.html.count('data-robot-task='), 3)
-        self.assertNotIn('hidden id="robot-so101-task-01"', self.html)
+        self.assertEqual(self.html.count('class="robot-card"'), 3)
         self.assertEqual(self.html.count('Video forthcoming'), 6)  # visible text and accessible label per slot
         self.assertFalse((self.output/'media').exists())
 
