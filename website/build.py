@@ -102,7 +102,7 @@ def make_libero_summary(data, fidelity):
             loss = ' class="loss"' if key == 'int4' and model['key'] in ('smol', 'evo') else ''
             return f'<td{loss}><strong>{row["rate"]:.2f}%</strong></td>'
         body.append(f'<tr><th scope="row">{esc(model["name"])}</th><td>{model["chunk_length"]}</td><td>{model["k"]}</td>{sr("bf16")}{sr("trt_bf16")}'
-                    f'{sr("int8")}<td>{cos["int8"]:.5f}</td>{sr("int4")}<td>{cos["int4"]:.5f}</td>{({'n17': '<td><strong>95.62%</strong></td>', 'pi05': '<td><strong>97.75%</strong></td>',
+                    f'{sr("int8")}<td>{cos["int8"]:.5f}</td>{sr("int4")}<td>{cos["int4"]:.5f}</td>{({'n17': '<td><strong>95.00%</strong></td>', 'pi05': '<td><strong>97.75%</strong></td>',
                        'n15': '<td><strong>88.25%</strong></td>', 'smol': '<td class="na">—</td>',
                        'evo': '<td class="na">—</td>'}.get(model['key']) or sr("arc_sr_before_int8"))}{"<td class=\"na\">—</td>" if cos.get("res8") is None else f"<td>{cos['res8']:.5f}</td>"}</tr>')
     head = ('<thead><tr><th scope="col" rowspan="2">Checkpoint</th><th scope="col" rowspan="2">H</th><th scope="col" rowspan="2">K</th><th scope="colgroup" colspan="2">BF16 SR</th>'
