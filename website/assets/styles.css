@@ -24,6 +24,11 @@
 
 @media(max-width:700px){.robot-task-tabs{grid-template-columns:1fr;gap:4px;max-width:none;margin-bottom:15px}.robot-task-tabs button{justify-content:flex-start;min-height:41px;padding:7px 12px}.robot-task-tabs button span{min-width:48px}.robot-tabs-ready .robot-media-grid{padding:8px}.robot-tabs-ready .robot-media-grid.single-view .primary-view .robot-screen{aspect-ratio:16/10}}
 
+/* Four evidence highlights; green marks measured improvements. */
+.highlights{grid-template-columns:repeat(4,1fr);gap:28px}.metric span.gain{color:#18864b}.sr-metric{color:#18864b}.sr-metric span{color:#607069;font-size:.58em;letter-spacing:-1px}
+@media(max-width:1100px) and (min-width:701px){.highlights{grid-template-columns:1fr 1fr}.highlights>div:nth-child(3){border-left:0;padding-left:0}.highlights>div:nth-child(n+3){border-top:1px solid var(--line);padding-top:28px}}
+@media(max-width:700px){.highlights{grid-template-columns:1fr}}
+
 .chart-row.tooltip-dismissed .chart-tooltip,.success-row.tooltip-dismissed .chart-tooltip{visibility:hidden;opacity:0}
 
 /* Compact academic resource shelf. Empty release URLs render as inert review-safe slots. */
