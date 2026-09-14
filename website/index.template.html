@@ -103,12 +103,12 @@
     <section class="benchmark-panel latency-panel" id="jetson" aria-labelledby="jetson-title">
       <header><div><h3 id="jetson-title">Jetson AGX Orin · on-device</h3><p>GR00T N1.6 · batch 1 · observation-to-action chunk</p></div><span class="source-tag">Table IV</span></header>
       {{jetson_summary}}
-      <p class="latency-note">Speedup is relative to the compiled BF16 TensorRT engine on the same device. Engine size is the serialized TensorRT plan, not peak GPU memory.</p>
+      <p class="latency-note">“vs TRT BF16” is relative to the unquantized floating-point TensorRT engine of the same build path — not eager PyTorch and not torch.compile — so no row credits graph optimisation to quantization. Engine size is the serialized TensorRT plan, not peak GPU memory.</p>
     </section>
     <section class="benchmark-panel latency-panel" id="desktop" aria-labelledby="desktop-title">
       <header><div><h3 id="desktop-title">RTX 4070 Ti SUPER · desktop</h3><p>Six checkpoints · batch 1 · end-to-end median per action chunk</p></div><span class="source-tag">Table II</span></header>
       {{desktop_summary}}
-      <p class="latency-note">Compiled controls use floating-point TensorRT for GR00T and Evo-1, and torch.compile for π₀.₅ and SmolVLA. Compile share is the part of the eager-to-W4A4 reduction already delivered by compilation. † Uniform W4A4 fails fidelity on SmolVLA. ‡ Evo-1’s 0.5 ms W4A4 regression is below timing resolution. {{desktop_protocol}}</p>
+      <p class="latency-note">All FoldQuant columns are TensorRT engines. *Compile share is (t<sub>eager</sub> − t<sub>c</sub>)/(t<sub>eager</sub> − t<sub>4</sub>) using the faster eligible floating-point control (TRT BF16 for GR00T and Evo-1, torch.compile for π₀.₅ and SmolVLA). § N1.7 torch.compile was measured in a framework runtime with 71.8 ms eager latency and is excluded from attribution. † Uniform W4A4 fails fidelity on SmolVLA. ‡ Evo-1’s 0.5 ms W4A4 regression is below timing resolution. {{desktop_protocol}}</p>
     </section>
     <section class="benchmark-panel latency-panel" id="action-head" aria-labelledby="head-title">
       <header><div><h3 id="head-title">RTX 4070 Ti SUPER · action head only</h3><p>GR00T checkpoints · batch 1 · head-only median</p></div><span class="source-tag">Table II</span></header>

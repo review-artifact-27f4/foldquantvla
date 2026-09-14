@@ -119,12 +119,12 @@ def make_latency_tables(jetson, desktop):
     for r in jetson['rows']:
         kind = ' class="ours"' if r['key'] in ours else (' class="baseline"' if r['key'] == 'float' else '')
         gain = ' class="gain"' if r['speedup_vs_float'] > 1 else (' class="loss"' if r['speedup_vs_float'] < 1 else '')
-        jrows.append(f'<tr{kind}><th scope="row">{esc(r["label"])}</th><td>{ms(r["gpu_ms"])}</td><td><strong>{r["e2e_ms"]}</strong></td>'
+        jrows.append(f'<tr{kind}><th scope="row">{esc(r["label"])}</th><td class="prec">{esc(r["precision"])}</td><td>{ms(r["gpu_ms"])}</td><td><strong>{r["e2e_ms"]}</strong></td>'
                      f'<td>{r["hz"]:.1f}</td><td{gain}><strong>{r["speedup_vs_float"]:.2f}×</strong></td><td>{r["engine_mb"]:,}</td><td>{r["build_s"]:,}</td></tr>')
         if r['key'] == jsel['after']:
-            jrows.append(f'<tr class="sub-row pending-row"><th scope="row">↳ {esc(jsel["label"])}</th><td colspan="6" class="na pending-cell">{esc(jsel["status"])}</td></tr>')
-    jhead = ('<thead><tr><th scope="col">Configuration</th><th scope="col">GPU (ms) ↓</th><th scope="col">E2E (ms) ↓</th><th scope="col">Rate (Hz) ↑</th>'
-             '<th scope="col">vs BF16 ↑</th><th scope="col">Engine (MB) ↓</th><th scope="col">Build (s)</th></tr></thead>')
+            jrows.append(f'<tr class="sub-row pending-row"><th scope="row">↳ {esc(jsel["label"])}</th><td colspan="7" class="na pending-cell">{esc(jsel["status"])}</td></tr>')
+    jhead = ('<thead><tr><th scope="col">Configuration</th><th scope="col">Prec.</th><th scope="col">GPU (ms) ↓</th><th scope="col">E2E (ms) ↓</th><th scope="col">Rate (Hz) ↑</th>'
+             '<th scope="col">vs TRT BF16 ↑</th><th scope="col">Engine (MB) ↓</th><th scope="col">Build (s)</th></tr></thead>')
     marks = {'smol': '†', 'evo': '‡'}
     sel = desktop['selective_int8']
     head_keys = {'GR00T N1.7': 'n17', 'GR00T N1.6': 'n16', 'GR00T N1.5': 'n15'}
@@ -133,15 +133,15 @@ def make_latency_tables(jetson, desktop):
         for r in rows:
             v = sel_map.get(key_of(r))
             sel_cell = f'<td class="ours-col"><strong>{fmt(v)}</strong></td>' if v is not None else '<td class="na" title="Measurement pending">—</td>'
-            out.append(f'<tr class="{cls}"><th scope="row">{esc(r["name"])}<sup>{mark_of(r)}</sup></th><td>{fmt(r["eager"])}</td><td>{fmt(r["compiled"])}</td>'
+            out.append(f'<tr class="{cls}"><th scope="row">{esc(r["name"])}<sup>{mark_of(r)}</sup></th><td>{fmt(r["eager"])}</td><td>{fmt(r["torch_compile"])}{"<sup>§</sup>" if r.get("key") == "n17" or (r.get("name") == "GR00T N1.7" and cls == "desktop-row") else ""}</td><td>{fmt(r["trt_bf16"])}</td>'
                        f'<td>{fmt(r["int8"])}</td><td class="ours-col"><strong>{fmt(r["int4"])}</strong></td>{sel_cell}'
                        f'<td class="gain"><strong>{r["eager_speedup"]:.2f}×</strong></td><td>{r["compiled_share_pct"]:.1f}%</td>'
                        f'<td>{"−" if r["int8_to_int4_pct"] < 0 else ""}{abs(r["int8_to_int4_pct"]):.1f}%</td></tr>')
         return out
     drows = ladder(desktop['rows'], lambda r: r['key'], lambda r: marks.get(r['key'], ''), sel['e2e_ms'], ms, 'desktop-row')
     hrows = ladder(desktop['head_rows'], lambda r: head_keys[r['name']], lambda r: '', sel['head_ms'], lambda v: f'{v:.2f}', 'head-row')
-    dhead = ('<thead><tr><th scope="col">Checkpoint</th><th scope="col">Eager (ms) ↓</th><th scope="col">Compiled (ms) ↓</th><th scope="col">W8A8 (ms) ↓</th>'
-             '<th scope="col" class="ours-col">W4A4 (ms) ↓</th><th scope="col" class="ours-col">W4A4 + o/d INT8 (ms) ↓</th><th scope="col">W4A4 vs eager ↑</th><th scope="col">Compile share</th><th scope="col">8→4 gain</th></tr></thead>')
+    dhead = ('<thead><tr><th scope="col">Checkpoint</th><th scope="col">Eager (ms) ↓</th><th scope="col">torch.compile (ms) ↓</th><th scope="col">TRT BF16 (ms) ↓</th><th scope="col">W8A8 (ms) ↓</th>'
+             '<th scope="col" class="ours-col">W4A4 (ms) ↓</th><th scope="col" class="ours-col">W4A4 + o/d INT8 (ms) ↓</th><th scope="col">W4A4 vs eager ↑</th><th scope="col">Compile share*</th><th scope="col">8→4 gain</th></tr></thead>')
     def wrap(label, head, rows):
         return (f'<div class="benchmark-table-scroll" tabindex="0" role="region" aria-label="{esc(label)}">'
                 f'<table class="results-table">{head}<tbody>{"".join(rows)}</tbody></table></div>')

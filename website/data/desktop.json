@@ -17,7 +17,9 @@
       "int8_to_int4_pct": 10.7,
       "k": 8,
       "control": "Floating-point TensorRT",
-      "note": ""
+      "note": "",
+      "torch_compile": 58.05,
+      "trt_bf16": 41.5
     },
     {
       "key": "n16",
@@ -31,7 +33,9 @@
       "int8_to_int4_pct": 10.2,
       "k": 8,
       "control": "Floating-point TensorRT",
-      "note": "Re-timed end to end in the framework runtime with matched configurations."
+      "note": "Re-timed end to end in the framework runtime with matched configurations.",
+      "torch_compile": 59.85,
+      "trt_bf16": 44.1
     },
     {
       "key": "n15",
@@ -45,7 +49,9 @@
       "int8_to_int4_pct": 10.5,
       "k": 1,
       "control": "Floating-point TensorRT",
-      "note": "Re-timed end to end in the framework runtime with matched configurations."
+      "note": "Re-timed end to end in the framework runtime with matched configurations.",
+      "torch_compile": 53.46,
+      "trt_bf16": 40.2
     },
     {
       "key": "pi05",
@@ -59,7 +65,9 @@
       "int8_to_int4_pct": 14.8,
       "k": 5,
       "control": "torch.compile",
-      "note": ""
+      "note": "",
+      "torch_compile": 100.3,
+      "trt_bf16": 111.8
     },
     {
       "key": "smol",
@@ -73,7 +81,9 @@
       "int8_to_int4_pct": 5.2,
       "k": 1,
       "control": "torch.compile",
-      "note": "Throughput diagnostic: the uniform W4A4 configuration fails fidelity and loses closed-loop success."
+      "note": "Throughput diagnostic: the uniform W4A4 configuration fails fidelity and loses closed-loop success.",
+      "torch_compile": 38.93,
+      "trt_bf16": 36.8
     },
     {
       "key": "evo",
@@ -87,7 +97,9 @@
       "int8_to_int4_pct": -0.5,
       "k": 14,
       "control": "Floating-point TensorRT",
-      "note": "No measured gain over W8A8: the 0.5 ms difference is unresolved. Uniform W4A4 loses 85 of 800 successes."
+      "note": "No measured gain over W8A8: the 0.5 ms difference is unresolved. Uniform W4A4 loses 85 of 800 successes.",
+      "torch_compile": 113.33,
+      "trt_bf16": 110.7
     }
   ],
   "head_rows": [
@@ -99,7 +111,9 @@
       "int4": 15.84,
       "eager_speedup": 2.49,
       "compiled_share_pct": 74.9,
-      "int8_to_int4_pct": 14.3
+      "int8_to_int4_pct": 14.3,
+      "torch_compile": 25.4,
+      "trt_bf16": 21.76
     },
     {
       "name": "GR00T N1.6",
@@ -109,7 +123,9 @@
       "int4": 15.15,
       "eager_speedup": 2.62,
       "compiled_share_pct": 73.2,
-      "int8_to_int4_pct": 14.7
+      "int8_to_int4_pct": 14.7,
+      "torch_compile": 25.3,
+      "trt_bf16": 21.72
     },
     {
       "name": "GR00T N1.5",
@@ -119,7 +135,9 @@
       "int4": 9.39,
       "eager_speedup": 2.07,
       "compiled_share_pct": 55.3,
-      "int8_to_int4_pct": 17.3
+      "int8_to_int4_pct": 17.3,
+      "torch_compile": 15.5,
+      "trt_bf16": 13.9
     }
   ],
   "selective_int8": {
@@ -139,5 +157,6 @@
       "n16": 15.94,
       "n15": null
     }
-  }
+  },
+  "compile_footnote": "N1.7 torch.compile was measured in a framework runtime with eager latency 71.8 ms rather than 67.8 ms; shown for reference and excluded from attribution."
 }
