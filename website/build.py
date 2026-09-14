@@ -197,7 +197,7 @@ def make_latency_tables(jetson, desktop):
         if fr:
             parts = [x.replace('ModelOpt ', 'ModelOpt ') for x in fr]
             names = parts[0] if len(parts) == 1 else ', '.join(parts[:-1]) + ' and ' + parts[-1]
-            bits.append(f'§ {names} measured in the framework runtime; their ratio uses that runtime’s TRT BF16 ({r["trt_bf16"]:g} ms, Table II)')
+            bits.append(f'§ {names} measured in the framework runtime; {"its" if len(fr) == 1 else "their"} ratio uses that runtime’s TRT BF16 ({r["trt_bf16"]:g} ms, Table II)')
         if fam.get('ModelOpt W4A16 AWQ', {}).get('na'):
             bits.append('W4A16 AWQ does not apply: block size 128 vs hidden size 960')
         if key == 'pi05':
