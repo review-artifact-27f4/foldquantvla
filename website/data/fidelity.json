@@ -18,25 +18,25 @@
       "bf16": null,
       "int8": 0.99999,
       "int4": 0.99885,
-      "res8": null
+      "res8": 0.99933
     },
     "pi05": {
       "bf16": null,
       "int8": 1.0,
       "int4": 0.99942,
-      "res8": null
+      "res8": 0.99981
     },
     "smol": {
       "bf16": null,
       "int8": 0.99987,
       "int4": 0.92967,
-      "res8": null
+      "res8": 0.98476
     },
     "evo": {
       "bf16": null,
       "int8": 0.99991,
       "int4": 0.96881,
-      "res8": null
+      "res8": 0.98458
     }
   },
   "res8_note": "Median P2 cosine for W4A4 + o_proj/down_proj INT8; null = pending measurement"
