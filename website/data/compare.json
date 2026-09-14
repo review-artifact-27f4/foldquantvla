@@ -95,8 +95,7 @@
             192
           ],
           "cos": null,
-          "reported": true,
-          "tag": "reported · reproduction pending"
+          "reported": true
         },
         {
           "method": "DuQuant",
@@ -109,8 +108,7 @@
             176
           ],
           "cos": null,
-          "reported": true,
-          "tag": "reported · reproduction pending"
+          "reported": true
         },
         {
           "method": "QuantVLA",
@@ -123,8 +121,7 @@
             112
           ],
           "cos": null,
-          "reported": true,
-          "tag": "reported"
+          "reported": true
         },
         {
           "method": "SmoothQuant",
@@ -137,8 +134,7 @@
             52
           ],
           "cos": null,
-          "reported": true,
-          "tag": "reported"
+          "reported": true
         },
         {
           "method": "FoldQuant W8A8",
@@ -174,8 +170,7 @@
             197,
             188
           ],
-          "cos": 0.99978,
-          "tag": "released harness"
+          "cos": 0.99978
         }
       ],
       "footnote": "BF16 / W8A8 / W4A4: Table V protocol, 800 episodes, 520-step cap, seed 7. W4A4 + o/d INT8: released openpi harness, 20 trials per task, K = 5. Reported rows: HoloQ-VLA Table 2, emulated quantization, 10 calibration samples. Median cosine: Table VI P2 for W8A8 / W4A4, released-harness verify for o/d INT8."
