@@ -95,6 +95,21 @@
         ]
       },
       {
+        "label": "ModelOpt W8A8 SQ",
+        "kind": "",
+        "tasks": [
+          "not_run",
+          "not_run",
+          "not_run",
+          6
+        ],
+        "wilson": [
+          14.5,
+          51.9
+        ],
+        "scope": "T4 only"
+      },
+      {
         "label": "FoldQuant W8A8",
         "kind": "ours",
         "tasks": [
@@ -115,11 +130,11 @@
           15,
           17,
           19,
-          null
+          13
         ],
         "wilson": [
-          73.9,
-          91.9
+          70.0,
+          87.3
         ]
       },
       {
@@ -129,11 +144,11 @@
           19,
           19,
           20,
-          null
+          16
         ],
         "wilson": [
-          88.6,
-          99.1
+          84.6,
+          96.5
         ]
       }
     ],
@@ -148,6 +163,7 @@
         "int4": 0.99929,
         "res8": 0.99983
       }
-    }
+    },
+    "note": "Arms interleaved with matched object placements. W4A4 + o/d INT8 minus W4A4: +4 / +2 / +1 / +3 per task (+10 of 80). ModelOpt W8A8 SQ was run on the SO-101 blue-on-red task only and is not in any total. Median logged-observation action cosine vs BF16 PyTorch — ALOHA: TRT BF16 0.99999 · W8A8 0.99999 · W4A4 0.99962 · W4A4 + o/d INT8 0.99975; SO-101: TRT BF16 1.00000 · ModelOpt SQ 0.99892 · W8A8 1.00000 · W4A4 0.99961 · W4A4 + o/d INT8 0.99988. π0.5 real-robot runs are in progress."
   }
 }

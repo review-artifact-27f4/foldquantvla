@@ -18,7 +18,8 @@
         "label": "ModelOpt SmoothQuant",
         "precision": "INT8",
         "src": "",
-        "start_s": 0
+        "start_s": 0,
+        "result_label": "ModelOpt W8A8 SQ"
       },
       {
         "label": "FoldQuant W8A8",

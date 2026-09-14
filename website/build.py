@@ -319,25 +319,27 @@ def make_robot_trials(data):
 
 def make_robot_results(data):
     res = data['results']
+    per = res['episodes_per_task']
     head = ''.join(f'<th scope="col">{esc(t["platform"])} · {esc(t["title"].split("·")[-1].strip())}</th>' for t in data['trials'])
     body = []
     for arm in res['arms']:
         cells, done, total = [], 0, 0
         for n in arm['tasks']:
-            if n is None:
+            if n == 'not_run':
+                cells.append('<td class="na">—</td>')
+            elif n is None:
                 cells.append('<td class="na pending-cell">Measuring…</td>')
             else:
-                cells.append(f'<td>{n}/{res["episodes_per_task"]}</td>'); done += n; total += res['episodes_per_task']
+                cells.append(f'<td>{n}/{per}</td>'); done += n; total += per
         lo, hi = arm['wilson']
-        scope = '' if total == res['episodes_per_task'] * len(arm['tasks']) else '<small>tasks 1–3</small>'
+        scope = f'<small>{esc(arm["scope"])}</small>' if arm.get('scope') else ''
         kind = f' class="{arm["kind"]}"' if arm['kind'] else ''
         body.append(f'<tr{kind}><th scope="row">{esc(arm["label"])}</th>{"".join(cells)}'
                     f'<td><strong>{100 * done / total:.1f}%</strong><small>{done}/{total} · [{lo:.1f}, {hi:.1f}]</small>{scope}</td></tr>')
-    return (f'<div class="benchmark-panel robot-results"><header><div><h3>Real-robot success</h3><p>{esc(res["policy"])} · {res["episodes_per_task"]} episodes per task</p></div><span class="source-tag">Real robot</span></header>'
+    return (f'<div class="benchmark-panel robot-results"><header><div><h3>Real-robot success</h3><p>{esc(res["policy"])} · {per} episodes per task</p></div><span class="source-tag">Real robot</span></header>'
             f'<div class="benchmark-table-scroll" tabindex="0" role="region" aria-label="Real-robot success"><table class="results-table">'
             f'<thead><tr><th scope="col">Arm</th>{head}<th scope="col">Success ↑ · Wilson 95%</th></tr></thead><tbody>{"".join(body)}</tbody></table></div>'
-            '<p class="latency-note">Logged-observation action cosine against BF16 PyTorch — ALOHA: W8A8 0.99999 · W4A4 0.99930 · W4A4 + o/d INT8 0.99966; '
-            'SO-101: 0.99999 · 0.99929 · 0.99983; TRT BF16 0.99999. π₀.₅ real-robot runs on three SO-101 tasks are in progress.</p></div>')
+            f'<p class="latency-note">{esc(res["note"])}</p></div>')
 
 
 def make_overview_media():

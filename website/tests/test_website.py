@@ -105,7 +105,7 @@ class BuildTests(unittest.TestCase):
         self.assertNotIn('fonts.googleapis.com',self.html)
         self.assertIn('name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex"', self.html)
         self.assertIn('name="referrer" content="no-referrer"', self.html)
-        self.assertIn('58<span>/60</span>', self.html)
+        self.assertIn('74<span>/80</span>', self.html)
         self.assertIn('Real-robot successes', self.html)
 
     def test_all_evidence_readable_without_javascript(self):
