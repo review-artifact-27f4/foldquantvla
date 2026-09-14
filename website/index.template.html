@@ -52,6 +52,17 @@
     <div><p class="metric">{{episode_count}}</p><h2>Closed-loop episodes</h2><p>{{campaign_count}} LIBERO campaigns × 800 episodes.<br>{{comparison_count}} reference comparisons across six checkpoints.</p></div>
     <div><p class="metric sr-metric">{{stable_comparison_count}}<span>/{{comparison_count}}</span></p><h2>No detected SR loss</h2><p>Comparisons without a statistically detected drop after Holm correction.<br>Non-detection does not establish equivalence.</p></div>
   </section>
+  <section class="section benchmark-preview" id="closed-loop-preview" aria-labelledby="benchmark-preview-title">
+    <div class="container">
+      <div class="benchmark-intro">
+        <div class="section-heading"><p class="section-label">Closed-loop benchmark · LIBERO</p><h2 id="benchmark-preview-title">Success survives<br>the precision change.</h2></div>
+        <div><p>Across 800 episodes per configuration, FoldQuantVLA W4A4 remains close to its checkpoint-specific BF16 reference on GR00T N1.7 and π₀.₅.</p><p>The comparison uses task-clustered testing with Holm correction. DuQuant W4A4 and HoloQVLA W4A4 slots are reserved for the matched evaluation now in progress.</p></div>
+      </div>
+      <div class="benchmark-tabs" aria-label="Checkpoint" hidden><button id="benchmark-tab-n17" data-benchmark="benchmark-n17">GR00T N1.7</button><button id="benchmark-tab-pi05" data-benchmark="benchmark-pi05">π₀.₅</button></div>
+      <div class="benchmark-panels">{{benchmark_preview}}</div>
+      <p class="benchmark-note"><strong>Current evidence.</strong> Published values come from Table V. Pending rows do not enter the 53 reported comparisons or the 47,200-episode total.</p>
+    </div>
+  </section>
   <section class="section container overview" id="overview" aria-labelledby="overview-title">
     <div class="section-heading"><p class="section-label">Overview</p><h2 id="overview-title">A consistent fold.<br>A clearer measurement.</h2></div>
     <div class="overview-copy"><p class="lead">What does lower precision actually buy a robot policy?</p><p>FoldQuantVLA fixes a shared change of basis at each activation site, folds it into weights and normalization gains, and rounds once. A common build path produces floating-point, eight-bit, and four-bit engines for the language backbone and iterative action expert.</p><p>We evaluate the resulting engines with compiled floating-point controls and 59 closed-loop LIBERO campaigns. The controls separate deployment speedups from precision gains; the rollouts show where offline action fidelity stops predicting task success.</p></div>

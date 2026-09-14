@@ -52,6 +52,42 @@
   revealHash();
   window.addEventListener('hashchange', revealHash);
 
+  const benchmarkTabs = [...document.querySelectorAll('.benchmark-tabs button')];
+  const benchmarkPanels = [...document.querySelectorAll('.benchmark-panel')];
+  function selectBenchmark(id, focus = false) {
+    benchmarkTabs.forEach(tab => {
+      const selected = tab.dataset.benchmark === id;
+      tab.setAttribute('aria-selected', String(selected));
+      tab.tabIndex = selected ? 0 : -1;
+      if (selected && focus) tab.focus();
+    });
+    benchmarkPanels.forEach(panel => { panel.hidden = panel.id !== id; });
+  }
+  if (benchmarkTabs.length) {
+    const benchmarkTablist = document.querySelector('.benchmark-tabs');
+    benchmarkTablist.hidden = false;
+    benchmarkTablist.setAttribute('role', 'tablist');
+    benchmarkTabs.forEach((tab, index) => {
+      tab.setAttribute('role', 'tab');
+      tab.setAttribute('aria-controls', tab.dataset.benchmark);
+      const panel = document.getElementById(tab.dataset.benchmark);
+      panel.setAttribute('role', 'tabpanel');
+      tab.addEventListener('click', () => selectBenchmark(tab.dataset.benchmark));
+      tab.addEventListener('keydown', event => {
+        let next;
+        if (event.key === 'ArrowRight') next = (index + 1) % benchmarkTabs.length;
+        if (event.key === 'ArrowLeft') next = (index + benchmarkTabs.length - 1) % benchmarkTabs.length;
+        if (event.key === 'Home') next = 0;
+        if (event.key === 'End') next = benchmarkTabs.length - 1;
+        if (next === undefined) return;
+        event.preventDefault();
+        selectBenchmark(benchmarkTabs[next].dataset.benchmark, true);
+      });
+    });
+    document.documentElement.classList.add('benchmark-tabs-ready');
+    selectBenchmark('benchmark-n17');
+  }
+
   const desktopSelect = document.getElementById('desktop-model');
   function filterDesktop() {
     document.querySelectorAll('.desktop-model').forEach(panel => {

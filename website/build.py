@@ -88,6 +88,32 @@ def make_libero(data):
     return ''.join(cards)
 
 
+def make_benchmark_preview(data):
+    panels = []
+    for model_key in ('n17', 'pi05'):
+        model = next(model for model in data['models'] if model['key'] == model_key)
+        rows = {row['key']: row for row in model['rows']}
+        selected = [rows['bf16'], rows['int8'], rows['int4']]
+        body = []
+        for row in selected:
+            kind = 'baseline' if row['key'] == 'bf16' else ('ours' if row['key'] == 'int4' else '')
+            precision = 'BF16' if row['key'] == 'bf16' else ('W8A8' if row['key'] == 'int8' else 'W4A4')
+            body.append(
+                f'<tr class="{kind}"><th scope="row">{esc(row["label"])}</th><td>{precision}</td>'
+                f'<td>{row["successes"]}/800</td><td><div class="sr-cell"><span style="--sr:{row["rate"]:.2f}%"></span>'
+                f'<strong>{row["rate"]:.2f}%</strong></div></td></tr>')
+        for method in ('DuQuant', 'HoloQVLA'):
+            body.append(
+                f'<tr class="pending-row"><th scope="row">{method}</th><td>W4A4</td><td>Evaluation pending</td><td>—</td></tr>')
+        panels.append(
+            f'<section class="benchmark-panel" id="benchmark-{model_key}" aria-labelledby="benchmark-tab-{model_key}">'
+            f'<header><div><h3>{esc(model["name"])}</h3><p>K = {model["k"]} · 40 tasks · 20 initial states</p></div><span>800 episodes / arm</span></header>'
+            f'<div class="benchmark-table-scroll" tabindex="0" role="region" aria-label="{esc(model["name"])} LIBERO success comparison">'
+            '<table><thead><tr><th scope="col">Method</th><th scope="col">Precision</th><th scope="col">Successes</th><th scope="col">Success rate ↑</th></tr></thead>'
+            f'<tbody>{"".join(body)}</tbody></table></div></section>')
+    return ''.join(panels)
+
+
 def make_resources(data):
     icons = {'code': '&lt;/&gt;', 'models': '◇', 'appendix': 'A+', 'bibtex': 'B'}
     items = []
@@ -217,6 +243,7 @@ def build(output, base_url=''):
     tokens['head_table'] = table(['Checkpoint','Eager (ms)','Compiled float (ms)','W8A8 (ms)','W4A4 (ms)'], [[r['name']]+[f'{r[k]:.2f}' for k in ('eager','compiled','int8','int4')] for r in desktop['head_rows']], 'Table II · Action-head-only latency')
     tokens['desktop_protocol'] = esc(desktop['protocol'])
     tokens['libero_charts'] = make_libero(libero)
+    tokens['benchmark_preview'] = make_benchmark_preview(libero)
     tokens['libero_options'] = ''.join(f'<option value="{m["key"]}">{esc(m["name"])}</option>' for m in libero['models'])
     config_labels = {}
     table_rows, attrs = [], []

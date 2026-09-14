@@ -115,6 +115,12 @@ class BuildTests(unittest.TestCase):
         self.assertTrue(all('hidden' not in r for r in rows))
         self.assertEqual(sum('desktop-model' in a.get('class','').split() for _,a in self.doc.elements),6)
         self.assertIn('prefers-reduced-motion:reduce',(self.output/'assets/styles.css').read_text())
+        benchmark_panels = [a for _,a in self.doc.elements if a.get('id') in ('benchmark-n17','benchmark-pi05')]
+        self.assertEqual(len(benchmark_panels), 2)
+        self.assertTrue(all('hidden' not in panel for panel in benchmark_panels))
+        self.assertIn('DuQuant', self.html)
+        self.assertIn('HoloQVLA', self.html)
+        self.assertEqual(self.html.count('Evaluation pending'), 4)
 
     def test_real_robot_reel_is_ready_without_publishing_private_media(self):
         data = site.load('real_robot')
