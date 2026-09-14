@@ -323,10 +323,10 @@ def make_overview_media():
     source = ROOT / 'media' / 'overview.mp4'
     shell = '<span class="video-kicker"><i aria-hidden="true"></i> Overview film</span>'
     if source.is_file():
-        video = ('<video controls playsinline preload="metadata" aria-label="FoldQuantVLA overview video">'
+        video = ('<video autoplay muted loop playsinline controls preload="auto" aria-label="FoldQuantVLA overview video">'
                  '<source src="media/overview.mp4" type="video/mp4">'
                  'This browser cannot play the overview video.</video>')
-        return f'<div class="overview-video-frame has-video">{shell}{video}</div>', source
+        return f'<div class="overview-video-frame has-video">{video}</div>', source
     placeholder = ('<span class="overview-play" aria-hidden="true">▶</span>'
                    '<div><strong>Fold once. Execute natively.</strong><span>Overview video forthcoming</span></div>')
     return f'<div class="overview-video-frame" role="img" aria-label="Overview video forthcoming">{shell}{placeholder}</div>', None
