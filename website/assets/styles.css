@@ -125,3 +125,4 @@
 .latency-tabs-ready .latency-panel.is-inactive,.family-ready .family-panel.is-inactive{visibility:hidden;pointer-events:none}
 .family-ready .family-panels{display:grid}.family-ready .family-panels>.family-panel{grid-area:1/1;margin-top:0}
 .overview-video-frame.has-video{aspect-ratio:16/9;min-height:0;background:#f8faf7}.overview-video-frame.has-video:before{content:none;display:none}.overview-video-frame.has-video video{object-fit:contain}
+.latency-stack>.latency-panel,.latency-stack>.latency-panel+.latency-panel{margin-top:0}
