@@ -145,7 +145,7 @@ def scene_libero(t, d, compare):
     img = canvas(); dr = ImageDraw.Draw(img); a = fade(t, d)
     panel = next(p for p in compare['panels'] if p['key'] == 'n17')
     rows = [r for r in panel['rows'] if r['kind'] != 'pending']
-    text(dr, (120, 90), 'LIBERO · GR00T N1.7 · one harness · 800 episodes per arm', 30, 600, RED, 'la', a)
+    text(dr, (120, 90), 'LIBERO · GR00T N1.7 · success rate · 800 episodes per arm', 30, 600, RED, 'la', a)
     text(dr, (120, 132), 'Success stays with the float model', 58, 700, INK, 'la', a)
     lo, hi = 85.0, 100.0
     x0, x1 = 700, 1700
@@ -158,7 +158,7 @@ def scene_libero(t, d, compare):
         dr.rounded_rectangle((x0, y, x1, y + 60), 10, fill=blend((236, 242, 238), a))
         w = (x1 - x0) * (sr - lo) / (hi - lo) * k
         dr.rounded_rectangle((x0, y, x0 + max(w, 12), y + 60), 10, fill=blend(col, a))
-        text(dr, (x0 + max(w, 12) + 18, y + 30), f'{sr:.2f}%  ·  {total}/800', 30, 600, INK, 'lm', k)
+        text(dr, (x0 + max(w, 12) + 18, y + 30), f'{sr:.2f}%', 30, 600, INK, 'lm', k)
     text(dr, (x0, 950), f'{lo:.0f}%', 22, 400, GREY, 'la', a); text(dr, (x1, 950), f'{hi:.0f}%', 22, 400, GREY, 'ra', a)
     text(dr, (120, 1010), 'Axis starts at 85%. HoloQ-VLA is our fake-quantized port of the method. Differences are within closed-loop noise.', 22, 400, GREY, 'la', a)
     return img
@@ -226,7 +226,7 @@ def robot_scene(path, cfg, results, preview_clip, threads, work):
         text(dr, (x, top + cell_h + 80), arm['precision'], 22, 400, MUTED)
         res = by_label.get(arm.get('result_label', arm['label']))
         if res and task_index is not None and res['tasks'][task_index] is not None:
-            text(dr, (x, top + cell_h + 124), f'{res["tasks"][task_index]}/{results["episodes_per_task"]} successes', 24, 600, INK)
+            text(dr, (x, top + cell_h + 124), f'{100 * res["tasks"][task_index] / results["episodes_per_task"]:.0f}% SR', 24, 600, INK)
         src = arm.get('src') or preview_clip
         if not src:
             placeholders.append(i)

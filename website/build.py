@@ -98,7 +98,7 @@ def make_libero_summary(data, fidelity):
             if row is None:
                 return '<td class="na">—</td>'
             loss = ' class="loss"' if key == 'int4' and model['key'] in ('smol', 'evo') else ''
-            return f'<td{loss}><strong>{row["rate"]:.2f}%</strong><small>{row["successes"]}/800</small></td>'
+            return f'<td{loss}><strong>{row["rate"]:.2f}%</strong></td>'
         body.append(f'<tr><th scope="row">{esc(model["name"])}</th><td>{model["chunk_length"]}</td><td>{model["k"]}</td>{sr("bf16")}{sr("trt_bf16")}'
                     f'{sr("int8")}<td>{cos["int8"]:.5f}</td>{sr("int4")}<td>{cos["int4"]:.5f}</td>{('<td class="na pending-cell">Measuring…</td>' if model['key'] == 'n17' else sr("arc_sr_before_int8"))}{"<td class=\"na\">—</td>" if cos.get("res8") is None else f"<td>{cos['res8']:.5f}</td>"}</tr>')
     head = ('<thead><tr><th scope="col" rowspan="2">Checkpoint</th><th scope="col" rowspan="2">H</th><th scope="col" rowspan="2">K</th><th scope="colgroup" colspan="2">BF16 SR</th>'
@@ -227,16 +227,16 @@ def make_benchmark_preview(compare):
                             f'<td colspan="5" class="pending-cell">{esc(row["status"].capitalize())}…</td></tr>')
                 continue
             total = sum(row['suites'])
-            suites = ''.join(f'<td>{n}</td>' for n in row['suites'])
+            suites = ''.join(f'<td>{n / 2:.1f}%</td>' for n in row['suites'])
             tag = f'<small>{esc(row["tag"])}</small>' if row.get('tag') else ''
             body.append(f'<tr class="{row["kind"]}"><th scope="row">{esc(row["method"])}{tag}</th><td class="prec">{esc(row["precision"])}</td>{suites}'
-                        f'<td><strong>{total / 8:.2f}%</strong><small>{total}/800</small></td></tr>')
+                        f'<td><strong>{total / 8:.2f}%</strong></td></tr>')
         panels.append(
             f'<section class="benchmark-panel" id="benchmark-{panel["key"]}" aria-labelledby="benchmark-tab-{panel["key"]}">'
-            f'<header><div><h3>{esc(panel["name"])}</h3><p>{esc(panel["meta"])}</p></div><span>200 episodes / suite</span></header>'
+            f'<header><div><h3>{esc(panel["name"])}</h3><p>{esc(panel["meta"])}</p></div><span>SR % · 200 episodes per suite</span></header>'
             f'<div class="benchmark-table-scroll" tabindex="0" role="region" aria-label="{esc(panel["name"])} LIBERO comparison">'
             '<table class="compare-table"><thead><tr><th scope="col">Arm</th><th scope="col">Prec.</th><th scope="col">Spatial</th><th scope="col">Object</th>'
-            f'<th scope="col">Goal</th><th scope="col">Long</th><th scope="col">Success rate ↑</th></tr></thead>'
+            f'<th scope="col">Goal</th><th scope="col">Long</th><th scope="col">Average SR ↑</th></tr></thead>'
             f'<tbody>{"".join(body)}</tbody></table></div>'
             + (f'<p class="latency-note">{esc(panel["footnote"])}</p>' if panel.get('footnote') else '') + '</section>')
     return ''.join(panels)
@@ -334,15 +334,15 @@ def make_robot_results(data):
             elif n is None:
                 cells.append('<td class="na pending-cell">Measuring…</td>')
             else:
-                cells.append(f'<td>{n}/{per}</td>'); done += n; total += per
+                cells.append(f'<td>{100 * n / per:.0f}%</td>'); done += n; total += per
         lo, hi = arm['wilson']
         scope = f'<small>{esc(arm["scope"])}</small>' if arm.get('scope') else ''
         kind = f' class="{arm["kind"]}"' if arm['kind'] else ''
         body.append(f'<tr{kind}><th scope="row">{esc(arm["label"])}</th>{"".join(cells)}'
-                    f'<td><strong>{100 * done / total:.1f}%</strong><small>{done}/{total} · [{lo:.1f}, {hi:.1f}]</small>{scope}</td></tr>')
-    return (f'<div class="benchmark-panel robot-results"><header><div><h3>Real-robot success</h3><p>{esc(res["policy"])} · {per} episodes per task</p></div><span class="source-tag">Real robot</span></header>'
+                    f'<td><strong>{100 * done / total:.1f}%</strong><small>95% CI [{lo:.1f}, {hi:.1f}]</small>{scope}</td></tr>')
+    return (f'<div class="benchmark-panel robot-results"><header><div><h3>Real-robot success</h3><p>{esc(res["policy"])} · SR % · {per} episodes per task and arm · Wilson 95% interval</p></div><span class="source-tag">Real robot</span></header>'
             f'<div class="benchmark-table-scroll" tabindex="0" role="region" aria-label="Real-robot success"><table class="results-table">'
-            f'<thead><tr><th scope="col">Arm</th>{head}<th scope="col">Success ↑ · Wilson 95%</th></tr></thead><tbody>{"".join(body)}</tbody></table></div>'
+            f'<thead><tr><th scope="col">Arm</th>{head}<th scope="col">Average SR ↑</th></tr></thead><tbody>{"".join(body)}</tbody></table></div>'
             f'<p class="latency-note">{esc(res["note"])}</p></div>')
 
 

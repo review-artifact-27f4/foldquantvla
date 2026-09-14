@@ -164,6 +164,6 @@
         "res8": 0.99983
       }
     },
-    "note": "Arms interleaved with matched object placements. W4A4 + o/d INT8 minus W4A4: +4 / +2 / +1 / +3 per task (+10 of 80). ModelOpt W8A8 SQ stopped after one task (SO-101 blue on red): jerky motion risked the hardware. It is not in any total. Median logged-observation action cosine vs BF16 PyTorch — ALOHA: TRT BF16 0.99999 · W8A8 0.99999 · W4A4 0.99962 · W4A4 + o/d INT8 0.99975; SO-101: TRT BF16 1.00000 · ModelOpt SQ 0.99892 · W8A8 1.00000 · W4A4 0.99961 · W4A4 + o/d INT8 0.99988. π0.5 real-robot runs are in progress."
+    "note": "Arms interleaved with matched object placements. W4A4 + o/d INT8 vs W4A4: +20 / +10 / +5 / +15 pp per task, +12.5 pp on average. ModelOpt W8A8 SQ stopped after one task (SO-101 blue on red): jerky motion risked the hardware. It is not in any total. Median logged-observation action cosine vs BF16 PyTorch — ALOHA: TRT BF16 0.99999 · W8A8 0.99999 · W4A4 0.99962 · W4A4 + o/d INT8 0.99975; SO-101: TRT BF16 1.00000 · ModelOpt SQ 0.99892 · W8A8 1.00000 · W4A4 0.99961 · W4A4 + o/d INT8 0.99988. π0.5 real-robot runs are in progress."
   }
 }
