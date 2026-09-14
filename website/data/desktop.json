@@ -176,8 +176,9 @@
           "note": "smolvla_libero, release harness, 1 repeat; same run W4A4 36.4"
         },
         "evo": {
-          "display": "measuring",
-          "note": "running"
+          "display": "112.0",
+          "note": "Evo1_LIBERO, FoldQuant release timer (served request incl. image decode), 1 repeat; same run W4A4 112.3",
+          "e2e_table_comparable": false
         }
       },
       "head_ms": {
@@ -188,5 +189,12 @@
       }
     }
   },
-  "compile_footnote": "N1.7 torch.compile was measured in a framework runtime with eager latency 71.8 ms rather than 67.8 ms; shown for reference and excluded from attribution."
+  "compile_footnote": "N1.7 torch.compile was measured in a framework runtime with eager latency 71.8 ms rather than 67.8 ms; shown for reference and excluded from attribution.",
+  "gpu_ms": {
+    "evo": {
+      "FoldQuant W4A4": 87.0,
+      "FoldQuant W4A4 + o/d INT8": 87.0
+    }
+  },
+  "gpu_ms_note": "Device time from FoldQuant release timer runs (component sum), exclusive GPU"
 }

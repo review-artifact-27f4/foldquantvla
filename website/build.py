@@ -142,6 +142,10 @@ def make_latency_tables(jetson, desktop):
                 rows.append(f'<tr{cls}><th scope="row">{label}</th><td class="prec">{prec}</td><td colspan="4" class="na pending-cell">Measuring…</td></tr>')
                 continue
             gpu = f'{v["gpu"]:.1f}' if v.get('gpu') is not None else '<span class="pending-cell">Measuring…</span>'
+            if v.get('same_as_w4a4'):
+                rows.append(f'<tr{cls}><th scope="row">{label}</th><td class="prec">{prec}</td><td>{gpu}</td><td><strong>≈ W4A4</strong><sup>*</sup></td>'
+                            '<td class="na">—</td><td class="na">—</td></tr>')
+                continue
             e2e = v['e2e']
             e2e_txt = (str(e2e) if isinstance(e2e, int) else ms(e2e)) + v.get('mark', '')
             if label.startswith('TRT BF16'):
@@ -181,11 +185,18 @@ def make_latency_tables(jetson, desktop):
         elif pre and pre['display'] != 'measuring':
             v = float(pre['display'])
             values['FoldQuant W4A4 + o/d INT8'] = {'e2e': v, 'comparable': False}
+            if pre.get('e2e_table_comparable') is False:
+                values['FoldQuant W4A4 + o/d INT8'] = {'e2e': r['int4'], 'mark': '*', 'comparable': False, 'same_as_w4a4': True}
             m = re.search(r'same runs? W4A4 ([0-9.]+)', pre['note'])
             if m:
-                note_bits.append(f'o/d INT8 costs +{v - float(m.group(1)):.1f} ms over W4A4 in the same run')
+                delta = v - float(m.group(1))
+                note_bits.append(f'o/d INT8 costs {"+" if delta >= 0 else "−"}{abs(delta):.1f} ms vs W4A4 in the same run'
+                                 + (f' ({float(m.group(1)):.1f} → {v:.1f} ms in a timer that includes image decode; * same-run E2E is within 0.3 ms of W4A4)' if pre.get('e2e_table_comparable') is False else ''))
         if r.get('note'):
             note_bits.append(f'{marks.get(key, "")} {r["note"]}'.strip())
+        for label, g in desktop.get('gpu_ms', {}).get(key, {}).items():
+            if label in values:
+                values[label]['gpu'] = g
         foot = f'<p class="family-note">{esc(" · ".join(note_bits))}</p>'
         dpanels.append(panel('desktop', r['name'], head, family_rows(values), foot))
     desktop_html = switcher('desktop', [r['name'] for r in desktop['rows']]) + '<div class="family-panels">' + ''.join(dpanels) + '</div>'
