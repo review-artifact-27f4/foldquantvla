@@ -136,7 +136,7 @@ class BuildTests(unittest.TestCase):
         self.assertIn('id="robot-demos"', self.html)
         self.assertEqual(self.html.count('data-robot-task='), 4)
         self.assertEqual(self.html.count('class="robot-card"'), 4)
-        self.assertEqual(self.html.count('Video forthcoming'), 6)  # visible text and accessible label per slot
+        self.assertEqual(self.html.count('Video forthcoming'), 8)  # visible text and accessible label per slot
         self.assertFalse((self.output/'media').exists())
 
     def test_real_robot_media_paths_are_confined(self):
