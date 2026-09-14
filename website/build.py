@@ -12,7 +12,7 @@ from urllib.parse import urlparse
 ROOT = Path(__file__).resolve().parent
 CORE = ('bf16', 'int8', 'mixed', 'int4')
 COLORS = {'bf16': '#84958b', 'trt_bf16': '#66776d', 'float': '#84958b', 'eager': '#b9c3bd', 'compiled': '#84958b', 'int8': '#507b68', 'mixed': '#b57a34', 'int4': '#d72e3b', 'sq': '#74828b', 'awq': '#9b8582', 'arc': '#bd5861', 'cascade': '#bd5861'}
-SHORT = {'bf16': 'BF16', 'int8': 'W8A8', 'mixed': 'Head 4 / LM 8', 'int4': 'W4A4'}
+SHORT = {'bf16': 'BF16', 'int8': 'W8A8', 'mixed': 'Head W4A4 + LLM W8A8', 'int4': 'W4A4'}
 VIDEO_TYPES = {'.mp4': 'video/mp4', '.webm': 'video/webm'}
 POSTER_TYPES = {'.avif', '.jpg', '.jpeg', '.png', '.webp'}
 
@@ -112,33 +112,36 @@ def make_latency_tables(jetson, desktop):
     def ms(v):
         t = f"{v:.2f}".rstrip("0")
         return t + "0" if t.endswith(".") else t
+    dash = '<td class="na">—</td>'
     ours = {'int8', 'mixed', 'int4'}
+    jsel = jetson['selective_int8']
     jrows = []
     for r in jetson['rows']:
         kind = ' class="ours"' if r['key'] in ours else (' class="baseline"' if r['key'] == 'float' else '')
         gain = ' class="gain"' if r['speedup_vs_float'] > 1 else (' class="loss"' if r['speedup_vs_float'] < 1 else '')
         jrows.append(f'<tr{kind}><th scope="row">{esc(r["label"])}</th><td>{ms(r["gpu_ms"])}</td><td><strong>{r["e2e_ms"]}</strong></td>'
                      f'<td>{r["hz"]:.1f}</td><td{gain}><strong>{r["speedup_vs_float"]:.2f}×</strong></td><td>{r["engine_mb"]:,}</td><td>{r["build_s"]:,}</td></tr>')
+        if r['key'] == jsel['after']:
+            jrows.append(f'<tr class="sub-row pending-row"><th scope="row">↳ {esc(jsel["label"])}</th><td colspan="6" class="na pending-cell">{esc(jsel["status"])}</td></tr>')
     jhead = ('<thead><tr><th scope="col">Configuration</th><th scope="col">GPU (ms) ↓</th><th scope="col">E2E (ms) ↓</th><th scope="col">Rate (Hz) ↑</th>'
              '<th scope="col">vs BF16 ↑</th><th scope="col">Engine (MB) ↓</th><th scope="col">Build (s)</th></tr></thead>')
     marks = {'smol': '†', 'evo': '‡'}
     sel = desktop['selective_int8']
-    dash = '<td class="na">—</td>'
-    def ladder(rows, name_of, mark_of, sel_ms, fmt=ms):
+    head_keys = {'GR00T N1.7': 'n17', 'GR00T N1.6': 'n16', 'GR00T N1.5': 'n15'}
+    def ladder(rows, key_of, mark_of, sel_map, fmt, cls):
         out = []
         for r in rows:
-            out.append(f'<tr class="desktop-row"><th scope="row">{esc(name_of(r))}<sup>{mark_of(r)}</sup></th><td>{fmt(r["eager"])}</td><td>{fmt(r["compiled"])}</td>'
-                       f'<td>{fmt(r["int8"])}</td><td class="ours-col"><strong>{fmt(r["int4"])}</strong></td>'
+            v = sel_map.get(key_of(r))
+            sel_cell = f'<td class="ours-col"><strong>{fmt(v)}</strong></td>' if v is not None else '<td class="na" title="Measurement pending">—</td>'
+            out.append(f'<tr class="{cls}"><th scope="row">{esc(r["name"])}<sup>{mark_of(r)}</sup></th><td>{fmt(r["eager"])}</td><td>{fmt(r["compiled"])}</td>'
+                       f'<td>{fmt(r["int8"])}</td><td class="ours-col"><strong>{fmt(r["int4"])}</strong></td>{sel_cell}'
                        f'<td class="gain"><strong>{r["eager_speedup"]:.2f}×</strong></td><td>{r["compiled_share_pct"]:.1f}%</td>'
                        f'<td>{"−" if r["int8_to_int4_pct"] < 0 else ""}{abs(r["int8_to_int4_pct"]):.1f}%</td></tr>')
-            if r.get('key', '') == sel['checkpoint'] or name_of(r) == 'GR00T N1.6':
-                out.append(f'<tr class="sub-row"><th scope="row">↳ {esc(sel["label"])}</th>{dash*3}'
-                           f'<td class="ours-col"><strong>{fmt(sel_ms)}</strong></td>{dash*3}</tr>')
         return out
-    drows = ladder(desktop['rows'], lambda r: r['name'], lambda r: marks.get(r['key'], ''), sel['e2e_ms'])
-    hrows = [x.replace('class="desktop-row"', 'class="head-row"') for x in ladder(desktop['head_rows'], lambda r: r['name'], lambda r: '', sel['head_ms'], lambda v: f'{v:.2f}')]
+    drows = ladder(desktop['rows'], lambda r: r['key'], lambda r: marks.get(r['key'], ''), sel['e2e_ms'], ms, 'desktop-row')
+    hrows = ladder(desktop['head_rows'], lambda r: head_keys[r['name']], lambda r: '', sel['head_ms'], lambda v: f'{v:.2f}', 'head-row')
     dhead = ('<thead><tr><th scope="col">Checkpoint</th><th scope="col">Eager (ms) ↓</th><th scope="col">Compiled (ms) ↓</th><th scope="col">W8A8 (ms) ↓</th>'
-             '<th scope="col" class="ours-col">W4A4 (ms) ↓</th><th scope="col">vs eager ↑</th><th scope="col">Compile share</th><th scope="col">8→4 gain</th></tr></thead>')
+             '<th scope="col" class="ours-col">W4A4 (ms) ↓</th><th scope="col" class="ours-col">W4A4 + o/d INT8 (ms) ↓</th><th scope="col">W4A4 vs eager ↑</th><th scope="col">Compile share</th><th scope="col">8→4 gain</th></tr></thead>')
     def wrap(label, head, rows):
         return (f'<div class="benchmark-table-scroll" tabindex="0" role="region" aria-label="{esc(label)}">'
                 f'<table class="results-table">{head}<tbody>{"".join(rows)}</tbody></table></div>')

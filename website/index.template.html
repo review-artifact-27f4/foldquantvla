@@ -97,7 +97,8 @@
     </div>
   </section>
   <section class="section container results-section" id="results" aria-labelledby="results-title">
-    <div class="section-heading results-heading"><div><p class="section-label">Results · Latency</p><h2 id="results-title">Efficiency, with the controls.</h2></div><p>One table format for every target: on-device,<br>desktop end to end, and the action head.</p></div>
+    <div class="section-heading results-heading"><div><p class="section-label">Results · Latency</p><h2 id="results-title">Efficiency, with the controls.</h2></div><p>Switch between on-device deployment,<br>desktop end to end, and the action head.</p></div>
+    <div class="latency-tabs" aria-label="Latency view" hidden><button id="latency-tab-jetson" data-latency="jetson">Jetson AGX Orin</button><button id="latency-tab-desktop" data-latency="desktop">Desktop · end-to-end</button><button id="latency-tab-head" data-latency="action-head">Desktop · action head</button></div>
     <div class="latency-stack">
     <section class="benchmark-panel latency-panel" id="jetson" aria-labelledby="jetson-title">
       <header><div><h3 id="jetson-title">Jetson AGX Orin · on-device</h3><p>GR00T N1.6 · batch 1 · observation-to-action chunk</p></div><span class="source-tag">Table IV</span></header>
@@ -112,7 +113,7 @@
     <section class="benchmark-panel latency-panel" id="action-head" aria-labelledby="head-title">
       <header><div><h3 id="head-title">RTX 4070 Ti SUPER · action head only</h3><p>GR00T checkpoints · batch 1 · head-only median</p></div><span class="source-tag">Table II</span></header>
       {{head_summary}}
-      <p class="latency-note">Head-only latency has a different scope and denominator from end-to-end latency; stage medians are not summed into a chunk time. The o/d proj INT8 row keeps o_proj and down_proj at INT8 inside the W4A4 arm on GR00T N1.6 (Section VI-C, same protocol).</p>
+      <p class="latency-note">Head-only latency has a different scope and denominator from end-to-end latency; stage medians are not summed into a chunk time. W4A4 + o/d INT8 keeps o_proj and down_proj at INT8 inside the W4A4 arm (Section VI-C, same protocol); “—” marks measurements in progress.</p>
     </section>
     </div>
   </section>

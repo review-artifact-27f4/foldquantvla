@@ -29,7 +29,7 @@
     },
     {
       "key": "mixed",
-      "label": "FoldQuant head 4 / LM 8",
+      "label": "FoldQuant Head W4A4 + LLM W8A8",
       "gpu_ms": 108.9,
       "e2e_ms": 130,
       "hz": 7.7,
@@ -67,5 +67,10 @@
       "engine_mb": 3077,
       "build_s": 1553
     }
-  ]
+  ],
+  "selective_int8": {
+    "label": "FoldQuant W4A4 + o/d proj INT8",
+    "after": "int4",
+    "status": "Measurement pending"
+  }
 }

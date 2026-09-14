@@ -88,6 +88,41 @@
     selectBenchmark('benchmark-n17');
   }
 
+  const latencyTabs = [...document.querySelectorAll('.latency-tabs button')];
+  if (latencyTabs.length) {
+    const latencyList = document.querySelector('.latency-tabs');
+    const selectLatency = (id, focus = false) => {
+      latencyTabs.forEach(tab => {
+        const selected = tab.dataset.latency === id;
+        tab.setAttribute('aria-selected', String(selected));
+        tab.tabIndex = selected ? 0 : -1;
+        document.getElementById(tab.dataset.latency).hidden = !selected;
+        if (selected && focus) tab.focus();
+      });
+    };
+    latencyList.hidden = false;
+    latencyList.setAttribute('role', 'tablist');
+    latencyTabs.forEach((tab, index) => {
+      tab.setAttribute('role', 'tab');
+      tab.setAttribute('aria-controls', tab.dataset.latency);
+      const panel = document.getElementById(tab.dataset.latency);
+      panel.setAttribute('role', 'tabpanel');
+      panel.setAttribute('aria-labelledby', tab.id);
+      tab.addEventListener('click', () => selectLatency(tab.dataset.latency));
+      tab.addEventListener('keydown', event => {
+        let next;
+        if (event.key === 'ArrowRight') next = (index + 1) % latencyTabs.length;
+        if (event.key === 'ArrowLeft') next = (index + latencyTabs.length - 1) % latencyTabs.length;
+        if (next === undefined) return;
+        event.preventDefault();
+        selectLatency(latencyTabs[next].dataset.latency, true);
+      });
+    });
+    document.documentElement.classList.add('latency-tabs-ready');
+    const hashTab = latencyTabs.find(tab => tab.dataset.latency === location.hash.slice(1));
+    selectLatency(hashTab ? hashTab.dataset.latency : 'jetson');
+  }
+
   const desktopSelect = document.getElementById('desktop-model');
   function filterDesktop() {
     document.querySelectorAll('.desktop-model').forEach(panel => {

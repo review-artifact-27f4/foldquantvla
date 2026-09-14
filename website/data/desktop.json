@@ -123,10 +123,21 @@
     }
   ],
   "selective_int8": {
-    "checkpoint": "n16",
     "label": "W4A4 + o/d proj INT8",
-    "e2e_ms": 35.3,
-    "head_ms": 15.94,
-    "source": "Section VI-C, same runtime and protocol as Table II"
+    "description": "W4A4 with o_proj and down_proj kept at INT8",
+    "source": "Section VI-C, same runtime and protocol as Table II; null = measurement pending",
+    "e2e_ms": {
+      "n17": null,
+      "n16": 35.3,
+      "n15": null,
+      "pi05": null,
+      "smol": null,
+      "evo": null
+    },
+    "head_ms": {
+      "n17": null,
+      "n16": 15.94,
+      "n15": null
+    }
   }
 }

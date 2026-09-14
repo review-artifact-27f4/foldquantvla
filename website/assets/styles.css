@@ -76,8 +76,14 @@
 .latency-stack{display:grid;gap:26px}.latency-panel{scroll-margin-top:105px}.latency-panel .source-tag{align-self:flex-start}
 .results-table{font-size:13px}.results-table th,.results-table td{padding:13px 18px}.results-table thead{background:#fff}.results-table thead th{font-size:11px;font-weight:600;color:#4f6256}
 .results-table tbody tr.baseline{background:#fafcfa}.results-table tbody tr.ours{background:#fff7f5}.results-table tbody tr.ours th{color:var(--link)}
-.results-table td.gain strong{color:#18864b}.results-table td.loss strong{color:var(--link)}.results-table .ours-col{background:#fff7f5}.results-table td.ours-col strong{color:var(--link)}
+.results-table td.gain strong{color:#18864b}.results-table td.loss strong{color:var(--link)}.results-table .ours-col{background:#f1f8f3}.results-table td.ours-col strong{color:#18864b}
 .results-table sup{font-size:9px;color:var(--muted);margin-left:2px}
 .latency-note{padding:12px 27px 16px;border-top:1px solid var(--line);font-size:11px;line-height:1.7;color:var(--muted)}.latency-head{margin-top:24px}
 @media(max-width:700px){.results-table{font-size:11px}.results-table th,.results-table td{padding:10px 11px}.latency-note{padding:11px 16px 14px;font-size:10px}}
 .results-table tbody tr.sub-row{background:#fbfcfb}.results-table tbody tr.sub-row th{font-weight:500;color:var(--muted);padding-left:30px}.results-table td.na{color:#a3aea8}
+.latency-tabs{display:inline-grid;grid-template-columns:repeat(3,auto);gap:4px;margin:0 0 22px;padding:4px;border:1px solid var(--line);border-radius:10px;background:var(--tint);max-width:100%}
+.latency-tabs[hidden]{display:none}.latency-tabs button{min-width:170px;min-height:43px;padding:8px 18px;border:0;border-radius:7px;background:transparent;color:var(--muted);font:inherit;font-size:13px;font-weight:600;cursor:pointer}
+.latency-tabs button[aria-selected="true"]{background:#17201c;color:#fff;box-shadow:0 5px 14px rgba(23,32,28,.13)}.latency-tabs button:focus-visible{outline:3px solid rgba(237,28,36,.25);outline-offset:2px}
+.latency-tabs-ready .latency-panel[hidden]{display:none}.latency-tabs-ready .latency-stack{gap:0}
+.results-table td.pending-cell{text-align:left;font-style:italic}
+@media(max-width:700px){.latency-tabs{display:grid;grid-template-columns:1fr;width:100%}.latency-tabs button{min-width:0}}
