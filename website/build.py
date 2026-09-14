@@ -349,7 +349,7 @@ def make_robot_compare(data):
             pid = f'compare-{comp["key"]}-{arm["key"]}'
             tabs.append(f'<button type="button" id="{pid}-tab" data-compare="{pid}" class="{"ours" if arm.get("ours") else ""}">{esc(arm["label"])}</button>')
             panels.append(f'<figure class="compare-clip{" ours" if arm.get("ours") else ""}" id="{pid}"><div class="compare-screen">{screen}</div>'
-                          f'<figcaption><strong>{esc(arm["label"])}</strong><span>{esc(sr)}</span></figcaption></figure>')
+                          f'<figcaption><strong>{esc(arm["label"])}</strong></figcaption></figure>')
         tab_id = f'task-{comp["key"]}'
         task_tabs.append(f'<button type="button" data-task-panel="{tab_id}">{esc(comp.get("tab", comp["title"]))}</button>')
         html_parts.append(f'<section class="compare-task" id="{tab_id}" aria-label="{esc(comp["title"])}">'
