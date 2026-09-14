@@ -69,7 +69,6 @@ def scene_title(t, d, meta):
     mark(dr, W // 2, 330, 1.6 * (0.9 + 0.1 * ease(t / 0.8)), a)
     text(dr, (W // 2, 520), 'FoldQuantVLA', 128, 700, INK, 'mm', a)
     text(dr, (W // 2, 625), meta['subtitle'], 40, 400, MUTED, 'mm', a * ease((t - 0.4) / 0.6))
-    text(dr, (W // 2, 720), 'Anonymous Authors', 30, 400, GREY, 'mm', a * ease((t - 0.8) / 0.6))
     return img
 
 
@@ -187,7 +186,6 @@ def scene_outro(t, d, meta):
     mark(dr, W // 2, 380, 1.3, a)
     text(dr, (W // 2, 540), 'FoldQuantVLA', 96, 700, INK, 'mm', a)
     text(dr, (W // 2, 630), 'Consistent folding · native low-bit inference · closed-loop evidence', 36, 400, MUTED, 'mm', a)
-    text(dr, (W // 2, 720), 'Anonymous submission · code and models after review', 28, 400, GREY, 'mm', a)
     return img
 
 
