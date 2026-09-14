@@ -121,6 +121,10 @@ class BuildTests(unittest.TestCase):
         self.assertIn('DuQuant', self.html)
         self.assertIn('HoloQVLA', self.html)
         self.assertEqual(self.html.count('Evaluation pending'), 4)
+        self.assertIn('Median action cosine ↑', self.html)
+        self.assertIn('0.99817', self.html)
+        self.assertIn('0.99942', self.html)
+        self.assertNotIn('class="sr-cell"', self.html)
 
     def test_real_robot_reel_is_ready_without_publishing_private_media(self):
         data = site.load('real_robot')

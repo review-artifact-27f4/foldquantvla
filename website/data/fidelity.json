@@ -1,0 +1,8 @@
+{
+  "source": "Table VI (P2)",
+  "metric": "Median decoded-action cosine against BF16 PyTorch over 32 held-out mid-trajectory observations",
+  "models": {
+    "n17": {"bf16": null, "int8": 0.99996, "int4": 0.99817},
+    "pi05": {"bf16": null, "int8": 1.00000, "int4": 0.99942}
+  }
+}
