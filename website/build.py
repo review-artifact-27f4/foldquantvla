@@ -100,9 +100,9 @@ def make_libero_summary(data, fidelity):
             loss = ' class="loss"' if key == 'int4' and model['key'] in ('smol', 'evo') else ''
             return f'<td{loss}><strong>{row["rate"]:.2f}%</strong><small>{row["successes"]}/800</small></td>'
         body.append(f'<tr><th scope="row">{esc(model["name"])}</th><td>{model["k"]}</td>{sr("bf16")}'
-                    f'{sr("int8")}<td>{cos["int8"]:.5f}</td>{sr("int4")}<td>{cos["int4"]:.5f}</td>{sr("mixed")}</tr>')
+                    f'{sr("int8")}<td>{cos["int8"]:.5f}</td>{sr("int4")}<td>{cos["int4"]:.5f}</td>{sr("arc_sr_before_int8")}</tr>')
     head = ('<thead><tr><th scope="col" rowspan="2">Checkpoint</th><th scope="col" rowspan="2">K</th><th scope="col" rowspan="2">BF16 SR</th>'
-            '<th scope="colgroup" colspan="2">FoldQuant W8A8</th><th scope="colgroup" colspan="2">FoldQuant W4A4</th><th scope="col" rowspan="2">Head 4 / LM 8 SR</th></tr>'
+            '<th scope="colgroup" colspan="2">FoldQuant W8A8</th><th scope="colgroup" colspan="2">FoldQuant W4A4</th><th scope="col" rowspan="2">W4A4 + Res INT8 SR</th></tr>'
             '<tr><th scope="col">SR ↑</th><th scope="col">Median cos ↑</th><th scope="col">SR ↑</th><th scope="col">Median cos ↑</th></tr></thead>')
     return (f'<div class="benchmark-table-scroll" tabindex="0" role="region" aria-label="FoldQuantVLA LIBERO results across six checkpoints">'
             f'<table class="libero-summary">{head}<tbody>{"".join(body)}</tbody></table></div>')
