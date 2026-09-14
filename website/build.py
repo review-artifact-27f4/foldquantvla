@@ -88,6 +88,26 @@ def make_libero(data):
     return ''.join(cards)
 
 
+def make_libero_summary(data, fidelity):
+    body = []
+    for model in data['models']:
+        rows = {r['key']: r for r in model['rows']}
+        cos = fidelity['models'][model['key']]
+        def sr(key):
+            row = rows.get(key)
+            if row is None:
+                return '<td class="na">—</td>'
+            loss = ' class="loss"' if key == 'int4' and model['key'] in ('smol', 'evo') else ''
+            return f'<td{loss}><strong>{row["rate"]:.2f}%</strong><small>{row["successes"]}/800</small></td>'
+        body.append(f'<tr><th scope="row">{esc(model["name"])}</th><td>{model["k"]}</td>{sr("bf16")}'
+                    f'{sr("int8")}<td>{cos["int8"]:.5f}</td>{sr("int4")}<td>{cos["int4"]:.5f}</td>{sr("mixed")}</tr>')
+    head = ('<thead><tr><th scope="col" rowspan="2">Checkpoint</th><th scope="col" rowspan="2">K</th><th scope="col" rowspan="2">BF16 SR</th>'
+            '<th scope="colgroup" colspan="2">FoldQuant W8A8</th><th scope="colgroup" colspan="2">FoldQuant W4A4</th><th scope="col" rowspan="2">Head 4 / LM 8 SR</th></tr>'
+            '<tr><th scope="col">SR ↑</th><th scope="col">Median cos ↑</th><th scope="col">SR ↑</th><th scope="col">Median cos ↑</th></tr></thead>')
+    return (f'<div class="benchmark-table-scroll" tabindex="0" role="region" aria-label="FoldQuantVLA LIBERO results across six checkpoints">'
+            f'<table class="libero-summary">{head}<tbody>{"".join(body)}</tbody></table></div>')
+
+
 def make_benchmark_preview(data, fidelity):
     panels = []
     for model_key in ('n17', 'pi05'):
@@ -243,7 +263,7 @@ def build(output, base_url=''):
     tokens['desktop_table'] = table(['Checkpoint', 'Eager (ms)', 'Compiled (ms)', 'W8A8 (ms)', 'W4A4 (ms)', 'Eager / W4A4', 'Compile share', '8→4 reduction', 'Control'], [[r['name'],number(r['eager']),number(r['compiled']),number(r['int8']),number(r['int4']),f'{r["eager_speedup"]:.2f}×',f'{r["compiled_share_pct"]:.1f}%',f'{r["int8_to_int4_pct"]:.1f}%',r['control']] for r in desktop['rows']], 'Table II · Desktop end-to-end precision ladder')
     tokens['head_table'] = table(['Checkpoint','Eager (ms)','Compiled float (ms)','W8A8 (ms)','W4A4 (ms)'], [[r['name']]+[f'{r[k]:.2f}' for k in ('eager','compiled','int8','int4')] for r in desktop['head_rows']], 'Table II · Action-head-only latency')
     tokens['desktop_protocol'] = esc(desktop['protocol'])
-    tokens['libero_charts'] = make_libero(libero)
+    tokens['libero_summary'] = make_libero_summary(libero, fidelity)
     tokens['benchmark_preview'] = make_benchmark_preview(libero, fidelity)
     tokens['libero_options'] = ''.join(f'<option value="{m["key"]}">{esc(m["name"])}</option>' for m in libero['models'])
     config_labels = {}
