@@ -141,7 +141,7 @@ def make_latency_tables(jetson, desktop):
             if not v or v.get('e2e') is None:
                 rows.append(f'<tr{cls}><th scope="row">{label}</th><td class="prec">{prec}</td><td colspan="4" class="na pending-cell">Measuring…</td></tr>')
                 continue
-            gpu = f'{v["gpu"]:.1f}' if v.get('gpu') is not None else '<span class="pending-cell">Measuring…</span>'
+            gpu = f'{v["gpu"]:.1f}' if v.get('gpu') is not None else ('<span class="na">n/a</span>' if label == 'torch.compile' else '<span class="pending-cell">Measuring…</span>')
             if v.get('same_as_w4a4'):
                 rows.append(f'<tr{cls}><th scope="row">{label}</th><td class="prec">{prec}</td><td>{gpu}</td><td><strong>≈ W4A4</strong><sup>*</sup></td>'
                             '<td class="na">—</td><td class="na">—</td></tr>')
@@ -167,37 +167,27 @@ def make_latency_tables(jetson, desktop):
         jpanels.append(panel('jetson', model['name'], head, family_rows(values)))
     jetson_html = switcher('jetson', [m['name'] for m in orin['models']]) + '<div class="family-panels">' + ''.join(jpanels) + '</div>'
 
-    sel = desktop['selective_int8']
+    sweep = load('desktop_sweep')
     marks = {'smol': '†', 'evo': '‡'}
     dpanels = []
     for r in desktop['rows']:
         key = r['key']
-        values = {'Eager PyTorch': {'e2e': r['eager']},
-                  'torch.compile': {'e2e': r['torch_compile'], 'mark': '§' if key == 'n17' else ''},
-                  'TRT BF16 (float engine)': {'e2e': r['trt_bf16']},
-                  'FoldQuant W8A8': {'e2e': r['int8']}, 'FoldQuant W4A4': {'e2e': r['int4']}}
-        paper = sel['e2e_ms'].get(key)
-        pre = sel['preliminary']['e2e_ms'].get(key)
-        note_bits = [f'Compile share {r["compiled_share_pct"]:.1f}%', f'8→4 gain {"−" if r["int8_to_int4_pct"] < 0 else ""}{abs(r["int8_to_int4_pct"]):.1f}%']
-        if paper is not None:
-            values['FoldQuant W4A4 + o/d INT8'] = {'e2e': paper}
-            note_bits.append(f'o/d INT8 costs +{paper - r["int4"]:.1f} ms over W4A4')
-        elif pre and pre['display'] != 'measuring':
-            v = float(pre['display'])
-            values['FoldQuant W4A4 + o/d INT8'] = {'e2e': v, 'comparable': False}
-            if pre.get('e2e_table_comparable') is False:
-                values['FoldQuant W4A4 + o/d INT8'] = {'e2e': r['int4'], 'mark': '*', 'comparable': False, 'same_as_w4a4': True}
-            m = re.search(r'same runs? W4A4 ([0-9.]+)', pre['note'])
-            if m:
-                delta = v - float(m.group(1))
-                note_bits.append(f'o/d INT8 costs {"+" if delta >= 0 else "−"}{abs(delta):.1f} ms vs W4A4 in the same run'
-                                 + (f' ({float(m.group(1)):.1f} → {v:.1f} ms in a timer that includes image decode; * same-run E2E is within 0.3 ms of W4A4)' if pre.get('e2e_table_comparable') is False else ''))
-        if r.get('note'):
-            note_bits.append(f'{marks.get(key, "")} {r["note"]}'.strip())
-        for label, g in desktop.get('gpu_ms', {}).get(key, {}).items():
-            if label in values:
-                values[label]['gpu'] = g
-        foot = f'<p class="family-note">{esc(" · ".join(note_bits))}</p>'
+        fam = sweep['families'][key]
+        values = {}
+        for label, v in fam.items():
+            values[label] = {'gpu': v['gpu'], 'e2e': v['e2e'], 'mark': '§' if v.get('framework_runtime') else '',
+                             'comparable': not v.get('framework_runtime')}
+        w4, od = fam['FoldQuant W4A4']['e2e'], fam['FoldQuant W4A4 + o/d INT8']['e2e']
+        bits = [f'o/d INT8 vs W4A4: {"+" if od >= w4 else "−"}{abs(od - w4):.1f} ms E2E']
+        if any(v.get('framework_runtime') for v in fam.values()):
+            bits.append('§ torch.compile from the framework runtime (Table II), not this timer')
+        if sweep['notes'].get(key):
+            bits.append(sweep['notes'][key])
+        closed_loop = {'smol': '† Uniform W4A4 fails fidelity and loses closed-loop success, so its speed is a throughput diagnostic.',
+                       'evo': '‡ Uniform W4A4 loses 85 of 800 LIBERO successes.'}
+        if closed_loop.get(key):
+            bits.append(closed_loop[key])
+        foot = f'<p class="family-note">{esc(" · ".join(bits))}</p>'
         dpanels.append(panel('desktop', r['name'], head, family_rows(values), foot))
     desktop_html = switcher('desktop', [r['name'] for r in desktop['rows']]) + '<div class="family-panels">' + ''.join(dpanels) + '</div>'
     return jetson_html, desktop_html, ''

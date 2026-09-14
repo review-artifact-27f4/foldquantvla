@@ -1,0 +1,169 @@
+{
+  "source": "FoldQuant release timers, RTX 4070 Ti SUPER, 60 iterations / 10 warmup, seed 42, exclusive GPU, 2026-09-14 15:56–16:11",
+  "gpu_definition": "sum of model components; torch.compile hides components",
+  "families": {
+    "n17": {
+      "Eager PyTorch": {
+        "gpu": 65,
+        "e2e": 67.3
+      },
+      "torch.compile": {
+        "gpu": null,
+        "e2e": 54.7
+      },
+      "TRT BF16 (float engine)": {
+        "gpu": 39,
+        "e2e": 41.0
+      },
+      "FoldQuant W8A8": {
+        "gpu": 33,
+        "e2e": 35.9
+      },
+      "FoldQuant W4A4": {
+        "gpu": 30,
+        "e2e": 32.2
+      },
+      "FoldQuant W4A4 + o/d INT8": {
+        "gpu": 31,
+        "e2e": 34.0
+      }
+    },
+    "n16": {
+      "Eager PyTorch": {
+        "gpu": 64.7,
+        "e2e": 68.8
+      },
+      "torch.compile": {
+        "gpu": null,
+        "e2e": 59.85,
+        "framework_runtime": true
+      },
+      "TRT BF16 (float engine)": {
+        "gpu": 42.5,
+        "e2e": 46.6
+      },
+      "FoldQuant W8A8": {
+        "gpu": 36.4,
+        "e2e": 40.6
+      },
+      "FoldQuant W4A4": {
+        "gpu": 31.6,
+        "e2e": 35.8
+      },
+      "FoldQuant W4A4 + o/d INT8": {
+        "gpu": 33.0,
+        "e2e": 37.1
+      }
+    },
+    "n15": {
+      "Eager PyTorch": {
+        "gpu": 50.6,
+        "e2e": 54.8
+      },
+      "torch.compile": {
+        "gpu": null,
+        "e2e": 53.46,
+        "framework_runtime": true
+      },
+      "TRT BF16 (float engine)": {
+        "gpu": 36.9,
+        "e2e": 41.5
+      },
+      "FoldQuant W8A8": {
+        "gpu": 32.7,
+        "e2e": 38.0
+      },
+      "FoldQuant W4A4": {
+        "gpu": 28.4,
+        "e2e": 33.1
+      },
+      "FoldQuant W4A4 + o/d INT8": {
+        "gpu": 29.1,
+        "e2e": 33.5
+      }
+    },
+    "pi05": {
+      "Eager PyTorch": {
+        "gpu": 154.9,
+        "e2e": 165.7
+      },
+      "torch.compile": {
+        "gpu": null,
+        "e2e": 99.6
+      },
+      "TRT BF16 (float engine)": {
+        "gpu": 102.8,
+        "e2e": 113.8
+      },
+      "FoldQuant W8A8": {
+        "gpu": 77.7,
+        "e2e": 88.2
+      },
+      "FoldQuant W4A4": {
+        "gpu": 64.5,
+        "e2e": 74.7
+      },
+      "FoldQuant W4A4 + o/d INT8": {
+        "gpu": 70.3,
+        "e2e": 80.9
+      }
+    },
+    "smol": {
+      "Eager PyTorch": {
+        "gpu": 202.3,
+        "e2e": 206.5
+      },
+      "torch.compile": {
+        "gpu": null,
+        "e2e": 38.5
+      },
+      "TRT BF16 (float engine)": {
+        "gpu": 33.8,
+        "e2e": 37.8
+      },
+      "FoldQuant W8A8": {
+        "gpu": 34.8,
+        "e2e": 38.6
+      },
+      "FoldQuant W4A4": {
+        "gpu": 32.5,
+        "e2e": 36.4
+      },
+      "FoldQuant W4A4 + o/d INT8": {
+        "gpu": 32.9,
+        "e2e": 36.8
+      }
+    },
+    "evo": {
+      "Eager PyTorch": {
+        "gpu": 145.9,
+        "e2e": 171.7
+      },
+      "torch.compile": {
+        "gpu": null,
+        "e2e": 113.33,
+        "framework_runtime": true
+      },
+      "TRT BF16 (float engine)": {
+        "gpu": 149.0,
+        "e2e": 174.9
+      },
+      "FoldQuant W8A8": {
+        "gpu": 94.2,
+        "e2e": 120.3
+      },
+      "FoldQuant W4A4": {
+        "gpu": 86.7,
+        "e2e": 112.3
+      },
+      "FoldQuant W4A4 + o/d INT8": {
+        "gpu": 87.0,
+        "e2e": 111.8
+      }
+    }
+  },
+  "notes": {
+    "n17": "GPU components printed as whole ms by the upstream timer. o/d INT8 uses the Table V recipe engine.",
+    "evo": "E2E includes image decode of the served request. This release float engine is a bf16 build and is slower than eager in the denoise loop (106.9 vs 97.4 ms); Table II’s float control came from an fp16 framework-runtime build."
+  }
+}
