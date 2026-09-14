@@ -15,7 +15,7 @@
       if (selected && focus) tab.focus();
     });
   }
-  tablist.setAttribute('role', 'tablist');
+  if (tablist) tablist.setAttribute('role', 'tablist');
   tabs.forEach((tab, index) => {
     tab.setAttribute('role', 'tab');
     tab.setAttribute('aria-controls', panels[index].id);
@@ -39,7 +39,7 @@
       history.replaceState(null, '', `#${panels[next].id}`);
     });
   });
-  document.documentElement.classList.add('tabs-ready');
+  if (tabs.length) document.documentElement.classList.add('tabs-ready');
   function revealHash() {
     const id = location.hash.slice(1);
     if (panelIds.includes(id)) selectTab(id);
@@ -94,8 +94,10 @@
       panel.hidden = panel.dataset.model !== desktopSelect.value;
     });
   }
-  desktopSelect.addEventListener('change', filterDesktop);
-  filterDesktop();
+  if (desktopSelect) {
+    desktopSelect.addEventListener('change', filterDesktop);
+    filterDesktop();
+  }
 
   const modelSelect = document.getElementById('libero-model');
   const configSelect = document.getElementById('libero-config');

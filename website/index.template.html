@@ -97,22 +97,20 @@
     </div>
   </section>
   <section class="section container results-section" id="results" aria-labelledby="results-title">
-    <div class="section-heading results-heading"><div><p class="section-label">Results · Latency</p><h2 id="results-title">Efficiency, with the controls.</h2></div><p>Latency on two targets: Jetson AGX Orin<br>and an RTX 4070 Ti SUPER desktop.</p></div>
-    <div class="result-tabs" aria-label="Result views"><a href="#jetson" id="tab-jetson">Jetson <span>On-device deployment</span></a><a href="#desktop" id="tab-desktop">Desktop <span>Precision &amp; compilation</span></a></div>
-    <section class="result-panel" id="jetson" aria-labelledby="jetson-title">
-      <div class="panel-heading"><div><h3 id="jetson-title">On the deployment target</h3><p>GR00T N1.6 · Jetson AGX Orin · batch 1</p></div><span class="source-tag">Table IV</span></div>
-      <div class="chart-pair">{{jetson_charts}}</div>
-      <p class="chart-caption">Each arm uses the same device and policy. Speedups are relative to the compiled floating-point engine; engine size is the serialized TensorRT plan.</p>
-      <details class="data-details"><summary>All six deployment configurations <span>GPU time, latency, size &amp; build time</span></summary>{{jetson_table}}</details>
+    <div class="section-heading results-heading"><div><p class="section-label">Results · Latency</p><h2 id="results-title">Efficiency, with the controls.</h2></div><p>The same table on both targets: on-device<br>deployment and the desktop precision ladder.</p></div>
+    <div class="latency-stack">
+    <section class="benchmark-panel latency-panel" id="jetson" aria-labelledby="jetson-title">
+      <header><div><h3 id="jetson-title">Jetson AGX Orin · on-device</h3><p>GR00T N1.6 · batch 1 · observation-to-action chunk</p></div><span class="source-tag">Table IV</span></header>
+      {{jetson_summary}}
+      <p class="latency-note">Speedup is relative to the compiled BF16 TensorRT engine on the same device. Engine size is the serialized TensorRT plan, not peak GPU memory.</p>
     </section>
-    <section class="result-panel" id="desktop" aria-labelledby="desktop-title">
-      <div class="panel-heading"><div><h3 id="desktop-title">What lower precision adds</h3><p>RTX 4070 Ti SUPER · batch 1 · end-to-end median per action chunk</p></div><span class="source-tag">Table II</span></div>
-      <div class="filter-row enhanced-control" hidden><label for="desktop-model">Checkpoint<select id="desktop-model">{{desktop_options}}</select></label></div>
-      <div id="desktop-charts">{{desktop_charts}}</div>
-      <p class="chart-caption">Compiled controls use floating-point TensorRT for GR00T and Evo-1, and torch.compile for π₀.₅ and SmolVLA. The eager-relative ratio includes compilation benefits.</p>
-      <details class="data-details"><summary>Full desktop precision ladder <span>Six checkpoints, matched controls</span></summary>{{desktop_table}}<p class="table-note">{{desktop_protocol}}</p></details>
-      <details class="data-details"><summary>Action-head measurements <span>Head-only scope</span></summary>{{head_table}}<p class="table-note">Head-only latency has a different scope from end-to-end latency. Stage medians are not summed into a chunk time.</p></details>
+    <section class="benchmark-panel latency-panel" id="desktop" aria-labelledby="desktop-title">
+      <header><div><h3 id="desktop-title">RTX 4070 Ti SUPER · desktop</h3><p>Six checkpoints · batch 1 · end-to-end median per action chunk</p></div><span class="source-tag">Table II</span></header>
+      {{desktop_summary}}
+      <p class="latency-note">Compiled controls use floating-point TensorRT for GR00T and Evo-1, and torch.compile for π₀.₅ and SmolVLA. Compile share is the part of the eager-to-W4A4 reduction already delivered by compilation. † Uniform W4A4 fails fidelity on SmolVLA. ‡ Evo-1’s 0.5 ms W4A4 regression is below timing resolution. {{desktop_protocol}}</p>
     </section>
+    </div>
+    <details class="data-details latency-head"><summary>Action-head measurements <span>Head-only scope</span></summary>{{head_table}}<p class="table-note">Head-only latency has a different scope from end-to-end latency. Stage medians are not summed into a chunk time.</p></details>
   </section>
   <section class="section analysis-section" id="analysis" aria-labelledby="analysis-title"><div class="container">
     <div class="section-heading"><p class="section-label">What the controls reveal</p><h2 id="analysis-title">Smaller bits.<br>A more nuanced picture.</h2></div>

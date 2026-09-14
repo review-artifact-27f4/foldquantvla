@@ -113,7 +113,7 @@ class BuildTests(unittest.TestCase):
         rows = [a for tag,a in self.doc.elements if tag == 'tr' and 'data-model' in a]
         self.assertEqual(len(rows),59)
         self.assertTrue(all('hidden' not in r for r in rows))
-        self.assertEqual(sum('desktop-model' in a.get('class','').split() for _,a in self.doc.elements),6)
+        self.assertEqual(sum('desktop-row' in a.get('class','').split() for _,a in self.doc.elements),6)
         self.assertIn('prefers-reduced-motion:reduce',(self.output/'assets/styles.css').read_text())
         benchmark_panels = [a for _,a in self.doc.elements if a.get('id') in ('benchmark-n17','benchmark-pi05')]
         self.assertEqual(len(benchmark_panels), 2)
