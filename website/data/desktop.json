@@ -156,6 +156,24 @@
       "n17": null,
       "n16": 15.94,
       "n15": null
+    },
+    "preliminary": {
+      "e2e_ms": {
+        "n17": {
+          "display": "32.9",
+          "note": "public libero_10 fine-tune, release harness, 1 repeat; same run W4A4 32.3"
+        },
+        "pi05": {
+          "display": "82.3–84.4",
+          "note": "pi05_libero, release harness, two 1-repeat runs; same runs W4A4 77.3–78.6"
+        }
+      },
+      "head_ms": {
+        "n17": {
+          "display": "15.92",
+          "note": "public libero_10 fine-tune, 1 repeat; same run W4A4 15.89"
+        }
+      }
     }
   },
   "compile_footnote": "N1.7 torch.compile was measured in a framework runtime with eager latency 71.8 ms rather than 67.8 ms; shown for reference and excluded from attribution."

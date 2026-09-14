@@ -132,7 +132,13 @@ def make_latency_tables(jetson, desktop):
         out = []
         for r in rows:
             v = sel_map.get(key_of(r))
-            sel_cell = f'<td class="ours-col"><strong>{fmt(v)}</strong></td>' if v is not None else '<td class="na" title="Measurement pending">—</td>'
+            pre = sel['preliminary']['e2e_ms' if cls == 'desktop-row' else 'head_ms'].get(key_of(r))
+            if v is not None:
+                sel_cell = f'<td class="ours-col"><strong>{fmt(v)}</strong></td>'
+            elif pre:
+                sel_cell = f'<td class="ours-col prelim" title="Preliminary: {esc(pre["note"])}"><strong>{esc(pre["display"])}</strong><sup>p</sup></td>'
+            else:
+                sel_cell = '<td class="na" title="Measurement pending">—</td>'
             out.append(f'<tr class="{cls}"><th scope="row">{esc(r["name"])}<sup>{mark_of(r)}</sup></th><td>{fmt(r["eager"])}</td><td>{fmt(r["torch_compile"])}{"<sup>§</sup>" if r.get("key") == "n17" or (r.get("name") == "GR00T N1.7" and cls == "desktop-row") else ""}</td><td>{fmt(r["trt_bf16"])}</td>'
                        f'<td>{fmt(r["int8"])}</td><td class="ours-col"><strong>{fmt(r["int4"])}</strong></td>{sel_cell}'
                        f'<td class="gain"><strong>{r["eager_speedup"]:.2f}×</strong></td><td class="{"gain" if r["trt_bf16"] / r["int4"] >= 1.005 else ""}"><strong>{r["trt_bf16"] / r["int4"]:.2f}×</strong></td><td>{r["compiled_share_pct"]:.1f}%</td>'
