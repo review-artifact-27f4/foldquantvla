@@ -52,6 +52,16 @@
     <div><p class="metric">{{episode_count}}</p><h2>Closed-loop episodes</h2><p>{{campaign_count}} LIBERO campaigns × 800 episodes.<br>{{comparison_count}} reference comparisons across six checkpoints.</p></div>
     <div><p class="metric sr-metric">{{stable_comparison_count}}<span>/{{comparison_count}}</span></p><h2>No detected SR loss</h2><p>Comparisons without a statistically detected drop after Holm correction.<br>Non-detection does not establish equivalence.</p></div>
   </section>
+  <section class="section container overview" id="overview" aria-labelledby="overview-title">
+    <div class="section-heading"><p class="section-label">Overview</p><h2 id="overview-title">A consistent fold.<br>A clearer measurement.</h2></div>
+    <div class="overview-copy"><p class="lead">What does lower precision actually buy a robot policy?</p><p>FoldQuantVLA fixes a shared change of basis at each activation site, folds it into weights and normalization gains, and rounds once. A common build path produces floating-point, eight-bit, and four-bit engines for the language backbone and iterative action expert.</p><p>We evaluate the resulting engines with compiled floating-point controls and 59 closed-loop LIBERO campaigns. The controls separate deployment speedups from precision gains; the rollouts show where offline action fidelity stops predicting task success.</p></div>
+    <div class="contributions">
+      <article><span class="contribution-symbol" aria-hidden="true">↳</span><h3>Consistent by construction</h3><p>Every projection sharing an activation site uses the same transform. Calibration, exported weights, and runtime stay in the same coordinates.</p></article>
+      <article><span class="contribution-symbol" aria-hidden="true">▦</span><h3>Native low-bit execution</h3><p>Custom TensorRT plugins fuse activation transforms and quantization with integer tensor-core GEMMs on desktop and Jetson GPUs.</p></article>
+      <article><span class="contribution-symbol" aria-hidden="true">↻</span><h3>Measured end to end</h3><p>Compiled controls, device measurements, and closed-loop outcomes reveal both the gains and the configurations that fail.</p></article>
+    </div>
+    <div class="model-strip" aria-label="Evaluated checkpoints"><span>Evaluated on</span><strong>GR00T N1.5 / N1.6 / N1.7</strong><strong>π₀.₅</strong><strong>SmolVLA</strong><strong>Evo-1</strong></div>
+  </section>
   <section class="section benchmark-preview" id="closed-loop-preview" aria-labelledby="benchmark-preview-title">
     <div class="container">
       <div class="benchmark-intro">
@@ -71,16 +81,6 @@
         <p class="table-note">H100 closed-loop runs use an INT8 datapath with nibble extension for W4A4. Native INT4 execution is measured on sm89 desktop and sm87 Jetson hardware. Statistical non-separation is not evidence of equivalence.</p>
       </div>
     </div>
-  </section>
-  <section class="section container overview" id="overview" aria-labelledby="overview-title">
-    <div class="section-heading"><p class="section-label">Overview</p><h2 id="overview-title">A consistent fold.<br>A clearer measurement.</h2></div>
-    <div class="overview-copy"><p class="lead">What does lower precision actually buy a robot policy?</p><p>FoldQuantVLA fixes a shared change of basis at each activation site, folds it into weights and normalization gains, and rounds once. A common build path produces floating-point, eight-bit, and four-bit engines for the language backbone and iterative action expert.</p><p>We evaluate the resulting engines with compiled floating-point controls and 59 closed-loop LIBERO campaigns. The controls separate deployment speedups from precision gains; the rollouts show where offline action fidelity stops predicting task success.</p></div>
-    <div class="contributions">
-      <article><span class="contribution-symbol" aria-hidden="true">↳</span><h3>Consistent by construction</h3><p>Every projection sharing an activation site uses the same transform. Calibration, exported weights, and runtime stay in the same coordinates.</p></article>
-      <article><span class="contribution-symbol" aria-hidden="true">▦</span><h3>Native low-bit execution</h3><p>Custom TensorRT plugins fuse activation transforms and quantization with integer tensor-core GEMMs on desktop and Jetson GPUs.</p></article>
-      <article><span class="contribution-symbol" aria-hidden="true">↻</span><h3>Measured end to end</h3><p>Compiled controls, device measurements, and closed-loop outcomes reveal both the gains and the configurations that fail.</p></article>
-    </div>
-    <div class="model-strip" aria-label="Evaluated checkpoints"><span>Evaluated on</span><strong>GR00T N1.5 / N1.6 / N1.7</strong><strong>π₀.₅</strong><strong>SmolVLA</strong><strong>Evo-1</strong></div>
   </section>
   <section class="section method-section" id="method" aria-labelledby="method-title">
     <div class="container">
