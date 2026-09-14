@@ -5,7 +5,7 @@
       "key": "t1",
       "platform": "ALOHA",
       "title": "ALOHA · Banana",
-      "instruction": "Single-arm ALOHA: pick up the banana.",
+      "instruction": "Single-arm ALOHA: pick up the banana and place it in the pot, then close the pot with the lid.",
       "policy": "GR00T N1.7 · Jetson AGX Orin",
       "views": [
         {
