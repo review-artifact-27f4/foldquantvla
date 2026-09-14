@@ -126,76 +126,68 @@ def make_latency_tables(jetson, desktop):
                 f'<div class="benchmark-table-scroll" tabindex="0" role="region" aria-label="{esc(name)} latency">'
                 f'<table class="results-table">{head}<tbody>{"".join(rows)}</tbody></table></div>{foot}</div>')
 
-    # Jetson AGX Orin
+    ARMS = [('Eager PyTorch', 'bf16', 'baseline'), ('torch.compile', 'bf16', ''), ('TRT BF16 (float engine)', 'bf16', ''),
+            ('FoldQuant W8A8', 'int8', 'ours'), ('FoldQuant W4A4', 'int4', 'ours'), ('FoldQuant W4A4 + o/d INT8', 'int4', 'ours'),
+            ('ModelOpt W8A8 SQ', 'int8', ''), ('ModelOpt W4A16 AWQ', 'int4', '')]
+    head = ('<thead><tr><th scope="col">Arm</th><th scope="col">Prec.</th><th scope="col">GPU (ms) ↓</th><th scope="col">E2E (ms) ↓</th>'
+            '<th scope="col">Rate (Hz) ↑</th><th scope="col">vs TRT BF16 ↑</th></tr></thead>')
+    def family_rows(values):
+        """values: label -> dict(gpu, e2e, mark, comparable) or None (measuring)."""
+        trt = (values.get('TRT BF16 (float engine)') or {}).get('e2e')
+        rows = []
+        for label, prec, kind in ARMS:
+            v = values.get(label)
+            cls = f' class="{kind}"' if kind else ''
+            if not v or v.get('e2e') is None:
+                rows.append(f'<tr{cls}><th scope="row">{label}</th><td class="prec">{prec}</td><td colspan="4" class="na pending-cell">Measuring…</td></tr>')
+                continue
+            gpu = f'{v["gpu"]:.1f}' if v.get('gpu') is not None else '<span class="pending-cell">Measuring…</span>'
+            e2e = v['e2e']
+            e2e_txt = ms(e2e) + v.get('mark', '')
+            if label.startswith('TRT BF16'):
+                vs = '<td class="na">ref</td>'
+            elif trt is None or not v.get('comparable', True):
+                vs = '<td class="na">—</td>'
+            elif label in ('Eager PyTorch', 'torch.compile'):
+                vs = f'<td>{trt / e2e:.2f}×</td>'
+            else:
+                vs = ratio(trt / e2e)
+            rows.append(f'<tr{cls}><th scope="row">{label}</th><td class="prec">{prec}</td><td>{gpu}</td><td><strong>{e2e_txt}</strong></td>'
+                        f'<td>{1000 / e2e:.1f}</td>{vs}</tr>')
+        return rows
+
     orin = load('jetson_orin')
-    jhead = ('<thead><tr><th scope="col">Arm</th><th scope="col">Prec.</th><th scope="col">GPU (ms) ↓</th><th scope="col">E2E (ms) ↓</th>'
-             '<th scope="col">Rate (Hz) ↑</th><th scope="col">vs TRT BF16 ↑</th><th scope="col">cos vs sm89 ↑</th></tr></thead>')
     jpanels = []
     for model in orin['models']:
-        rows = []
-        for r in model['arms']:
-            kind = f' class="{r["kind"]}"' if r['kind'] else ''
-            rows.append(f'<tr{kind}><th scope="row">{esc(r["label"])}</th><td class="prec">{esc(r["precision"])}</td><td>{r["gpu_ms"]:.1f}</td>'
-                        f'<td><strong>{r["e2e_ms"]}</strong></td><td>{r["hz"]:.1f}</td>{"<td class=\"na\">ref</td>" if r["precision"] == "bf16" else ratio(r["speedup"])}<td>{r["cos"]:.5f}</td></tr>')
-            if r['label'] == 'FoldQuant W4A4':
-                rows.append('<tr class="ours"><th scope="row">FoldQuant W4A4 + o/d INT8</th><td class="prec">int4</td><td colspan="5" class="na pending-cell">Measuring…</td></tr>')
-        jpanels.append(panel('jetson', model['name'], jhead, rows))
+        values = {r['label']: {'gpu': r['gpu_ms'], 'e2e': r['e2e_ms']} for r in model['arms']}
+        jpanels.append(panel('jetson', model['name'], head, family_rows(values)))
     jetson_html = switcher('jetson', [m['name'] for m in orin['models']]) + '<div class="family-panels">' + ''.join(jpanels) + '</div>'
 
-    # Desktop: end-to-end and action head in one table per family
     sel = desktop['selective_int8']
     marks = {'smol': '†', 'evo': '‡'}
-    heads = {r['name']: r for r in desktop['head_rows']}
-    head_keys = {'GR00T N1.7': 'n17', 'GR00T N1.6': 'n16', 'GR00T N1.5': 'n15'}
     dpanels = []
     for r in desktop['rows']:
-        key, h = r['key'], heads.get(r['name'])
-        e_pre = sel['preliminary']['e2e_ms'].get(key)
-        h_pre = sel['preliminary']['head_ms'].get(key)
-        def sel_value(paper, pre):
-            if paper is not None:
-                return paper, None
-            if pre and pre['display'] != 'measuring':
-                return float(pre['display']), pre
-            return None, pre
-        e_sel, e_src = sel_value(sel['e2e_ms'].get(key), e_pre)
-        h_sel, h_src = sel_value(sel['head_ms'].get(key) if h else None, h_pre)
-        arms = [('Eager PyTorch', 'eager', 'baseline'), ('torch.compile', 'torch_compile', ''), ('TRT BF16 (float engine)', 'trt_bf16', ''),
-                ('FoldQuant W8A8', 'int8', 'ours'), ('FoldQuant W4A4', 'int4', 'ours')]
-        rows = []
-        for label, field, kind in arms:
-            e = r[field]
-            mark = '<sup>§</sup>' if field == 'torch_compile' and key == 'n17' else ''
-            head_cell = f'<td>{h[field]:.2f}</td>' if h else ''
-            rows.append(f'<tr class="{kind}"><th scope="row">{label}</th><td><strong>{ms(e)}</strong>{mark}</td>{head_cell}'
-                        +                         (('<td class="na">ref</td>' if field == 'eager' else ratio(r["eager"] / e))
-                         + ('<td class="na">ref</td>' if field == 'trt_bf16' else ('<td class="na">—</td>' if field in ('eager', 'torch_compile') else ratio(r["trt_bf16"] / e))))
-                        + '</tr>')
-        if e_sel is None:
-            status = 'Measuring…' if (e_pre and e_pre['display'] == 'measuring') else '—'
-            rows.append(f'<tr class="ours"><th scope="row">FoldQuant W4A4 + o/d INT8</th><td colspan="{4 if h else 3}" class="na pending-cell">{status}</td></tr>')
-        else:
-            head_cell = (f'<td>{h_sel:.2f}</td>' if h_sel is not None else '<td class="na">—</td>') if h else ''
-            if e_src is None:
-                rows.append(f'<tr class="ours"><th scope="row">FoldQuant W4A4 + o/d INT8</th><td><strong>{ms(e_sel)}</strong></td>{head_cell}'
-                            f'{ratio(r["eager"] / e_sel)}{ratio(r["trt_bf16"] / e_sel)}</tr>')
-            else:
-                rows.append(f'<tr class="ours"><th scope="row">FoldQuant W4A4 + o/d INT8</th><td><strong>{ms(e_sel)}</strong></td>{head_cell}'
-                            '<td class="na">—</td><td class="na">—</td></tr>')
-        facts = [('Compile share', f'{r["compiled_share_pct"]:.1f}%'),
-                 ('8→4 gain', f'{"−" if r["int8_to_int4_pct"] < 0 else ""}{abs(r["int8_to_int4_pct"]):.1f}%')]
-        if e_sel is not None:
-            m = re.search(r'same runs? W4A4 ([0-9.]+)', e_src['note']) if e_src else None
-            base = float(m.group(1)) if m else (r['int4'] if e_src is None else None)
-            if base is not None:
-                facts.append(('o/d INT8 costs', f'+{e_sel - base:.1f} ms over W4A4 in the same run'))
-        bits = [f'{k} {v}' for k, v in facts]
+        key = r['key']
+        values = {'Eager PyTorch': {'e2e': r['eager']},
+                  'torch.compile': {'e2e': r['torch_compile'], 'mark': '§' if key == 'n17' else ''},
+                  'TRT BF16 (float engine)': {'e2e': r['trt_bf16']},
+                  'FoldQuant W8A8': {'e2e': r['int8']}, 'FoldQuant W4A4': {'e2e': r['int4']}}
+        paper = sel['e2e_ms'].get(key)
+        pre = sel['preliminary']['e2e_ms'].get(key)
+        note_bits = [f'Compile share {r["compiled_share_pct"]:.1f}%', f'8→4 gain {"−" if r["int8_to_int4_pct"] < 0 else ""}{abs(r["int8_to_int4_pct"]):.1f}%']
+        if paper is not None:
+            values['FoldQuant W4A4 + o/d INT8'] = {'e2e': paper}
+            note_bits.append(f'o/d INT8 costs +{paper - r["int4"]:.1f} ms over W4A4')
+        elif pre and pre['display'] != 'measuring':
+            v = float(pre['display'])
+            values['FoldQuant W4A4 + o/d INT8'] = {'e2e': v, 'comparable': False}
+            m = re.search(r'same runs? W4A4 ([0-9.]+)', pre['note'])
+            if m:
+                note_bits.append(f'o/d INT8 costs +{v - float(m.group(1)):.1f} ms over W4A4 in the same run')
         if r.get('note'):
-            bits.append(f'{marks.get(key, "")} {r["note"]}'.strip())
-        foot = f'<p class="family-note">{esc(" · ".join(bits))}</p>'
-        dhead = ('<thead><tr><th scope="col">Arm</th><th scope="col">End-to-end (ms) ↓</th>' + ('<th scope="col">Action head (ms) ↓</th>' if h else '')
-                 + '<th scope="col">vs eager ↑</th><th scope="col">vs TRT BF16 ↑</th></tr></thead>')
-        dpanels.append(panel('desktop', r['name'], dhead, rows, foot))
+            note_bits.append(f'{marks.get(key, "")} {r["note"]}'.strip())
+        foot = f'<p class="family-note">{esc(" · ".join(note_bits))}</p>'
+        dpanels.append(panel('desktop', r['name'], head, family_rows(values), foot))
     desktop_html = switcher('desktop', [r['name'] for r in desktop['rows']]) + '<div class="family-panels">' + ''.join(dpanels) + '</div>'
     return jetson_html, desktop_html, ''
 

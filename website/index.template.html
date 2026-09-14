@@ -100,10 +100,10 @@
     <section class="benchmark-panel latency-panel" id="jetson" aria-labelledby="jetson-title">
       <header><div><h3 id="jetson-title">Jetson AGX Orin · on-device</h3><p>Five checkpoints · TensorRT 10.3 · batch 1 · observation-to-action chunk</p></div><span class="source-tag">Table IV</span></header>
       {{jetson_summary}}
-      <p class="latency-note">“GPU” is device time and “E2E” observation-to-action. “vs TRT BF16” is relative to the unquantized TensorRT engine of the same checkpoint, not to eager or torch.compile. “cos vs sm89” compares each Orin engine with the desktop engine of the same arm. * Every Evo-1 Orin engine, float included, sits 0.01–0.02 below sm89 on cosine, a TensorRT 10.3 backbone port effect rather than quantization. SmolVLA does not build on TensorRT 10.3. N1.6 plans are 5,325 / 3,618 / 2,525 / 3,901 / 3,077 MB in row order.</p>
+      <p class="latency-note">“GPU” is device time and “E2E” observation-to-action; Hz is 1000 / E2E. “vs TRT BF16” is relative to the unquantized TensorRT engine of the same checkpoint. Evo-1 Orin engines, float included, sit 0.01–0.02 below the desktop engines on action cosine — a TensorRT 10.3 backbone port effect. SmolVLA does not build on TensorRT 10.3. N1.6 plans: 5,325 / 3,618 / 2,525 / 3,901 / 3,077 MB for TRT BF16, W8A8, W4A4, SQ, AWQ.</p>
     </section>
     <section class="benchmark-panel latency-panel" id="desktop" aria-labelledby="desktop-title">
-      <header><div><h3 id="desktop-title">RTX 4070 Ti SUPER · desktop</h3><p>Six checkpoints · batch 1 · median per action chunk, end to end and action head only (GR00T)</p></div><span class="source-tag">Table II</span></header>
+      <header><div><h3 id="desktop-title">RTX 4070 Ti SUPER · desktop</h3><p>Six checkpoints · batch 1 · observation-to-action chunk</p></div><span class="source-tag">Table II</span></header>
       {{desktop_summary}}
       <p class="latency-note">All FoldQuant columns are TensorRT engines. “W4A4 vs TRT BF16” compares against the floating-point engine of the same build path and is computed from the rounded medians shown. *Compile share is (t<sub>eager</sub> − t<sub>c</sub>)/(t<sub>eager</sub> − t<sub>4</sub>) using the faster eligible floating-point control (TRT BF16 for GR00T and Evo-1, torch.compile for π₀.₅ and SmolVLA). § N1.7 torch.compile was measured in a framework runtime with 71.8 ms eager latency and is excluded from attribution. † Uniform W4A4 fails fidelity on SmolVLA. ‡ Evo-1’s 0.5 ms W4A4 regression is below timing resolution. {{desktop_protocol}}</p>
     </section>
