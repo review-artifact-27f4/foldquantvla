@@ -170,7 +170,7 @@
     {
       "key": "aloha-banana",
       "title": "ALOHA · Banana into pot, then close the lid",
-      "meta": "Same episode index for every engine · high camera · 4× speed",
+      "meta": "All engines start together on the same episode index · high camera · 4× speed",
       "task_index": 0,
       "arms": [
         {
@@ -182,6 +182,123 @@
           "key": "trt-bf16",
           "label": "TRT BF16",
           "result_label": "TRT BF16 (float engine)"
+        },
+        {
+          "key": "foldquant-w8a8",
+          "label": "FoldQuant W8A8",
+          "result_label": "FoldQuant W8A8",
+          "ours": true
+        },
+        {
+          "key": "foldquant-w4a4",
+          "label": "FoldQuant W4A4",
+          "result_label": "FoldQuant W4A4",
+          "ours": true
+        },
+        {
+          "key": "foldquant-w4a4-od-int8",
+          "label": "FoldQuant W4A4 + o/d INT8",
+          "result_label": "FoldQuant W4A4 + o/d INT8",
+          "ours": true
+        }
+      ],
+      "tab": "ALOHA · Banana"
+    },
+    {
+      "key": "so101-banana",
+      "title": "SO-101 · Pick up the banana",
+      "tab": "SO-101 · Banana",
+      "task_index": 1,
+      "meta": "All engines start together on the same episode index · external camera · 4× speed",
+      "arms": [
+        {
+          "key": "bf16-pytorch",
+          "label": "BF16 PyTorch",
+          "result_label": "BF16 PyTorch"
+        },
+        {
+          "key": "trt-bf16",
+          "label": "TRT BF16",
+          "result_label": "TRT BF16 (float engine)"
+        },
+        {
+          "key": "foldquant-w8a8",
+          "label": "FoldQuant W8A8",
+          "result_label": "FoldQuant W8A8",
+          "ours": true
+        },
+        {
+          "key": "foldquant-w4a4",
+          "label": "FoldQuant W4A4",
+          "result_label": "FoldQuant W4A4",
+          "ours": true
+        },
+        {
+          "key": "foldquant-w4a4-od-int8",
+          "label": "FoldQuant W4A4 + o/d INT8",
+          "result_label": "FoldQuant W4A4 + o/d INT8",
+          "ours": true
+        }
+      ]
+    },
+    {
+      "key": "so101-blocks-cup",
+      "title": "SO-101 · Put all blocks into the cup",
+      "tab": "SO-101 · Blocks → cup",
+      "task_index": 2,
+      "meta": "All engines start together on the same episode index · external camera · 4× speed",
+      "arms": [
+        {
+          "key": "bf16-pytorch",
+          "label": "BF16 PyTorch",
+          "result_label": "BF16 PyTorch"
+        },
+        {
+          "key": "trt-bf16",
+          "label": "TRT BF16",
+          "result_label": "TRT BF16 (float engine)"
+        },
+        {
+          "key": "foldquant-w8a8",
+          "label": "FoldQuant W8A8",
+          "result_label": "FoldQuant W8A8",
+          "ours": true
+        },
+        {
+          "key": "foldquant-w4a4",
+          "label": "FoldQuant W4A4",
+          "result_label": "FoldQuant W4A4",
+          "ours": true
+        },
+        {
+          "key": "foldquant-w4a4-od-int8",
+          "label": "FoldQuant W4A4 + o/d INT8",
+          "result_label": "FoldQuant W4A4 + o/d INT8",
+          "ours": true
+        }
+      ]
+    },
+    {
+      "key": "so101-blue-on-red",
+      "title": "SO-101 · Blue block on the red block",
+      "tab": "SO-101 · Blue on red",
+      "task_index": 3,
+      "meta": "All engines start together on the same episode index · external camera · 4× speed",
+      "arms": [
+        {
+          "key": "bf16-pytorch",
+          "label": "BF16 PyTorch",
+          "result_label": "BF16 PyTorch"
+        },
+        {
+          "key": "trt-bf16",
+          "label": "TRT BF16",
+          "result_label": "TRT BF16 (float engine)"
+        },
+        {
+          "key": "modelopt-w8a8-sq",
+          "label": "ModelOpt W8A8 SQ",
+          "result_label": "ModelOpt W8A8 SQ"
         },
         {
           "key": "foldquant-w8a8",

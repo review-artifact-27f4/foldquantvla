@@ -204,24 +204,46 @@
   document.addEventListener('keydown', event => {
     if (event.key === 'Escape') document.querySelectorAll('.chart-row, .success-row').forEach(row => row.classList.add('tooltip-dismissed'));
   });
+  // Real-robot comparison: task tabs; every engine of the active task starts together, holds its last frame, restarts when all end.
   document.querySelectorAll('.robot-compare').forEach(block => {
-    const buttons = [...block.querySelectorAll('.compare-tabs button')];
-    const bar = block.querySelector('.compare-tabs');
-    const select = id => buttons.forEach(b => {
-      const on = b.dataset.compare === id;
-      b.setAttribute('aria-selected', String(on));
-      const clip = document.getElementById(b.dataset.compare);
-      clip.classList.toggle('is-inactive', !on);
-      clip.inert = !on;
-      const v = clip.querySelector('video');
-      if (v) { if (on) { v.play().catch(() => {}); } else { v.pause(); } }
-    });
-    bar.hidden = false; bar.setAttribute('role', 'tablist');
-    buttons.forEach(b => { b.setAttribute('role', 'tab'); b.addEventListener('click', () => select(b.dataset.compare)); });
+    const tabs = [...block.querySelectorAll('.compare-task-tabs button')];
+    const tasks = [...block.querySelectorAll('.compare-task')];
+    let active = null;
+    const sync = task => {
+      const videos = [...task.querySelectorAll('video')];
+      let done = new Set();
+      const restart = () => {
+        if (active !== task) return;
+        done = new Set();
+        videos.forEach(v => { v.currentTime = 0; v.play().catch(() => {}); });
+      };
+      videos.forEach(v => v.addEventListener('ended', () => { done.add(v); if (done.size === videos.length) setTimeout(restart, 800); }));
+      task._restart = () => {
+        const wait = () => (videos.every(v => v.readyState >= 3) ? restart() : setTimeout(wait, 150));
+        wait();
+      };
+    };
+    tasks.forEach(sync);
+    const select = id => {
+      tabs.forEach(t => t.setAttribute('aria-selected', String(t.dataset.taskPanel === id)));
+      tasks.forEach(task => {
+        const on = task.id === id;
+        task.classList.toggle('is-inactive', !on);
+        task.inert = !on;
+        task.querySelectorAll('video').forEach(v => { if (!on) v.pause(); });
+        if (on) { active = task; task._restart(); }
+      });
+    };
+    const bar = block.querySelector('.compare-task-tabs');
+    if (bar) { bar.hidden = false; bar.setAttribute('role', 'tablist'); }
+    tabs.forEach(t => { t.setAttribute('role', 'tab'); t.addEventListener('click', () => select(t.dataset.taskPanel)); });
     block.classList.add('compare-ready');
-    select(buttons[0].dataset.compare);
+    tasks.forEach(task => task.querySelectorAll('video').forEach(v => { v.autoplay = false; v.pause(); }));
+    new IntersectionObserver((entries, obs) => {
+      if (entries.some(e => e.isIntersecting)) { select(tasks[0].id); obs.disconnect(); }
+    }, { threshold: 0.2 }).observe(block);
   });
-  const experimentVideos = [...document.querySelectorAll('.robot-card video, .compare-clip video')];
+  const experimentVideos = [];
   const robotTabs = [...document.querySelectorAll('.robot-task-tabs button')];
   const robotPanels = [...document.querySelectorAll('.robot-trial')];
   function selectRobotTask(id, focus = false) {
