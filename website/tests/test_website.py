@@ -103,8 +103,8 @@ class BuildTests(unittest.TestCase):
         self.assertNotIn('fonts.googleapis.com',self.html)
         self.assertIn('name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex"', self.html)
         self.assertIn('name="referrer" content="no-referrer"', self.html)
-        self.assertIn('50<span>/53</span>', self.html)
-        self.assertIn('SR within noise of BF16', self.html)
+        self.assertIn('58<span>/60</span>', self.html)
+        self.assertIn('Real-robot successes', self.html)
 
     def test_all_evidence_readable_without_javascript(self):
         panels = [a for _,a in self.doc.elements if a.get('id') in ('jetson','desktop','libero')]

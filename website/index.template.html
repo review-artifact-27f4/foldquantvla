@@ -46,10 +46,10 @@
     </div>
   </section>
   <section class="highlights container" aria-label="Research highlights">
-    <div><p class="metric">{{speedup}}<span class="gain">×</span></p><h2>Faster on Jetson</h2><p>150 → 125 ms per observation-to-action chunk.<br>GR00T N1.6 · W4A4 vs compiled BF16 · batch 1</p></div>
-    <div><p class="metric">{{compression}}<span class="gain">×</span></p><h2>Smaller engine artifact</h2><p>5,325 → 2,525 MB of serialized engines.<br>Same Jetson configuration; not peak GPU memory.</p></div>
-    <div><p class="metric">{{episode_count}}</p><h2>Closed-loop episodes</h2><p>{{campaign_count}} LIBERO campaigns × 800 episodes.<br>{{comparison_count}} reference comparisons across six checkpoints.</p></div>
-    <div><p class="metric sr-metric">{{stable_comparison_count}}<span>/{{comparison_count}}</span></p><h2>SR within noise of BF16</h2><p>LIBERO comparisons whose small SR changes are not significant after Holm correction.<br>Real-robot drops also stay inside the Wilson interval.</p></div>
+    <div><p class="metric">1.20–1.33<span class="gain">×</span></p><h2>Faster on Jetson AGX Orin</h2><p>Native W4A4 vs the TRT BF16 engine, end to end.<br>GR00T N1.5 / N1.6 / N1.7 and π₀.₅ · batch 1</p></div>
+    <div><p class="metric">{{compression}}<span class="gain">×</span></p><h2>Smaller engine artifact</h2><p>5,325 → 2,525 MB of serialized TensorRT plans.<br>GR00T N1.6 · not peak GPU memory.</p></div>
+    <div><p class="metric sr-metric">58<span>/60</span></p><h2>Real-robot successes</h2><p>W4A4 + o/d INT8 on Jetson, GR00T N1.7, three tasks.<br>BF16 PyTorch 56/60 · TRT BF16 57/60 on the same tasks.</p></div>
+    <div><p class="metric">0.46 → 0.85</p><h2>Worst-case action cosine</h2><p>W4A4 → W4A4 + o/d INT8, GR00T N1.6 held-out.<br>Costs +0.6–1.4 ms end to end on GR00T.</p></div>
   </section>
   <section class="section container overview" id="overview" aria-labelledby="overview-title">
     <div class="section-heading"><p class="section-label">Overview</p><h2 id="overview-title">A consistent fold.<br>A clearer measurement.</h2></div>
