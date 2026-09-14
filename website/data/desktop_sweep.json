@@ -26,6 +26,11 @@
       "FoldQuant W4A4 + o/d INT8": {
         "gpu": 31,
         "e2e": 34.0
+      },
+      "ModelOpt W4A16 AWQ": {
+        "gpu": null,
+        "e2e": 60.0,
+        "framework_runtime": true
       }
     },
     "n16": {

@@ -126,8 +126,8 @@ def make_latency_tables(jetson, desktop):
                 f'<div class="benchmark-table-scroll" tabindex="0" role="region" aria-label="{esc(name)} latency">'
                 f'<table class="results-table">{head}<tbody>{"".join(rows)}</tbody></table></div>{foot}</div>')
 
-    # Baselines first, FoldQuant arms last.
-    ARMS = [('Eager PyTorch', 'bf16', 'baseline'), ('torch.compile', 'bf16', ''), ('TRT BF16 (float engine)', 'bf16', ''),
+    # Reference first, then baselines, FoldQuant arms last.
+    ARMS = [('TRT BF16 (float engine)', 'bf16', 'baseline'), ('Eager PyTorch', 'bf16', ''), ('torch.compile', 'bf16', ''),
             ('ModelOpt W8A8 SQ', 'int8', ''), ('ModelOpt W4A16 AWQ', 'int4', ''),
             ('FoldQuant W8A8', 'int8', 'ours'), ('FoldQuant W4A4', 'int4', 'ours'), ('FoldQuant W4A4 + o/d INT8', 'int4', 'ours')]
     head = ('<thead><tr><th scope="col">Arm</th><th scope="col">Prec.</th><th scope="col">GPU (ms) ↓</th><th scope="col">E2E (ms) ↓</th>'
@@ -154,6 +154,9 @@ def make_latency_tables(jetson, desktop):
             e2e_txt = (str(e2e) if isinstance(e2e, int) else ms(e2e)) + v.get('mark', '')
             if label.startswith('TRT BF16'):
                 vs = '<td class="na">ref</td>'
+            elif v.get('ref_e2e') is not None:
+                x = v['ref_e2e'] / e2e
+                vs = f'<td>{x:.2f}×</td>' if label in ('Eager PyTorch', 'torch.compile') else ratio(x)
             elif trt is None or not v.get('comparable', True):
                 vs = '<td class="na">—</td>'
             elif label in ('Eager PyTorch', 'torch.compile'):
@@ -183,7 +186,8 @@ def make_latency_tables(jetson, desktop):
                 values[label] = {'na': True}
                 continue
             values[label] = {'gpu': v['gpu'], 'e2e': v['e2e'], 'mark': '§' if v.get('framework_runtime') else '',
-                             'comparable': not v.get('framework_runtime')}
+                             'comparable': not v.get('framework_runtime'),
+                             'ref_e2e': r['trt_bf16'] if v.get('framework_runtime') else None}
         if key == 'pi05':
             values['ModelOpt W8A8 SQ'] = {'na': True}
             values['ModelOpt W4A16 AWQ'] = {'na': True}
@@ -193,7 +197,7 @@ def make_latency_tables(jetson, desktop):
         if fr:
             parts = [x.replace('ModelOpt ', 'ModelOpt ') for x in fr]
             names = parts[0] if len(parts) == 1 else ', '.join(parts[:-1]) + ' and ' + parts[-1]
-            bits.append(f'§ {names} measured in the framework runtime, not this timer, so no ratio is shown')
+            bits.append(f'§ {names} measured in the framework runtime; their ratio uses that runtime’s TRT BF16 ({r["trt_bf16"]:g} ms, Table II)')
         if fam.get('ModelOpt W4A16 AWQ', {}).get('na'):
             bits.append('W4A16 AWQ does not apply: block size 128 vs hidden size 960')
         if key == 'pi05':
