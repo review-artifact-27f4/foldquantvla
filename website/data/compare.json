@@ -88,18 +88,6 @@
           "ref": true
         },
         {
-          "method": "TRT BF16 (float engine)",
-          "precision": "bf16",
-          "kind": "",
-          "suites": [
-            200,
-            200,
-            198,
-            186
-          ],
-          "cos": null
-        },
-        {
           "method": "FoldQuant W8A8",
           "precision": "int8",
           "kind": "ours",
@@ -165,7 +153,7 @@
         },
         {
           "kind": "group",
-          "label": "Reported in HoloQ-VLA Table 2 · their harness · emulated quantization"
+          "label": "Reported in HoloQ-VLA Table 2 · their harness · emulated quantization · full W4A4 (backbone + action head)"
         },
         {
           "method": "FP16",
@@ -183,7 +171,7 @@
         },
         {
           "method": "HoloQ-VLA",
-          "precision": "—",
+          "precision": "int4",
           "kind": "",
           "suites": [
             198,
@@ -196,7 +184,7 @@
         },
         {
           "method": "DuQuant",
-          "precision": "—",
+          "precision": "int4",
           "kind": "",
           "suites": [
             192,
@@ -209,7 +197,7 @@
         },
         {
           "method": "QuantVLA",
-          "precision": "—",
+          "precision": "int4",
           "kind": "",
           "suites": [
             188,
@@ -222,7 +210,7 @@
         },
         {
           "method": "SmoothQuant",
-          "precision": "—",
+          "precision": "int4",
           "kind": "",
           "suites": [
             166,
