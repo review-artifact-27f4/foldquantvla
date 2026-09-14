@@ -7,11 +7,41 @@
     "duration_s": 12,
     "footnote": "One episode per engine on the same task and initial layout. Counts are successes out of 20 episodes.",
     "arms": [
-      {"label": "TRT BF16", "result_label": "TRT BF16 (float engine)", "precision": "float engine", "src": "", "start_s": 0},
-      {"label": "FoldQuant W8A8", "precision": "INT8", "ours": true, "src": "", "start_s": 0},
-      {"label": "FoldQuant W4A4", "precision": "INT4", "ours": true, "src": "", "start_s": 0},
-      {"label": "W4A4 + o/d INT8", "result_label": "FoldQuant W4A4 + o/d INT8", "precision": "INT4 + 2 INT8 sites", "ours": true, "src": "", "start_s": 0},
-      {"label": "ModelOpt SmoothQuant", "precision": "INT8", "src": "", "start_s": 0}
+      {
+        "label": "TRT BF16",
+        "result_label": "TRT BF16 (float engine)",
+        "precision": "float engine",
+        "src": "",
+        "start_s": 0
+      },
+      {
+        "label": "ModelOpt SmoothQuant",
+        "precision": "INT8",
+        "src": "",
+        "start_s": 0
+      },
+      {
+        "label": "FoldQuant W8A8",
+        "precision": "INT8",
+        "ours": true,
+        "src": "",
+        "start_s": 0
+      },
+      {
+        "label": "FoldQuant W4A4",
+        "precision": "INT4",
+        "ours": true,
+        "src": "",
+        "start_s": 0
+      },
+      {
+        "label": "W4A4 + o/d INT8",
+        "result_label": "FoldQuant W4A4 + o/d INT8",
+        "precision": "INT4 + 2 INT8 sites",
+        "ours": true,
+        "src": "",
+        "start_s": 0
+      }
     ]
   }
 }

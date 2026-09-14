@@ -126,9 +126,10 @@ def make_latency_tables(jetson, desktop):
                 f'<div class="benchmark-table-scroll" tabindex="0" role="region" aria-label="{esc(name)} latency">'
                 f'<table class="results-table">{head}<tbody>{"".join(rows)}</tbody></table></div>{foot}</div>')
 
+    # Baselines first, FoldQuant arms last.
     ARMS = [('Eager PyTorch', 'bf16', 'baseline'), ('torch.compile', 'bf16', ''), ('TRT BF16 (float engine)', 'bf16', ''),
-            ('FoldQuant W8A8', 'int8', 'ours'), ('FoldQuant W4A4', 'int4', 'ours'), ('FoldQuant W4A4 + o/d INT8', 'int4', 'ours'),
-            ('ModelOpt W8A8 SQ', 'int8', ''), ('ModelOpt W4A16 AWQ', 'int4', '')]
+            ('ModelOpt W8A8 SQ', 'int8', ''), ('ModelOpt W4A16 AWQ', 'int4', ''),
+            ('FoldQuant W8A8', 'int8', 'ours'), ('FoldQuant W4A4', 'int4', 'ours'), ('FoldQuant W4A4 + o/d INT8', 'int4', 'ours')]
     head = ('<thead><tr><th scope="col">Arm</th><th scope="col">Prec.</th><th scope="col">GPU (ms) ↓</th><th scope="col">E2E (ms) ↓</th>'
             '<th scope="col">Rate (Hz) ↑</th><th scope="col">vs TRT BF16 ↑</th></tr></thead>')
     def family_rows(values):
