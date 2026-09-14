@@ -10,7 +10,7 @@
       "views": [
         {
           "label": "Evaluation video",
-          "detail": "ALOHA · Banana · robot cameras",
+          "detail": "ALOHA · Banana · high camera",
           "src": "aloha-banana/bf16-pytorch.mp4",
           "poster": ""
         }
@@ -170,7 +170,7 @@
     {
       "key": "aloha-banana",
       "title": "ALOHA · Banana into pot, then close the lid",
-      "meta": "Same episode index for every engine · robot cameras: high (left) and wrist (right) · 4× speed",
+      "meta": "Same episode index for every engine · high camera · 4× speed",
       "task_index": 0,
       "arms": [
         {

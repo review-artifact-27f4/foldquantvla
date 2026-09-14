@@ -3,16 +3,33 @@
     {
       "key": "aloha-banana",
       "dataset_root": "FoldQuantVLA_ALOHA",
-      "cameras": ["observation.images.color.high", "observation.images.color.wrist_left"],
+      "cameras": [
+        "observation.images.color.high"
+      ],
       "episode": 0,
       "speed": 4,
-      "height": 360,
+      "height": 480,
       "arms": [
-        {"key": "bf16-pytorch", "dir": "banana_pytorch"},
-        {"key": "trt-bf16", "dir": "banana_trt_bf16"},
-        {"key": "foldquant-w8a8", "dir": "banana_w8a8"},
-        {"key": "foldquant-w4a4", "dir": "banana_w4a4"},
-        {"key": "foldquant-w4a4-od-int8", "dir": "banana_w4a4res8"}
+        {
+          "key": "bf16-pytorch",
+          "dir": "banana_pytorch"
+        },
+        {
+          "key": "trt-bf16",
+          "dir": "banana_trt_bf16"
+        },
+        {
+          "key": "foldquant-w8a8",
+          "dir": "banana_w8a8"
+        },
+        {
+          "key": "foldquant-w4a4",
+          "dir": "banana_w4a4"
+        },
+        {
+          "key": "foldquant-w4a4-od-int8",
+          "dir": "banana_w4a4res8"
+        }
       ]
     }
   ]
