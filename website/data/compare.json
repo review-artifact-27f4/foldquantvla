@@ -70,10 +70,10 @@
           "precision": "bf16",
           "kind": "baseline",
           "suites": [
-            199,
-            196,
-            196,
-            181
+            197,
+            198,
+            195,
+            187
           ],
           "ref": true
         },
@@ -126,25 +126,14 @@
           "reported": true
         },
         {
-          "method": "FoldQuant W8A8",
-          "precision": "int8",
-          "kind": "ours",
-          "suites": [
-            199,
-            199,
-            193,
-            188
-          ]
-        },
-        {
           "method": "FoldQuant W4A4",
           "precision": "int4",
           "kind": "ours",
           "suites": [
-            197,
-            198,
             196,
-            186
+            199,
+            192,
+            191
           ]
         },
         {
@@ -159,7 +148,7 @@
           ]
         }
       ],
-      "footnote": "BF16 / W8A8 / W4A4: Table V protocol, 800 episodes, 520-step cap, seed 7. W4A4 + o/d INT8: released openpi harness, 20 trials per task, K = 5. Reported rows: HoloQ-VLA Table 2, emulated quantization, 10 calibration samples. Our reproduction of HoloQ-VLA W4A4 on the long suite reaches 188/200 against 192 reported (t = −0.82, p = 0.44); other suites not re-run."
+      "footnote": "BF16 and FoldQuant rows: FoldQuant released openpi harness, 20 trials per task, K = 5, seed 7. HoloQ-VLA, DuQuant, QuantVLA and SmoothQuant: reported in HoloQ-VLA Table 2 (emulated quantization, 10 calibration samples); their FP16 reference is also 777/800. Our reproduction of HoloQ-VLA W4A4 on the long suite reaches 188/200 against 192 reported (t = −0.82, p = 0.44)."
     }
   ]
 }
