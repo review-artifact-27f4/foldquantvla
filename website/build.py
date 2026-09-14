@@ -143,7 +143,7 @@ def make_latency_tables(jetson, desktop):
                 continue
             gpu = f'{v["gpu"]:.1f}' if v.get('gpu') is not None else '<span class="pending-cell">Measuring…</span>'
             e2e = v['e2e']
-            e2e_txt = ms(e2e) + v.get('mark', '')
+            e2e_txt = (str(e2e) if isinstance(e2e, int) else ms(e2e)) + v.get('mark', '')
             if label.startswith('TRT BF16'):
                 vs = '<td class="na">ref</td>'
             elif trt is None or not v.get('comparable', True):
