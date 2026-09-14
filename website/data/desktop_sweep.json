@@ -53,6 +53,16 @@
       "FoldQuant W4A4 + o/d INT8": {
         "gpu": 33.0,
         "e2e": 37.1
+      },
+      "ModelOpt W8A8 SQ": {
+        "gpu": 33.1,
+        "e2e": 40.3,
+        "framework_runtime": true
+      },
+      "ModelOpt W4A16 AWQ": {
+        "gpu": 57.2,
+        "e2e": 64.1,
+        "framework_runtime": true
       }
     },
     "n15": {
@@ -80,6 +90,16 @@
       "FoldQuant W4A4 + o/d INT8": {
         "gpu": 29.1,
         "e2e": 33.5
+      },
+      "ModelOpt W8A8 SQ": {
+        "gpu": 25.4,
+        "e2e": 34.1,
+        "framework_runtime": true
+      },
+      "ModelOpt W4A16 AWQ": {
+        "gpu": 43.9,
+        "e2e": 53.2,
+        "framework_runtime": true
       }
     },
     "pi05": {
@@ -132,6 +152,14 @@
       "FoldQuant W4A4 + o/d INT8": {
         "gpu": 32.9,
         "e2e": 36.8
+      },
+      "ModelOpt W8A8 SQ": {
+        "gpu": 43.0,
+        "e2e": 44.4,
+        "framework_runtime": true
+      },
+      "ModelOpt W4A16 AWQ": {
+        "na": true
       }
     },
     "evo": {
@@ -159,11 +187,22 @@
       "FoldQuant W4A4 + o/d INT8": {
         "gpu": 87.0,
         "e2e": 111.8
+      },
+      "ModelOpt W8A8 SQ": {
+        "gpu": 110.9,
+        "e2e": 117.3,
+        "framework_runtime": true
+      },
+      "ModelOpt W4A16 AWQ": {
+        "gpu": 114.7,
+        "e2e": 121.2,
+        "framework_runtime": true
       }
     }
   },
   "notes": {
     "n17": "GPU components printed as whole ms by the upstream timer. o/d INT8 uses the Table V recipe engine.",
     "evo": "E2E includes image decode of the served request. This release float engine is a bf16 build and is slower than eager in the denoise loop (106.9 vs 97.4 ms); Table II’s float control came from an fp16 framework-runtime build."
-  }
+  },
+  "modelopt_source": "VLA-OPT framework runtime, presets modelopt_w8a8_smoothquant / modelopt_w4a16_awq, 4-suite calibration, 60/10, seed 42, exclusive GPU, 2026-09-14"
 }

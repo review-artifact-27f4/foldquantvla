@@ -178,6 +178,9 @@ def make_latency_tables(jetson, desktop):
         fam = sweep['families'][key]
         values = {}
         for label, v in fam.items():
+            if v.get('na'):
+                values[label] = {'na': True}
+                continue
             values[label] = {'gpu': v['gpu'], 'e2e': v['e2e'], 'mark': '§' if v.get('framework_runtime') else '',
                              'comparable': not v.get('framework_runtime')}
         if key == 'pi05':
@@ -185,8 +188,13 @@ def make_latency_tables(jetson, desktop):
             values['ModelOpt W4A16 AWQ'] = {'na': True}
         w4, od = fam['FoldQuant W4A4']['e2e'], fam['FoldQuant W4A4 + o/d INT8']['e2e']
         bits = [f'o/d INT8 vs W4A4: {"+" if od >= w4 else "−"}{abs(od - w4):.1f} ms E2E']
-        if any(v.get('framework_runtime') for v in fam.values()):
-            bits.append('§ torch.compile from the framework runtime (Table II), not this timer')
+        fr = [l for l, v in fam.items() if v.get('framework_runtime')]
+        if fr:
+            parts = [x.replace('ModelOpt ', 'ModelOpt ') for x in fr]
+            names = parts[0] if len(parts) == 1 else ', '.join(parts[:-1]) + ' and ' + parts[-1]
+            bits.append(f'§ {names} measured in the framework runtime, not this timer, so no ratio is shown')
+        if fam.get('ModelOpt W4A16 AWQ', {}).get('na'):
+            bits.append('W4A16 AWQ does not apply: block size 128 vs hidden size 960')
         if key == 'pi05':
             bits.append('ModelOpt SQ / AWQ are not buildable on a 16 GB GPU; the paper’s π₀.₅ ModelOpt arms were built on an H100 40 GB partition')
         if sweep['notes'].get(key):
