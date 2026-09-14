@@ -117,6 +117,42 @@
     if (event.key === 'Escape') document.querySelectorAll('.chart-row, .success-row').forEach(row => row.classList.add('tooltip-dismissed'));
   });
   const experimentVideos = [...document.querySelectorAll('.robot-view video')];
+  const robotTabs = [...document.querySelectorAll('.robot-task-tabs button')];
+  const robotPanels = [...document.querySelectorAll('.robot-trial')];
+  function selectRobotTask(id, focus = false) {
+    robotTabs.forEach(tab => {
+      const selected = tab.dataset.robotTask === id;
+      tab.setAttribute('aria-selected', String(selected));
+      tab.tabIndex = selected ? 0 : -1;
+      if (selected && focus) tab.focus();
+    });
+    robotPanels.forEach(panel => { panel.hidden = panel.id !== id; });
+  }
+  if (robotTabs.length) {
+    const taskList = document.querySelector('.robot-task-tabs');
+    taskList.hidden = false;
+    taskList.setAttribute('role', 'tablist');
+    robotTabs.forEach((tab, index) => {
+      tab.setAttribute('role', 'tab');
+      tab.setAttribute('aria-controls', tab.dataset.robotTask);
+      const panel = document.getElementById(tab.dataset.robotTask);
+      panel.setAttribute('role', 'tabpanel');
+      panel.setAttribute('aria-labelledby', tab.id);
+      tab.addEventListener('click', () => selectRobotTask(tab.dataset.robotTask));
+      tab.addEventListener('keydown', event => {
+        let next;
+        if (event.key === 'ArrowRight') next = (index + 1) % robotTabs.length;
+        if (event.key === 'ArrowLeft') next = (index + robotTabs.length - 1) % robotTabs.length;
+        if (event.key === 'Home') next = 0;
+        if (event.key === 'End') next = robotTabs.length - 1;
+        if (next === undefined) return;
+        event.preventDefault();
+        selectRobotTask(robotTabs[next].dataset.robotTask, true);
+      });
+    });
+    document.documentElement.classList.add('robot-tabs-ready');
+    selectRobotTask(robotTabs[0].dataset.robotTask);
+  }
   experimentVideos.forEach(video => video.addEventListener('play', () => {
     experimentVideos.forEach(other => { if (other !== video) other.pause(); });
   }));

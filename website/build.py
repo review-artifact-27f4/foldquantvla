@@ -126,7 +126,7 @@ def safe_media_path(value, allowed_suffixes):
 
 
 def make_robot_trials(data):
-    trials, media = [], []
+    trials, task_tabs, media = [], [], []
     seen = set()
     for trial_index, trial in enumerate(data['trials'], start=1):
         key = trial['key']
@@ -171,13 +171,16 @@ def make_robot_trials(data):
         media_class = 'robot-media-grid single-view' if len(views) == 1 else 'robot-media-grid'
         secondary_html = '' if len(views) == 1 else f'<div class="robot-secondary{" one-view" if len(views) == 2 else ""}">{secondary}</div>'
         status = 'Experiment video' if any(view.get('src') for view in views) else 'Media slot ready'
+        task_tabs.append(
+            f'<button type="button" id="robot-tab-{esc(key)}" data-robot-task="robot-{esc(key)}">'
+            f'<span>{esc(trial["platform"])}</span>{esc(trial["title"].split("·")[-1].strip())}</button>')
         trials.append(
             f'<article class="robot-trial" id="robot-{esc(key)}">'
             f'<header class="robot-trial-header"><div><span>Evaluation task {trial_index:02d}</span><h3>{esc(trial["title"])}</h3>'
             f'<p>{esc(trial["instruction"])}</p></div><div class="robot-trial-meta"><span>{esc(trial["policy"])}</span>'
             f'<strong><i aria-hidden="true"></i>{status}</strong></div></header>'
             f'<div class="{media_class}">{primary}{secondary_html}</div></article>')
-    return ''.join(trials), media
+    return ''.join(trials), ''.join(task_tabs), media
 
 
 def make_overview_media():
@@ -225,7 +228,7 @@ def build(output, base_url=''):
     tokens['libero_config_options'] = ''.join(f'<option value="{esc(k)}">{esc(v)}</option>' for k,v in config_labels.items())
     tokens['libero_table'] = table(['Checkpoint','K','Configuration','Successes','Success rate','95% CI (%)'],table_rows,'Table V · All 59 closed-loop LIBERO campaigns',attrs)
     tokens['robot_intro'] = esc(real_robot['intro'])
-    tokens['robot_trials'], robot_media = make_robot_trials(real_robot)
+    tokens['robot_trials'], tokens['robot_task_tabs'], robot_media = make_robot_trials(real_robot)
     tokens['overview_media'], overview_media = make_overview_media()
     tokens['bibtex'] = esc('@misc{anonymous2026foldquantvla,\n  title  = {' + meta['title'] + '},\n  author = {{Anonymous Authors}},\n  year   = {2026},\n  note   = {Anonymous ICRA submission}\n}')
     page = (ROOT / 'index.template.html').read_text(encoding='utf-8')
