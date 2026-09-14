@@ -159,7 +159,7 @@
           ]
         }
       ],
-      "footnote": "BF16 / W8A8 / W4A4: Table V protocol, 800 episodes, 520-step cap, seed 7. W4A4 + o/d INT8: released openpi harness, 20 trials per task, K = 5. Reported rows: HoloQ-VLA Table 2, emulated quantization, 10 calibration samples."
+      "footnote": "BF16 / W8A8 / W4A4: Table V protocol, 800 episodes, 520-step cap, seed 7. W4A4 + o/d INT8: released openpi harness, 20 trials per task, K = 5. Reported rows: HoloQ-VLA Table 2, emulated quantization, 10 calibration samples. Our reproduction of HoloQ-VLA W4A4 on the long suite reaches 188/200 against 192 reported (t = −0.82, p = 0.44); other suites not re-run."
     }
   ]
 }
