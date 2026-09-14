@@ -2,11 +2,42 @@
   "source": "Table VI (P2)",
   "metric": "Median decoded-action cosine against BF16 PyTorch over 32 held-out mid-trajectory observations",
   "models": {
-    "n17": {"bf16": null, "int8": 0.99996, "int4": 0.99817},
-    "n16": {"bf16": null, "int8": 0.99998, "int4": 0.99876},
-    "n15": {"bf16": null, "int8": 0.99999, "int4": 0.99885},
-    "pi05": {"bf16": null, "int8": 1.00000, "int4": 0.99942},
-    "smol": {"bf16": null, "int8": 0.99987, "int4": 0.92967},
-    "evo": {"bf16": null, "int8": 0.99991, "int4": 0.96881}
-  }
+    "n17": {
+      "bf16": null,
+      "int8": 0.99996,
+      "int4": 0.99817,
+      "res8": null
+    },
+    "n16": {
+      "bf16": null,
+      "int8": 0.99998,
+      "int4": 0.99876,
+      "res8": null
+    },
+    "n15": {
+      "bf16": null,
+      "int8": 0.99999,
+      "int4": 0.99885,
+      "res8": null
+    },
+    "pi05": {
+      "bf16": null,
+      "int8": 1.0,
+      "int4": 0.99942,
+      "res8": null
+    },
+    "smol": {
+      "bf16": null,
+      "int8": 0.99987,
+      "int4": 0.92967,
+      "res8": null
+    },
+    "evo": {
+      "bf16": null,
+      "int8": 0.99991,
+      "int4": 0.96881,
+      "res8": null
+    }
+  },
+  "res8_note": "Median P2 cosine for W4A4 + o_proj/down_proj INT8; null = pending measurement"
 }
