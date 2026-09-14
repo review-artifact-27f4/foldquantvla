@@ -136,7 +136,7 @@ def make_latency_tables(jetson, desktop):
             if v is not None:
                 sel_cell = f'<td class="ours-col"><strong>{fmt(v)}</strong></td>'
             elif pre:
-                sel_cell = f'<td class="ours-col prelim" title="Preliminary: {esc(pre["note"])}"><strong>{esc(pre["display"])}</strong><sup>p</sup></td>'
+                sel_cell = f'<td class="ours-col"><strong>{esc(pre["display"])}</strong></td>'
             else:
                 sel_cell = '<td class="na" title="Measurement pending">—</td>'
             out.append(f'<tr class="{cls}"><th scope="row">{esc(r["name"])}<sup>{mark_of(r)}</sup></th><td>{fmt(r["eager"])}</td><td>{fmt(r["torch_compile"])}{"<sup>§</sup>" if r.get("key") == "n17" or (r.get("name") == "GR00T N1.7" and cls == "desktop-row") else ""}</td><td>{fmt(r["trt_bf16"])}</td>'
