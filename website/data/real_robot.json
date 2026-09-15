@@ -99,7 +99,7 @@
         ]
       },
       {
-        "label": "ModelOpt W8A8 SQ",
+        "label": "ModelOpt W8A8 SmoothQuant*",
         "kind": "",
         "tasks": [
           "not_run",
@@ -168,7 +168,7 @@
         "res8": 0.99983
       }
     },
-    "note": "Arms interleaved with matched object placements. W4A4 + o/d INT8 vs W4A4: +20 / +10 / +5 / +15 pp per task, +12.5 pp on average. ModelOpt W8A8 SQ stopped after one task (SO-101 blue on red): jerky motion risked the hardware. It is not in any total. Median logged-observation action cosine vs BF16 PyTorch — ALOHA: TRT BF16 0.99999 · W8A8 0.99999 · W4A4 0.99962 · W4A4 + o/d INT8 0.99975; SO-101: TRT BF16 1.00000 · ModelOpt SQ 0.99892 · W8A8 1.00000 · W4A4 0.99961 · W4A4 + o/d INT8 0.99988."
+    "note": "Arms interleaved with matched object placements. W4A4 + o/d INT8 vs W4A4: +20 / +10 / +5 / +15 pp per task, +12.5 pp on average. ModelOpt W8A8 SmoothQuant stopped after one task (SO-101 blue on red): jerky motion risked the hardware. It is not in any total. Median logged-observation action cosine vs BF16 PyTorch — ALOHA: TRT BF16 0.99999 · W8A8 0.99999 · W4A4 0.99962 · W4A4 + o/d INT8 0.99975; SO-101: TRT BF16 1.00000 · ModelOpt SmoothQuant 0.99892 · W8A8 1.00000 · W4A4 0.99961 · W4A4 + o/d INT8 0.99988. * ModelOpt W8A8 SmoothQuant is run with NVIDIA’s TensorRT Model Optimizer (ModelOpt) repository."
   },
   "comparisons": [
     {
@@ -176,7 +176,7 @@
       "title": "SO-101 · Blue block on the red block",
       "tab": "SO-101 · Blue on red",
       "task_index": 3,
-      "meta": "All engines start together from a matched setup in each of five scenes · external camera · 4× speed",
+      "meta": "Engines start together from a matched setup in each scene · one successful episode per engine (SmoothQuant: a failed one) · external camera · 4× speed",
       "arms": [
         {
           "key": "bf16-pytorch",
@@ -190,8 +190,8 @@
         },
         {
           "key": "modelopt-w8a8-sq",
-          "label": "ModelOpt W8A8 SQ",
-          "result_label": "ModelOpt W8A8 SQ"
+          "label": "ModelOpt W8A8 SmoothQuant*",
+          "result_label": "ModelOpt W8A8 SmoothQuant*"
         },
         {
           "key": "foldquant-w8a8",
@@ -213,14 +213,15 @@
         }
       ],
       "prompt": "Pick blue cube and place on red cube",
-      "scenes": 5
+      "scenes": 5,
+      "footnote": "* ModelOpt W8A8 SmoothQuant is run with NVIDIA’s TensorRT Model Optimizer (ModelOpt) repository."
     },
     {
       "key": "so101-banana",
       "title": "SO-101 · Pick up the banana",
       "tab": "SO-101 · Banana",
       "task_index": 1,
-      "meta": "All engines start together from a matched setup in each of five scenes · external camera · 4× speed",
+      "meta": "Engines start together from a matched setup in each scene · one successful episode per engine · external camera · 4× speed",
       "arms": [
         {
           "key": "bf16-pytorch",
@@ -259,7 +260,7 @@
       "title": "SO-101 · Put all blocks into the cup",
       "tab": "SO-101 · Blocks → cup",
       "task_index": 2,
-      "meta": "All engines start together from a matched setup in each of five scenes · external camera · 4× speed",
+      "meta": "Engines start together from a matched setup in each scene · one successful episode per engine · external camera · 4× speed",
       "arms": [
         {
           "key": "bf16-pytorch",

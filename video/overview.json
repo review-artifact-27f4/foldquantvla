@@ -15,7 +15,7 @@
       "arms": [
         {
           "label": "ModelOpt W8A8 SmoothQuant",
-          "result_label": "ModelOpt W8A8 SQ",
+          "result_label": "ModelOpt W8A8 SmoothQuant*",
           "precision": "INT8",
           "src": "~/so101_processed/so101_block/ModelOpt_SQ_block/IMG_5858.MOV",
           "outcome": "fail",

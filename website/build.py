@@ -379,7 +379,8 @@ def make_robot_compare(comparisons, title, subtitle):
         task_tabs.append(f'<button type="button" data-task-panel="{tab_id}">{esc(comp.get("tab", comp["title"]))}</button>')
         html_parts.append(f'<section class="compare-task" id="{tab_id}" aria-label="{esc(comp["title"])}">'
                           f'<div class="compare-head"><h3>{esc(comp["title"])}</h3><p class="robot-prompt"><span>Prompt</span>“{esc(comp["prompt"])}”</p><p>{esc(comp["meta"])}</p></div>'
-                          f'{"".join(rows)}</section>')
+                          f'{"".join(rows)}'
+                          + (f'<p class="latency-note">{esc(comp["footnote"])}</p>' if comp.get('footnote') else '') + '</section>')
     if not html_parts:
         return '', media
     return (f'<div class="benchmark-panel robot-compare"><header><div><h3>{esc(title)}</h3><p>{esc(subtitle)}</p></div></header>'

@@ -58,12 +58,14 @@ def main():
                 base = (ROOT / task['dataset_root']).resolve()
                 ep = f'episode_{int(arm.get("episode", task["episode"])):06d}.mp4'
                 srcs = [base / arm['dir'] / 'videos' / 'chunk-000' / cam / ep for cam in task['cameras']]
-            dest = OUT / task['key'] / f'{arm["key"]}.mp4'
+            # "scene": N writes to <key>/scene-N/, the page's per-scene layout.
+            folder = OUT / task['key'] / (f'scene-{task["scene"]}' if 'scene' in task else '')
+            dest = folder / f'{arm["key"]}.mp4'
             if not all(ok(s) for s in srcs):
-                report[f'{task["key"]}/{arm["key"]}'] = 'missing'
+                report[str(dest.relative_to(OUT))] = 'missing'
                 continue
             cut(srcs, dest, task['speed'], task['height'], args.threads, task.get('aspect'), arm.get('rotate', ''))
-            report[f'{task["key"]}/{arm["key"]}'] = f'{dest.stat().st_size / 1e6:.1f} MB'
+            report[str(dest.relative_to(OUT))] = f'{dest.stat().st_size / 1e6:.1f} MB'
     for k, v in report.items():
         print(f'{k}: {v}')
 
