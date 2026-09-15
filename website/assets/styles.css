@@ -147,7 +147,12 @@
 .simpler-panel .compare-table th,.simpler-panel .compare-table td{padding-inline:8px}.simpler-panel .compare-table tbody th{white-space:normal;min-width:9em}
 .simpler-panel .compare-table thead th{white-space:normal;vertical-align:middle;text-align:center;max-width:7.5em;padding-block:8px;font-size:11px;font-weight:600}.simpler-panel .compare-table thead tr:first-child th[colspan]{text-align:center;border-bottom:1px solid var(--line)}
 .libero-own>.benchmark-table-scroll{border-bottom-left-radius:0;border-bottom-right-radius:0}.libero-own>.libero-foot{border:1px solid var(--line);border-top:0;border-radius:0 0 14px 14px;background:#fff}
-.teaser-figure{margin:34px 0 0;padding:14px;background:#fff;border:1px solid var(--line);border-radius:14px}.teaser-figure img{display:block;width:100%;height:auto}.teaser-figure figcaption{margin-top:10px;font-size:11px;line-height:1.6;color:var(--muted)}
+.teaser-figure{margin:0;padding:16px;background:#fff;border:1px solid var(--line);border-radius:14px}.teaser-figure img{display:block;width:100%;height:auto}.teaser-figure figcaption{margin-top:10px;font-size:11px;line-height:1.6;color:var(--muted)}
 @media(max-width:700px){.teaser-figure{margin:24px 0}}
 .compare-grid .compare-clip:not(.ours) figcaption strong{font-weight:400}
 .benchmark-panel tbody tr:not(.ours) th[scope=row],.results-table tbody tr:not(.ours) th[scope=row]{font-weight:400}
+/* Overview: heading across, then text and teaser side by side, contributions below. */
+.overview{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 64px;align-items:center}.overview>.section-heading{grid-column:1/-1}.overview-copy{max-width:none}
+@media(max-width:1000px){.overview{gap:0 36px}}
+.paper-title{text-wrap:balance}
+.nowrap{white-space:nowrap}

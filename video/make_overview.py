@@ -70,7 +70,12 @@ def scene_title(t, d, meta):
     img = canvas(); dr = ImageDraw.Draw(img); a = fade(t, d)
     mark(dr, W // 2, 330, 1.6 * (0.9 + 0.1 * ease(t / 0.8)), a)
     text(dr, (W // 2, 520), 'FoldQuantVLA', 128, 700, INK, 'mm', a)
-    text(dr, (W // 2, 625), meta['subtitle'], 40, 400, MUTED, 'mm', a * ease((t - 0.4) / 0.6))
+    # Full paper subtitle on two lines so it stays inside the frame.
+    head, tail = meta['subtitle'].split(' Vision-', 1) if ' Vision-' in meta['subtitle'] else (meta['subtitle'], '')
+    k = a * ease((t - 0.4) / 0.6)
+    text(dr, (W // 2, 625), head, 44, 400, MUTED, 'mm', k)
+    if tail:
+        text(dr, (W // 2, 683), 'Vision-' + tail, 44, 400, MUTED, 'mm', k)
     return img
 
 

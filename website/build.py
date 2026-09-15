@@ -452,6 +452,8 @@ def build(output, base_url=''):
             raise ValueError('--base-url must be an absolute HTTP(S) site URL without query or fragment.')
         base_url = base_url.rstrip('/') + '/'
     tokens = {k: esc(v) for k, v in meta.items()}
+    # Keep the hyphenated model family on one line in the visible hero title.
+    tokens['subtitle'] = tokens['subtitle'].replace('Vision-Language-Action', '<span class="nowrap">Vision-Language-Action</span>')
     tokens.update(social_image=esc(base_url + 'assets/social-card.png'), canonical=f'<link rel="canonical" href="{esc(base_url)}">' if base_url else '', speedup=f'{jetson["rows"][3]["speedup_vs_float"]:.2f}', compression=f'{jetson["rows"][0]["engine_mb"] / jetson["rows"][3]["engine_mb"]:.2f}', episode_count=f'{campaigns * libero["episodes_per_run"]:,}', campaign_count=str(campaigns), comparison_count=str(libero['comparison_count']), significant_loss_count=str(libero['significant_loss_count']), stable_comparison_count=str(libero['comparison_count'] - libero['significant_loss_count']))
     tokens['resource_links'] = make_resources(resources)
     tokens['jetson_charts'] = bar_chart(jetson['rows'], 'e2e_ms', 'ms', 'Observation-to-action latency', 'jetson-latency', 200) + bar_chart(jetson['rows'], 'engine_mb', 'MB', 'Serialized engine size', 'jetson-size', 6000)
