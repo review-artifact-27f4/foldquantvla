@@ -74,6 +74,20 @@ def scene_title(t, d, meta):
     return img
 
 
+def scene_teaser(t, d, teaser):
+    img = canvas(); dr = ImageDraw.Draw(img); a = fade(t, d)
+    text(dr, (120, 90), 'FoldQuantVLA at a glance · GR00T N1.7', 30, 600, RED, 'la', a)
+    text(dr, (120, 132), 'Four-bit speed, float-level success', 58, 700, INK, 'la', a)
+    box_h = 760
+    zoom = 0.97 + 0.03 * ease(t / d)
+    fh = int(box_h * zoom); fw = int(teaser.width * fh / teaser.height)
+    fig = teaser.resize((fw, fh), Image.LANCZOS)
+    if a < 1:
+        fig = Image.blend(Image.new('RGB', fig.size, BG), fig, a)
+    img.paste(fig, ((W - fw) // 2, 250 + (box_h - fh) // 2))
+    return img
+
+
 def scene_question(t, d):
     img = canvas(); dr = ImageDraw.Draw(img); a = fade(t, d)
     text(dr, (160, 330), 'What does low-bit actually', 76, 700, INK, 'la', a)
@@ -257,7 +271,7 @@ def scene_orin(t, d, orin):
         f, q = arms['TRT BF16 (float engine)'], arms['FoldQuant W4A4']
         k = a * ease((t - 0.5 - 0.25 * i) / 0.9)
         gx = 120 + i * group_w
-        for j, (r, col, lab) in enumerate(((f, GREY, 'TRT BF16'), (q, GREEN, 'FoldQuant W4A4'))):
+        for j, (r, col, lab) in enumerate(((f, GREY, 'TRT BF16'), (q, GREEN, 'FoldQuant W4A4 (ours)'))):
             h = (base - top) * min(r['e2e_ms'], vmax) / vmax * k
             x0 = gx + 60 + j * 130
             dr.rounded_rectangle((x0, base - h, x0 + 110, base), 8, fill=blend(col, a))
@@ -265,7 +279,7 @@ def scene_orin(t, d, orin):
         text(dr, (gx + 170, base + 40), m['name'].replace('π₀.₅', 'π0.5'), 30, 600, INK, 'mm', a)
         text(dr, (gx + 170, base + 84), f'{q["speedup"]:.2f}× faster', 30, 700, GREEN, 'mm', k)
     dr.line((120, base, 1800, base), fill=blend(LINE, a), width=2)
-    for j, (col, lab) in enumerate(((GREY, 'TRT BF16 (float engine)'), (GREEN, 'FoldQuant W4A4'))):
+    for j, (col, lab) in enumerate(((GREY, 'TRT BF16 (float engine)'), (GREEN, 'FoldQuant W4A4 (ours)'))):
         dr.rounded_rectangle((120 + j * 360, 232, 144 + j * 360, 256), 5, fill=blend(col, a))
         text(dr, (156 + j * 360, 244), lab, 24, 400, MUTED, 'lm', a)
     text(dr, (120, 1040), 'End-to-end observation-to-action latency. Lower is better.', 22, 400, GREY, 'la', a)
@@ -279,18 +293,19 @@ def scene_libero(t, d, compare):
     text(dr, (120, 90), 'LIBERO · GR00T N1.7 · success rate · 800 episodes per arm', 30, 600, RED, 'la', a)
     text(dr, (120, 132), 'Success stays with the float model', 58, 700, INK, 'la', a)
     lo, hi = 85.0, 100.0
-    x0, x1 = 700, 1700
+    x0, x1 = 840, 1700
     for i, r in enumerate(rows):
         total = sum(r['suites']); sr = total / 8
         k = a * ease((t - 0.5 - 0.3 * i) / 0.9)
         y = 320 + i * 150
         col = GREEN if r['kind'] == 'ours' else (GREY if r['kind'] == 'baseline' else (206, 170, 150))
-        text(dr, (120, y + 30), r['method'].replace('†', ' (our port)'), 36, 600, INK, 'lm', a)
+        ours = r['kind'] == 'ours'
+        text(dr, (120, y + 30), r['method'] + (' (ours)' if ours else ''), 36, 700 if ours else 400, INK, 'lm', a)
         dr.rounded_rectangle((x0, y, x1, y + 60), 10, fill=blend((236, 242, 238), a))
         w = (x1 - x0) * (sr - lo) / (hi - lo) * k
         dr.rounded_rectangle((x0, y, x0 + max(w, 12), y + 60), 10, fill=blend(col, a))
         text(dr, (x0 + max(w, 12) + 18, y + 30), f'{sr:.2f}%', 30, 600, INK, 'lm', k)
-    text(dr, (120, 1010), 'Axis starts at 85%. HoloQ-VLA is our fake-quantized port of the method. Differences are within closed-loop noise.', 22, 400, GREY, 'la', a)
+    text(dr, (120, 1010), 'Axis starts at 85%. † Emulated implementations. Differences are within closed-loop noise.', 22, 400, GREY, 'la', a)
     return img
 
 
@@ -308,7 +323,7 @@ def scene_fidelity(t, d):
         text(dr, (x + 400, 560), '→', 80, 400, MUTED, 'mm', k)
         val = before + (after - before) * k
         text(dr, (x + 470, 560), f'{val:.2f}', 110, 700, GREEN, 'lm', k)
-        text(dr, (x + 50, 700), 'W4A4', 28, 600, GREY, 'la', a); text(dr, (x + 470, 700), 'W4A4 + o/d INT8', 28, 600, GREEN, 'la', k)
+        text(dr, (x + 50, 700), 'W4A4 (ours)', 28, 700, GREY, 'la', a); text(dr, (x + 470, 700), 'W4A4 + o/d INT8 (ours)', 28, 700, GREEN, 'la', k)
         text(dr, (x + 50, 820), f'Latency cost {cost} end to end', 30, 600, INK, 'la', k)
     return img
 
@@ -367,18 +382,11 @@ def robot_scene(path, cfg, results, preview_clip, threads, work, tag):
     over = canvas(); dr = ImageDraw.Draw(over)
     text(dr, (120, 90), f'{cfg["kicker"]} · {speed:g}× speed', 30, 600, RED)
     text(dr, (120, 132), cfg['title'], 58, 700, INK)
-    task_index = cfg.get('task_index')
-    by_label = {r['label']: r for r in results['arms']}
     for i, arm in enumerate(arms):
         x = 120 + i * (cell_w + gap)
         dr.rounded_rectangle((x - 4, top - 4, x + cell_w + 4, top + cell_h + 4), 14, fill=RED if arm.get('outcome') == 'fail' else (GREEN if arm.get('ours') else LINE))
-        text(dr, (x, top + cell_h + 44), arm['label'], 32, 700, GREEN if arm.get('ours') else INK)
-        res = by_label.get(arm.get('result_label', arm['label']))
-        line = arm['precision']
-        if res and task_index is not None and isinstance(res['tasks'][task_index], int):
-            n = res['tasks'][task_index]
-            line += f'  ·  {100 * n / results["episodes_per_task"]:.0f}% SR over {results["episodes_per_task"]} episodes'
-        text(dr, (x, top + cell_h + 86), line, 24, 400, MUTED)
+        text(dr, (x, top + cell_h + 44), arm['label'] + (' (ours)' if arm.get('ours') else ''), 32, 700 if arm.get('ours') else 400, GREEN if arm.get('ours') else INK)
+        text(dr, (x, top + cell_h + 86), arm['precision'], 24, 400, MUTED)
         if arm.get('note'):
             text(dr, (x, top + cell_h + 122), arm['note'], 24, 600, RED if arm.get('outcome') == 'fail' else INK)
         if not (arm.get('src') or preview_clip):
@@ -435,6 +443,9 @@ def main():
     cfg = json.loads(Path(args.config).read_text(encoding='utf-8'))
     meta, orin, compare, robot = load('metadata'), load('jetson_orin'), load('compare'), load('real_robot')
     figure = Image.open(HERE / 'figures' / 'fig_overview.png').convert('RGB')
+    # Paper Fig. 1, rendered from teaser.pdf (pdftoppm -r 600) onto the video background.
+    teaser_rgba = Image.open(HERE / 'figures' / 'teaser.png').convert('RGBA')
+    teaser = Image.new('RGB', teaser_rgba.size, BG); teaser.paste(teaser_rgba, mask=teaser_rgba.split()[3])
     out = Path(args.output); out.parent.mkdir(parents=True, exist_ok=True)
     if args.install and args.preview_clip:
         raise SystemExit('Refusing to install a layout preview into the website.')
@@ -445,6 +456,7 @@ def main():
     with tempfile.TemporaryDirectory() as tmp:
         work = Path(tmp); parts = []
         scenes = [('title', 4.5, lambda t, d: scene_title(t, d, meta)),
+                  ('teaser', 7.0, lambda t, d: scene_teaser(t, d, teaser)),
                   ('question', 5.0, scene_question),
                   ('fold_why', 6.5, scene_fold_why),
                   ('fold_how', 10.0, scene_fold_how),

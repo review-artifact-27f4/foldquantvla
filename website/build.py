@@ -514,6 +514,9 @@ def build(output, base_url=''):
         destination = output / 'media' / 'overview.mp4'
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(overview_media, destination)
+    # Every FoldQuant row and clip caption reads "(ours)"; the styles set it bold.
+    page = re.sub(r'(<tr class="ours"><th scope="row">)([^<]*?)(?<! \(ours\))(<|$)', r'\1\2 (ours)\3', page)
+    page = re.sub(r'(<figure class="compare-clip ours"[^>]*>.*?<figcaption><strong>)([^<]*)(</strong>)', r'\1\2 (ours)\3', page)
     (output/'index.html').write_text(page,encoding='utf-8')
     (output/'.nojekyll').write_text('',encoding='utf-8')
     (output/'robots.txt').write_text('User-agent: *\nDisallow: /\n',encoding='utf-8')
