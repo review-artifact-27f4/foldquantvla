@@ -436,6 +436,21 @@ def make_robot_results(data):
             f'<p class="latency-note">{esc(res["note"])}</p></div>')
 
 
+def make_robot_results_pi05(data):
+    res = data.get('results_pi05')
+    if not res:
+        return ''
+    per = res['episodes_per_task']
+    body = ''.join(
+        f'<tr{f" class={chr(34)}{a[chr(107)+chr(105)+chr(110)+chr(100)]}{chr(34)}" if a["kind"] else ""}><th scope="row">{esc(a["label"])}</th>'
+        f'<td><strong>{100 * a["n"] / per:.1f}%</strong><small>95% CI [{a["wilson"][0]:.1f}, {a["wilson"][1]:.1f}]</small></td></tr>'
+        for a in res['arms'])
+    return (f'<div class="benchmark-panel robot-results robot-results-small"><header><div><h3>{esc(res["title"])}</h3><p>{esc(res["policy"])} · SR % · {per} episodes per arm · Wilson 95% interval</p></div></header>'
+            f'<div class="benchmark-table-scroll" tabindex="0" role="region" aria-label="π0.5 real-robot success"><table class="results-table">'
+            f'<thead><tr><th scope="col">Arm</th><th scope="col">SR ↑</th></tr></thead><tbody>{body}</tbody></table></div>'
+            f'<p class="latency-note">{esc(res["note"])}</p></div>')
+
+
 def make_overview_media():
     source = ROOT / 'media' / 'overview.mp4'
     shell = '<span class="video-kicker"><i aria-hidden="true"></i> Overview film</span>'
@@ -484,7 +499,7 @@ def build(output, base_url=''):
     tokens['libero_table'] = table(['Checkpoint','K','Configuration','Successes','Success rate','95% CI (%)'],table_rows,'Table V · All 59 closed-loop LIBERO campaigns',attrs)
     tokens['robot_intro'] = esc(real_robot['intro'])
     tokens['robot_trials'], tokens['robot_task_tabs'], robot_media = make_robot_trials(real_robot)
-    tokens['robot_results'] = make_robot_results(real_robot)
+    tokens['robot_results'] = make_robot_results(real_robot) + make_robot_results_pi05(real_robot)
     tokens['robot_compare'], compare_media = make_robot_compare(real_robot)
     robot_media = list(robot_media) + compare_media
     tokens['overview_media'], overview_media = make_overview_media()

@@ -119,7 +119,6 @@ class BuildTests(unittest.TestCase):
         self.assertTrue(all('hidden' not in panel for panel in benchmark_panels))
         self.assertIn('DuQuant', self.html)
         self.assertIn('HoloQ-VLA', self.html)
-        self.assertIn('Measuring…', self.html)
         self.assertIn('Median cos ↑', self.html)
         self.assertIn('0.99817', self.html)
         self.assertIn('0.99942', self.html)

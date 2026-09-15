@@ -168,7 +168,7 @@
         "res8": 0.99983
       }
     },
-    "note": "Arms interleaved with matched object placements. W4A4 + o/d INT8 vs W4A4: +20 / +10 / +5 / +15 pp per task, +12.5 pp on average. ModelOpt W8A8 SQ stopped after one task (SO-101 blue on red): jerky motion risked the hardware. It is not in any total. Median logged-observation action cosine vs BF16 PyTorch — ALOHA: TRT BF16 0.99999 · W8A8 0.99999 · W4A4 0.99962 · W4A4 + o/d INT8 0.99975; SO-101: TRT BF16 1.00000 · ModelOpt SQ 0.99892 · W8A8 1.00000 · W4A4 0.99961 · W4A4 + o/d INT8 0.99988. π0.5 real-robot runs are in progress."
+    "note": "Arms interleaved with matched object placements. W4A4 + o/d INT8 vs W4A4: +20 / +10 / +5 / +15 pp per task, +12.5 pp on average. ModelOpt W8A8 SQ stopped after one task (SO-101 blue on red): jerky motion risked the hardware. It is not in any total. Median logged-observation action cosine vs BF16 PyTorch — ALOHA: TRT BF16 0.99999 · W8A8 0.99999 · W4A4 0.99962 · W4A4 + o/d INT8 0.99975; SO-101: TRT BF16 1.00000 · ModelOpt SQ 0.99892 · W8A8 1.00000 · W4A4 0.99961 · W4A4 + o/d INT8 0.99988."
   },
   "comparisons": [
     {
@@ -328,5 +328,40 @@
       ],
       "prompt": "Pick blue cube and place on red cube"
     }
-  ]
+  ],
+  "results_pi05": {
+    "title": "π0.5 · SO-101 blue block on red",
+    "policy": "π0.5 on Jetson AGX Orin",
+    "episodes_per_task": 20,
+    "arms": [
+      {
+        "label": "BF16 PyTorch",
+        "kind": "baseline",
+        "n": 16,
+        "wilson": [
+          58.4,
+          91.9
+        ]
+      },
+      {
+        "label": "TRT BF16 (float engine)",
+        "kind": "",
+        "n": 20,
+        "wilson": [
+          83.9,
+          100.0
+        ]
+      },
+      {
+        "label": "FoldQuant W4A4",
+        "kind": "ours",
+        "n": 17,
+        "wilson": [
+          64.0,
+          94.8
+        ]
+      }
+    ],
+    "note": "20 episodes per arm on one task. Median logged-observation action cosine of W4A4 vs BF16 PyTorch is 0.98994; its backbone cosine (0.819) is the lowest measured on either robot while success stays at the reference. W8A8 and W4A4 + o/d INT8 were not run for π0.5 on the robot."
+  }
 }

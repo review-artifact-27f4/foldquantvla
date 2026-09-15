@@ -98,7 +98,7 @@
     <section class="benchmark-panel latency-panel" id="jetson" aria-labelledby="jetson-title">
       <header><div><h3 id="jetson-title">Jetson AGX Orin · on-device</h3><p>Four checkpoints · TensorRT 10.3 · batch 1 · observation-to-action chunk</p></div></header>
       {{jetson_summary}}
-      <p class="latency-note">“GPU” is device time and “E2E” observation-to-action; Hz is 1000 / E2E. “vs TRT BF16” is relative to the unquantized TensorRT engine of the same checkpoint. N1.6 plans: 5,325 / 3,618 / 2,525 / 3,901 / 3,077 MB for TRT BF16, W8A8, W4A4, SQ, AWQ.</p>
+      <p class="latency-note">“GPU” is device time and “E2E” observation-to-action; Hz is 1000 / E2E. “vs TRT BF16” is relative to the unquantized TensorRT engine of the same checkpoint. N1.6 plans: 5,325 / 3,618 / 2,525 / 3,901 / 3,077 MB for TRT BF16, W8A8, W4A4, SQ, AWQ. torch.compile is the compiled PyTorch policy on the board; on π0.5 it matches eager.</p>
     </section>
     <section class="benchmark-panel latency-panel" id="desktop" aria-labelledby="desktop-title">
       <header><div><h3 id="desktop-title">RTX 4070 Ti SUPER · desktop</h3><p>Four checkpoints · TensorRT 10.15 · batch 1 · observation-to-action chunk</p></div></header>

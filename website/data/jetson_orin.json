@@ -1,5 +1,5 @@
 {
-  "source": "table_latency_orin.tex (Jetson AGX Orin sm_87, TensorRT 10.3, batch 1)",
+  "source": "table_latency_orin.tex (Jetson AGX Orin sm_87, TensorRT 10.3, batch 1); eager / compiled PyTorch and o/d INT8 rows from the Jetson results page (2026-09-15)",
   "models": [
     {
       "name": "GR00T N1.7",
@@ -53,6 +53,36 @@
           "speedup": 0.87,
           "cos": 0.99967,
           "kind": ""
+        },
+        {
+          "label": "Eager PyTorch",
+          "precision": "bf16",
+          "gpu_ms": 323.2,
+          "e2e_ms": 351,
+          "hz": 2.8,
+          "speedup": null,
+          "cos": null,
+          "kind": ""
+        },
+        {
+          "label": "torch.compile",
+          "precision": "bf16",
+          "gpu_ms": 202.4,
+          "e2e_ms": 231,
+          "hz": 4.3,
+          "speedup": null,
+          "cos": null,
+          "kind": ""
+        },
+        {
+          "label": "FoldQuant W4A4 + o/d INT8",
+          "precision": "int4",
+          "gpu_ms": 93.5,
+          "e2e_ms": 120,
+          "hz": 8.3,
+          "speedup": null,
+          "cos": null,
+          "kind": "ours"
         }
       ]
     },
@@ -108,6 +138,36 @@
           "speedup": 0.85,
           "cos": 0.99981,
           "kind": ""
+        },
+        {
+          "label": "Eager PyTorch",
+          "precision": "bf16",
+          "gpu_ms": 313.2,
+          "e2e_ms": 333,
+          "hz": 3.0,
+          "speedup": null,
+          "cos": null,
+          "kind": ""
+        },
+        {
+          "label": "torch.compile",
+          "precision": "bf16",
+          "gpu_ms": 196.6,
+          "e2e_ms": 217,
+          "hz": 4.6,
+          "speedup": null,
+          "cos": null,
+          "kind": ""
+        },
+        {
+          "label": "FoldQuant W4A4 + o/d INT8",
+          "precision": "int4",
+          "gpu_ms": 106.3,
+          "e2e_ms": 127,
+          "hz": 7.9,
+          "speedup": null,
+          "cos": null,
+          "kind": "ours"
         }
       ]
     },
@@ -163,6 +223,36 @@
           "speedup": 0.78,
           "cos": 0.99937,
           "kind": ""
+        },
+        {
+          "label": "Eager PyTorch",
+          "precision": "bf16",
+          "gpu_ms": 216.2,
+          "e2e_ms": 249,
+          "hz": 4.0,
+          "speedup": null,
+          "cos": null,
+          "kind": ""
+        },
+        {
+          "label": "torch.compile",
+          "precision": "bf16",
+          "gpu_ms": 166.1,
+          "e2e_ms": 199,
+          "hz": 5.0,
+          "speedup": null,
+          "cos": null,
+          "kind": ""
+        },
+        {
+          "label": "FoldQuant W4A4 + o/d INT8",
+          "precision": "int4",
+          "gpu_ms": 85.0,
+          "e2e_ms": 114,
+          "hz": 8.8,
+          "speedup": null,
+          "cos": null,
+          "kind": "ours"
         }
       ]
     },
@@ -218,6 +308,36 @@
           "speedup": 0.7,
           "cos": 0.99985,
           "kind": ""
+        },
+        {
+          "label": "Eager PyTorch",
+          "precision": "bf16",
+          "gpu_ms": 856.9,
+          "e2e_ms": 861,
+          "hz": 1.2,
+          "speedup": null,
+          "cos": null,
+          "kind": ""
+        },
+        {
+          "label": "torch.compile",
+          "precision": "bf16",
+          "gpu_ms": 856.5,
+          "e2e_ms": 861,
+          "hz": 1.2,
+          "speedup": null,
+          "cos": null,
+          "kind": ""
+        },
+        {
+          "label": "FoldQuant W4A4 + o/d INT8",
+          "precision": "int4",
+          "gpu_ms": 198.7,
+          "e2e_ms": 203,
+          "hz": 4.9,
+          "speedup": null,
+          "cos": null,
+          "kind": "ours"
         }
       ]
     },
