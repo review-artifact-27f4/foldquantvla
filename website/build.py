@@ -226,35 +226,37 @@ def make_memory_tables(desktop):
     arms = [('TRT BF16 (float engine)', 'bf16', 'baseline'), ('Eager PyTorch', 'bf16', ''), ('ModelOpt W8A8 SQ', 'int8', ''),
             ('ModelOpt W4A16 AWQ', 'int4', ''), ('FoldQuant W8A8', 'int8', 'ours'), ('FoldQuant W4A4', 'int4', 'ours'),
             ('FoldQuant W4A4 + o/d INT8', 'int4', 'ours')]
-    head = ('<thead><tr><th scope="col">Arm</th><th scope="col">Prec.</th><th scope="col">Steady GPU memory (MiB) ↓</th>'
-            '<th scope="col">Engines on disk (MB) ↓</th><th scope="col">Memory vs TRT BF16</th></tr></thead>')
+    head = ('<thead><tr><th scope="col">Arm</th><th scope="col">Prec.</th><th scope="col">Floor (MiB) ↓</th>'
+            '<th scope="col">As served (MiB) ↓</th><th scope="col">Engines on disk (MB) ↓</th><th scope="col">Floor vs TRT BF16</th></tr></thead>')
     keys = [k for k in PAPER_CHECKPOINTS if k in mem['families']]
     opts = ''.join(f'<option value="mem-{k}">{esc(names[k])}</option>' for k in keys)
     panels = []
     for k in keys:
         fam = mem['families'][k]
-        ref = fam['TRT BF16 (float engine)'][0]
-        rows = []
+        ref = fam['TRT BF16 (float engine)'][1]
+        rows, not_measured = [], False
         for label, prec, kind in arms:
             v = fam.get(label)
             cls = f' class="{kind}"' if kind else ''
             if v is None:
-                rows.append(f'<tr{cls}><th scope="row">{label}</th><td class="prec">{prec}</td><td colspan="3" class="na">n/a</td></tr>')
+                rows.append(f'<tr{cls}><th scope="row">{label}</th><td class="prec">{prec}</td><td colspan="4" class="na">n/a</td></tr>')
                 continue
-            steady, disk = v[0], v[1]
-            tag = v[2] if len(v) > 2 else ''
-            disk_txt = f'{disk:,}<small>parameters</small>' if tag == 'params' else f'{disk:,}'
-            mark = '<sup>§</sup>' if tag == 'framework' else ''
+            if v == 'not_measured':
+                not_measured = True
+                rows.append(f'<tr{cls}><th scope="row">{label}</th><td class="prec">{prec}</td><td colspan="4" class="na">—</td></tr>')
+                continue
+            served, floor, disk = v
+            disk_txt = '<span class="na">—</span>' if disk is None else f'{disk:,}'
             if label.startswith('TRT BF16'):
                 vs = '<td class="na">ref</td>'
             else:
-                d = (steady - ref) / ref * 100
-                cls_d = 'gain' if d <= -0.5 else ('loss' if d >= 0.5 else '')
-                vs = f'<td class="{cls_d}"><strong>{"−" if d < 0 else "+"}{abs(d):.0f}%</strong></td>'
-            rows.append(f'<tr{cls}><th scope="row">{label}</th><td class="prec">{prec}</td><td><strong>{steady:,}</strong>{mark}</td><td>{disk_txt}</td>{vs}</tr>')
+                d = (floor - ref) / ref * 100
+                c = 'gain' if d <= -0.5 else ('loss' if d >= 0.5 else '')
+                vs = f'<td class="{c}"><strong>{"−" if d < 0 else "+"}{abs(d):.0f}%</strong></td>'
+            rows.append(f'<tr{cls}><th scope="row">{label}</th><td class="prec">{prec}</td><td><strong>{floor:,}</strong></td><td>{served:,}</td><td>{disk_txt}</td>{vs}</tr>')
         bits = []
-        if any(len(v) > 2 and v[2] == 'framework' for v in fam.values() if v):
-            bits.append('§ framework runtime; engine-backed modules are shims, so no PyTorch weights stay resident')
+        if not_measured:
+            bits.append('— ModelOpt arms were not re-measured with this method')
         if mem['notes'].get(k):
             bits.append(mem['notes'][k])
         foot = f'<p class="family-note">{esc(" · ".join(bits))}</p>' if bits else ''
