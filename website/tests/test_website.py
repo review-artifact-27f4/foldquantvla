@@ -82,6 +82,10 @@ class BuildTests(unittest.TestCase):
             if tag == 'a':
                 if attrs['href'] == './':
                     continue
+                if attrs['href'].startswith('https://'):
+                    # The only external link is the anonymized code repository.
+                    self.assertTrue(attrs['href'].startswith('https://anonymous.4open.science/'), attrs['href'])
+                    continue
                 self.assertTrue(attrs['href'].startswith('#'))
                 self.assertIn(attrs['href'][1:], ids)
             if tag in ('img','script','link'):
