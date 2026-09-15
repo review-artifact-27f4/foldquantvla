@@ -337,7 +337,7 @@ def scene_outro(t, d, meta):
     img = canvas(); dr = ImageDraw.Draw(img); a = fade(t, d)
     mark(dr, W // 2, 380, 1.3, a)
     text(dr, (W // 2, 540), 'FoldQuantVLA', 96, 700, INK, 'mm', a)
-    text(dr, (W // 2, 630), 'Consistent folding · native low-bit inference · closed-loop evidence', 36, 400, MUTED, 'mm', a)
+    text(dr, (W // 2, 630), 'Consistent folding · native low-bit inference · real robots: 4 tasks, 2 platforms', 36, 400, MUTED, 'mm', a)
     return img
 
 
