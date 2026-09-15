@@ -117,7 +117,7 @@ def make_latency_tables(jetson, desktop):
         t = f"{v:.2f}".rstrip("0")
         return t + "0" if t.endswith(".") else t
     def slug(name):
-        return re.sub(r'[^a-z0-9]+', '-', name.lower().replace('π₀.₅', 'pi05')).strip('-')
+        return re.sub(r'[^a-z0-9]+', '-', name.lower().replace('π₀.₅', 'pi05').replace('π0.5', 'pi05')).strip('-')
     def ratio(x):
         cls = 'gain' if x >= 1.005 else ('loss' if x <= 0.995 else '')
         return f'<td class="{cls}"><strong>{x:.2f}×</strong></td>'
@@ -144,7 +144,7 @@ def make_latency_tables(jetson, desktop):
             v = values.get(label)
             cls = f' class="{kind}"' if kind else ''
             if v and v.get('na'):
-                rows.append(f'<tr{cls}><th scope="row">{label}</th><td class="prec">{prec}</td><td colspan="4" class="na">—</td></tr>')
+                rows.append(f'<tr{cls}><th scope="row">{label}</th><td class="prec">{prec}</td><td colspan="4" class="na">n/a</td></tr>')
                 continue
             if not v or v.get('e2e') is None:
                 rows.append(f'<tr{cls}><th scope="row">{label}</th><td class="prec">{prec}</td><td colspan="4" class="na pending-cell">Measuring…</td></tr>')
@@ -239,7 +239,7 @@ def make_memory_tables(desktop):
             v = fam.get(label)
             cls = f' class="{kind}"' if kind else ''
             if v is None:
-                rows.append(f'<tr{cls}><th scope="row">{label}</th><td class="prec">{prec}</td><td colspan="3" class="na">—</td></tr>')
+                rows.append(f'<tr{cls}><th scope="row">{label}</th><td class="prec">{prec}</td><td colspan="3" class="na">n/a</td></tr>')
                 continue
             steady, disk = v[0], v[1]
             tag = v[2] if len(v) > 2 else ''
