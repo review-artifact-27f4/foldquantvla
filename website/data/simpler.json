@@ -1,0 +1,73 @@
+{
+  "source": "FoldQuant/models/groot_n1_6/exports/simpler/*/summary.tsv (2026-09-12/13)",
+  "name": "GR00T N1.6 · SimplerEnv Bridge (WidowX)",
+  "meta": "Seven WidowX tasks · 200 episodes per task",
+  "tasks": [
+    "Put spoon on towel",
+    "Put carrot on plate",
+    "Put eggplant in basket",
+    "Stack green cube on yellow",
+    "Put eggplant in sink",
+    "Close drawer",
+    "Open drawer"
+  ],
+  "rows": [
+    {
+      "method": "BF16 PyTorch",
+      "precision": "bf16",
+      "kind": "baseline",
+      "sr": [
+        0.635,
+        0.605,
+        0.9253731343283582,
+        0.06,
+        0.43,
+        0.72,
+        0.98
+      ]
+    },
+    {
+      "method": "FoldQuant W8A8",
+      "precision": "int8",
+      "kind": "ours",
+      "sr": [
+        0.635,
+        0.595,
+        0.895,
+        0.025,
+        0.4,
+        0.645,
+        0.965
+      ]
+    },
+    {
+      "method": "FoldQuant W4A4",
+      "precision": "int4",
+      "kind": "ours",
+      "sr": [
+        0.66,
+        0.705,
+        0.58,
+        0.075,
+        0.63,
+        0.82,
+        0.815
+      ]
+    },
+    {
+      "method": "FoldQuant W4A4 + o/d INT8",
+      "precision": "int4",
+      "kind": "ours",
+      "sr": [
+        0.755,
+        0.665,
+        0.705,
+        0.055,
+        0.5,
+        0.895,
+        0.92
+      ]
+    }
+  ],
+  "footnote": "Checkpoint nvidia/GR00T-N1.6-bridge on RTX 4070 Ti SUPER; SimplerEnv 8a2d286, 5 vectorised envs, 4 action steps, 300-step cap. Against BF16, paired over the seven tasks: W8A8 −2.8 pp (t(6) = −3.03, p = 0.02 uncorrected; not presented as a significant loss), mean |Δ| 2.8 pp, worst −7.5 (close drawer); W4A4 −1.0 pp (p = 0.89), mean |Δ| 13.6 pp, worst −34.5 (eggplant in basket); W4A4 + o/d INT8 +2.0 pp (p = 0.70), mean |Δ| 10.1 pp, worst −22.0 (eggplant in basket). Holding o_proj and down_proj at INT8 recovers open drawer (81.5 → 92.0) and the basket (58.0 → 70.5). W8A8 close- and open-drawer were re-run in a separate session after GPU-memory contention with the simulator renderers. The BF16 basket cell is as reported by the rollout script (0.9254), not a multiple of 1/200. No TRT BF16 or ModelOpt arm was run on this benchmark."
+}

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Build the anonymous project page using only the Python standard library."""
 import argparse
-import html
 import hashlib
+import html
 import json
 from pathlib import Path, PurePosixPath
 import re
@@ -16,7 +16,6 @@ PAPER_CHECKPOINTS = ('n17', 'n16', 'n15', 'pi05')
 COLORS = {'bf16': '#84958b', 'trt_bf16': '#66776d', 'float': '#84958b', 'eager': '#b9c3bd', 'compiled': '#84958b', 'int8': '#507b68', 'mixed': '#b57a34', 'int4': '#d72e3b', 'sq': '#74828b', 'awq': '#9b8582', 'arc': '#bd5861', 'cascade': '#bd5861'}
 SHORT = {'bf16': 'BF16', 'int8': 'W8A8', 'mixed': 'Head W4A4 + LLM W8A8', 'int4': 'W4A4'}
 VIDEO_TYPES = {'.mp4': 'video/mp4', '.webm': 'video/webm'}
-POSTER_TYPES = {'.avif', '.jpg', '.jpeg', '.png', '.webp'}
 
 
 def esc(value):
@@ -76,7 +75,7 @@ def make_libero(data):
             extra = ' hidden' if key not in CORE else ''
             attrs = f'data-config="{key}" data-core="{str(key in CORE).lower()}"'
             if row is None:
-                parts.append(f'<div class="success-row missing" {attrs}{extra}><span class="success-label">{esc(label)}</span><span class="missing-value">— <small>Not evaluated</small></span></div>')
+                parts.append(f'<div class="success-row missing" {attrs}{extra}><span class="success-label">{esc(label)}</span><span class="missing-value">N/A <small>Not evaluated</small></span></div>')
                 continue
             # A common 0–100 scale prevents magnifying small within-checkpoint gaps.
             x = lambda pct: 4 + pct * 2.30
@@ -98,13 +97,13 @@ def make_libero_summary(data, fidelity):
         def sr(key):
             row = rows.get(key)
             if row is None:
-                return '<td class="na">—</td>'
+                return '<td class="na">N/A</td>'
             loss = ' class="loss"' if key == 'int4' and model['key'] in ('smol', 'evo') else ''
             return f'<td{loss}><strong>{row["rate"]:.2f}%</strong></td>'
         body.append(f'<tr><th scope="row">{esc(model["name"])}</th><td>{model["chunk_length"]}</td><td>{model["k"]}</td>{sr("bf16")}{sr("trt_bf16")}'
                     f'{sr("int8")}<td>{cos["int8"]:.5f}</td>{sr("int4")}<td>{cos["int4"]:.5f}</td>{({'n17': '<td><strong>95.00%</strong></td>', 'pi05': '<td><strong>97.62%</strong></td>',
-                       'n15': '<td><strong>87.00%</strong></td>', 'smol': '<td class="na">—</td>',
-                       'evo': '<td class="na">—</td>'}.get(model['key']) or sr("arc_sr_before_int8"))}{"<td class=\"na\">—</td>" if cos.get("res8") is None else f"<td>{cos['res8']:.5f}</td>"}</tr>')
+                       'n15': '<td><strong>87.00%</strong></td>', 'smol': '<td class="na">N/A</td>',
+                       'evo': '<td class="na">N/A</td>'}.get(model['key']) or sr("arc_sr_before_int8"))}{"<td class=\"na\">N/A</td>" if cos.get("res8") is None else f"<td>{cos['res8']:.5f}</td>"}</tr>')
     head = ('<thead><tr><th scope="col" rowspan="2">Checkpoint</th><th scope="col" rowspan="2">H</th><th scope="col" rowspan="2">K</th><th scope="colgroup" colspan="2">BF16 SR</th>'
             '<th scope="colgroup" colspan="2">FoldQuant W8A8</th><th scope="colgroup" colspan="2">FoldQuant W4A4</th><th scope="colgroup" colspan="2">FoldQuant W4A4 + o/d INT8</th></tr>'
             '<tr><th scope="col">PyTorch</th><th scope="col">TensorRT</th><th scope="col">SR ↑</th><th scope="col">Median cos ↑</th><th scope="col">SR ↑</th><th scope="col">Median cos ↑</th><th scope="col">SR ↑</th><th scope="col">Median cos ↑</th></tr></thead>')
@@ -144,15 +143,15 @@ def make_latency_tables(jetson, desktop):
             v = values.get(label)
             cls = f' class="{kind}"' if kind else ''
             if v and v.get('na'):
-                rows.append(f'<tr{cls}><th scope="row">{label}</th><td class="prec">{prec}</td><td colspan="4" class="na">n/a</td></tr>')
+                rows.append(f'<tr{cls}><th scope="row">{label}</th><td class="prec">{prec}</td>{"<td class=\"na\">N/A</td>" * 4}</tr>')
                 continue
             if not v or v.get('e2e') is None:
                 rows.append(f'<tr{cls}><th scope="row">{label}</th><td class="prec">{prec}</td><td colspan="4" class="na pending-cell">Measuring…</td></tr>')
                 continue
-            gpu = f'{v["gpu"]:.1f}' if v.get('gpu') is not None else ('<span class="na">n/a</span>' if label == 'torch.compile' else '<span class="pending-cell">Measuring…</span>')
+            gpu = f'{v["gpu"]:.1f}' if v.get('gpu') is not None else ('<span class="na">N/A</span>' if label == 'torch.compile' else '<span class="pending-cell">Measuring…</span>')
             if v.get('same_as_w4a4'):
                 rows.append(f'<tr{cls}><th scope="row">{label}</th><td class="prec">{prec}</td><td>{gpu}</td><td><strong>≈ W4A4</strong><sup>*</sup></td>'
-                            '<td class="na">—</td><td class="na">—</td></tr>')
+                            '<td class="na">N/A</td><td class="na">N/A</td></tr>')
                 continue
             e2e = v['e2e']
             e2e_txt = (str(e2e) if isinstance(e2e, int) else ms(e2e)) + v.get('mark', '')
@@ -162,7 +161,7 @@ def make_latency_tables(jetson, desktop):
                 x = v['ref_e2e'] / e2e
                 vs = f'<td>{x:.2f}×</td>' if label in ('Eager PyTorch', 'torch.compile') else ratio(x)
             elif trt is None or not v.get('comparable', True):
-                vs = '<td class="na">—</td>'
+                vs = '<td class="na">N/A</td>'
             elif label in ('Eager PyTorch', 'torch.compile'):
                 vs = f'<td>{trt / e2e:.2f}×</td>'
             else:
@@ -238,14 +237,14 @@ def make_memory_tables(desktop):
             v = fam.get(label)
             cls = f' class="{kind}"' if kind else ''
             if v is None:
-                rows.append(f'<tr{cls}><th scope="row">{label}</th><td class="prec">{prec}</td><td colspan="4" class="na">n/a</td></tr>')
+                rows.append(f'<tr{cls}><th scope="row">{label}</th><td class="prec">{prec}</td>{"<td class=\"na\">N/A</td>" * 4}</tr>')
                 continue
             if v == 'not_measured':
                 not_measured = True
-                rows.append(f'<tr{cls}><th scope="row">{label}</th><td class="prec">{prec}</td><td colspan="4" class="na">—</td></tr>')
+                rows.append(f'<tr{cls}><th scope="row">{label}</th><td class="prec">{prec}</td>{"<td class=\"na\">N/A</td>" * 4}</tr>')
                 continue
             served, floor, disk = v
-            disk_txt = '<span class="na">—</span>' if disk is None else f'{disk:,}'
+            disk_txt = '<span class="na">N/A</span>' if disk is None else f'{disk:,}'
             if label.startswith('TRT BF16'):
                 vs = '<td class="na">ref</td>'
             else:
@@ -297,6 +296,21 @@ def make_benchmark_preview(compare):
     return ''.join(panels)
 
 
+def make_simpler(data):
+    # One "Task" group header over the seven full task names, which wrap so columns stay narrow.
+    head = ''.join(f'<th scope="col">{esc(t)}</th>' for t in data['tasks'])
+    body = []
+    for row in data['rows']:
+        cells = ''.join('<td class="na">N/A</td>' if v is None else f'<td>{100 * v:.1f}%</td>' for v in row['sr'])
+        mean = f'<td><strong>{100 * sum(row["sr"]) / len(row["sr"]):.1f}%</strong></td>' if None not in row['sr'] else '<td class="na">N/A</td>'
+        body.append(f'<tr class="{row["kind"]}"><th scope="row">{esc(row["method"])}</th>{cells}{mean}</tr>')
+    return (f'<section class="benchmark-panel simpler-panel" id="simpler" aria-labelledby="simpler-title">'
+            f'<header><div><h3 id="simpler-title">{esc(data["name"])}</h3><p>{esc(data["meta"])}</p></div><span>SR % · 200 episodes per task</span></header>'
+            f'<div class="benchmark-table-scroll" tabindex="0" role="region" aria-label="SimplerEnv comparison">'
+            f'<table class="compare-table"><thead><tr><th scope="col" rowspan="2">Arm</th><th scope="colgroup" colspan="{len(data['tasks'])}">Task</th><th scope="col" rowspan="2">Avg ↑</th></tr><tr>{head}</tr></thead>'
+            f'<tbody>{"".join(body)}</tbody></table></div></section>')
+
+
 def make_resources(data):
     icons = {'code': '&lt;/&gt;', 'models': '◇', 'appendix': 'A+', 'bibtex': 'B'}
     items = []
@@ -334,79 +348,41 @@ def safe_media_path(value, allowed_suffixes):
     return path
 
 
-def make_robot_trials(data):
-    trials, task_tabs, media = [], [], []
-    seen = set()
-    for trial_index, trial in enumerate(data['trials'], start=1):
-        key = trial['key']
-        if key in seen or not re.fullmatch(r'[a-z0-9-]+', key):
-            raise ValueError('Real-robot trial keys must be unique lowercase slugs.')
-        seen.add(key)
-        views = trial['views']
-        if len(views) != 1:
-            raise ValueError('Each real-robot task must contain exactly one evaluation video.')
-        rendered_views = []
-        for view_index, view in enumerate(views, start=1):
-            src = safe_media_path(view.get('src'), set(VIDEO_TYPES))
-            poster = safe_media_path(view.get('poster'), POSTER_TYPES)
-            if src:
-                media.append(src)
-                media_path = f'media/real-robot/{src.as_posix()}'
-                poster_attr = ''
-                if poster:
-                    media.append(poster)
-                    poster_attr = f' poster="media/real-robot/{esc(poster.as_posix())}"'
-                screen = (f'<video autoplay muted loop playsinline preload="metadata" aria-label="{esc(view["label"])} for {esc(trial["title"])}"{poster_attr}>'
-                          f'<source src="{esc(media_path)}" type="{VIDEO_TYPES[src.suffix.lower()]}">'
-                          'This browser cannot play the experiment video.</video>')
-                state = 'has-video'
-            else:
-                screen = ('<div class="robot-placeholder" role="img" aria-label="Video forthcoming">'
-                          '<span class="placeholder-message"><i aria-hidden="true">▶</i><strong>Video forthcoming</strong></span></div>')
-                state = 'is-placeholder'
-            rendered_views.append(f'<div class="robot-screen {state}">{screen}</div>')
-        platform = trial['platform']
-        name = trial['title'].split('·')[-1].strip()
-        trials.append(
-            f'<article class="robot-card" id="robot-{esc(key)}" data-robot-task="robot-{esc(key)}">'
-            f'{rendered_views[0]}'
-            f'<div class="robot-card-body"><h3>{esc(platform)} · {esc(name)}</h3>'
-            f'<span class="robot-tag">{esc(platform)}</span>'
-            f'<p class="robot-prompt"><span>Prompt</span>“{esc(trial["prompt"])}”</p></div></article>')
-    return ''.join(trials), ''.join(task_tabs), media
-
-
-def make_robot_compare(data):
+def make_robot_compare(comparisons, title, subtitle):
     """Per-engine clips for one task; missing clips render as placeholders."""
     html_parts, media, task_tabs = [], [], []
-    res = {a['label']: a for a in data['results']['arms']}
-    per = data['results']['episodes_per_task']
-    for comp in data.get('comparisons', []):
-        tabs, panels = [], []
-        for i, arm in enumerate(comp['arms']):
-            rel = f'{comp["key"]}/{arm["key"]}.mp4'
-            src = safe_media_path(rel, set(VIDEO_TYPES)) if (ROOT / 'media' / 'real-robot' / rel).is_file() else None
-            if src:
-                media.append(src)
-                screen = (f'<video muted playsinline autoplay preload="auto" aria-label="{esc(arm["label"])} on {esc(comp["title"])}">'
-                          f'<source src="media/real-robot/{esc(rel)}" type="video/mp4"></video>')
-            else:
-                screen = '<div class="robot-placeholder" role="img" aria-label="Video forthcoming"><span class="placeholder-message"><i aria-hidden="true">▶</i><strong>Video forthcoming</strong></span></div>'
-            r = res.get(arm['result_label'])
-            n = r['tasks'][comp['task_index']] if r else None
-            sr = f'{100 * n / per:.0f}% SR on this task' if isinstance(n, int) else ''
-            pid = f'compare-{comp["key"]}-{arm["key"]}'
-            tabs.append(f'<button type="button" id="{pid}-tab" data-compare="{pid}" class="{"ours" if arm.get("ours") else ""}">{esc(arm["label"])}</button>')
-            panels.append(f'<figure class="compare-clip{" ours" if arm.get("ours") else ""}" id="{pid}"><div class="compare-screen">{screen}</div>'
-                          f'<figcaption><strong>{esc(arm["label"])}</strong></figcaption></figure>')
+    for comp in comparisons:
+        scenes = comp.get('scenes', 1)
+        rows = []
+        for scene in range(1, scenes + 1):
+            panels = []
+            for arm in comp['arms']:
+                # A per-scene clip wins; until one exists, the task's single clip fills the row.
+                candidates = [f'{comp["key"]}/scene-{scene}/{arm["key"]}.mp4'] if scenes > 1 else []
+                candidates.append(f'{comp["key"]}/{arm["key"]}.mp4')
+                rel = next((r for r in candidates if (ROOT / 'media' / 'real-robot' / r).is_file()), None)
+                src = safe_media_path(rel, set(VIDEO_TYPES)) if rel else None
+                if src:
+                    media.append(src)
+                    screen = (f'<video muted playsinline autoplay preload="auto" aria-label="{esc(arm["label"])} on {esc(comp["title"])}">'
+                              f'<source src="media/real-robot/{esc(rel)}" type="video/mp4"></video>')
+                else:
+                    screen = '<div class="robot-placeholder" role="img" aria-label="Video forthcoming"><span class="placeholder-message"><i aria-hidden="true">▶</i><strong>Video forthcoming</strong></span></div>'
+                pid = f'compare-{comp["key"]}-{arm["key"]}' + (f'-s{scene}' if scenes > 1 else '')
+                panels.append(f'<figure class="compare-clip{" ours" if arm.get("ours") else ""}" id="{pid}"><div class="compare-screen">{screen}</div>'
+                              f'<figcaption><strong>{esc(arm["label"])}</strong></figcaption></figure>')
+            rows.append(f'<div class="compare-grid" data-scene="{scene}" style="--cols:{len(comp["arms"])}">{"".join(panels)}</div>')
+        if scenes > 1:
+            buttons = ''.join(f'<button type="button" data-scene="{n}">Scene {n}</button>' for n in range(1, scenes + 1))
+            rows.insert(0, f'<div class="compare-scene-tabs" aria-label="Scene">{buttons}</div>')
         tab_id = f'task-{comp["key"]}'
         task_tabs.append(f'<button type="button" data-task-panel="{tab_id}">{esc(comp.get("tab", comp["title"]))}</button>')
         html_parts.append(f'<section class="compare-task" id="{tab_id}" aria-label="{esc(comp["title"])}">'
                           f'<div class="compare-head"><h3>{esc(comp["title"])}</h3><p class="robot-prompt"><span>Prompt</span>“{esc(comp["prompt"])}”</p><p>{esc(comp["meta"])}</p></div>'
-                          f'<div class="compare-grid" style="--cols:{len(comp["arms"])}">{"".join(panels)}</div></section>')
+                          f'{"".join(rows)}</section>')
     if not html_parts:
         return '', media
-    return (f'<div class="benchmark-panel robot-compare"><header><div><h3>Five engines, one episode</h3><p>Pick a task; every engine plays at once so their pace can be compared</p></div></header>'
+    return (f'<div class="benchmark-panel robot-compare"><header><div><h3>{esc(title)}</h3><p>{esc(subtitle)}</p></div></header>'
             f'<div class="compare-task-tabs" aria-label="Real-robot task" hidden>{"".join(task_tabs)}</div>'
             f'<div class="compare-tasks">{"".join(html_parts)}</div></div>'), media
 
@@ -420,7 +396,7 @@ def make_robot_results(data):
         cells, done, total = [], 0, 0
         for n in arm['tasks']:
             if n == 'not_run':
-                cells.append('<td class="na">—</td>')
+                cells.append('<td class="na">N/A</td>')
             elif n is None:
                 cells.append('<td class="na pending-cell">Measuring…</td>')
             else:
@@ -430,7 +406,7 @@ def make_robot_results(data):
         kind = f' class="{arm["kind"]}"' if arm['kind'] else ''
         body.append(f'<tr{kind}><th scope="row">{esc(arm["label"])}</th>{"".join(cells)}'
                     f'<td><strong>{100 * done / total:.1f}%</strong><small>95% CI [{lo:.1f}, {hi:.1f}]</small>{scope}</td></tr>')
-    return (f'<div class="benchmark-panel robot-results"><header><div><h3>Real-robot success</h3><p>{esc(res["policy"])} · SR % · {per} episodes per task and arm · Wilson 95% interval</p></div><span class="source-tag">Real robot</span></header>'
+    return (f'<div class="benchmark-panel robot-results"><header><div><h3>Real-robot success</h3><p>{esc(res["policy"])} · SR % · {per} episodes per task and arm · Wilson 95% interval</p></div></header>'
             f'<div class="benchmark-table-scroll" tabindex="0" role="region" aria-label="Real-robot success"><table class="results-table">'
             f'<thead><tr><th scope="col">Arm</th>{head}<th scope="col">Average SR ↑</th></tr></thead><tbody>{"".join(body)}</tbody></table></div>'
             f'<p class="latency-note">{esc(res["note"])}</p></div>')
@@ -456,7 +432,7 @@ def make_overview_media():
     shell = '<span class="video-kicker"><i aria-hidden="true"></i> Overview film</span>'
     if source.is_file():
         video = ('<video autoplay muted loop playsinline controls preload="auto" aria-label="FoldQuantVLA overview video">'
-                 '<source src="media/overview.mp4" type="video/mp4">'
+                 f'<source src="media/overview.mp4?v={hashlib.sha256(source.read_bytes()).hexdigest()[:10]}" type="video/mp4">'
                  'This browser cannot play the overview video.</video>')
         return f'<div class="overview-video-frame has-video">{video}</div>', source
     placeholder = ('<span class="overview-play" aria-hidden="true">▶</span>'
@@ -487,6 +463,7 @@ def build(output, base_url=''):
     tokens['desktop_protocol'] = esc(desktop['protocol'])
     tokens['libero_summary'] = make_libero_summary(libero, fidelity)
     tokens['benchmark_preview'] = make_benchmark_preview(load('compare'))
+    tokens['simpler_summary'] = make_simpler(load('simpler'))
     tokens['libero_options'] = ''.join(f'<option value="{m["key"]}">{esc(m["name"])}</option>' for m in libero['models'])
     config_labels = {}
     table_rows, attrs = [], []
@@ -498,10 +475,15 @@ def build(output, base_url=''):
     tokens['libero_config_options'] = ''.join(f'<option value="{esc(k)}">{esc(v)}</option>' for k,v in config_labels.items())
     tokens['libero_table'] = table(['Checkpoint','K','Configuration','Successes','Success rate','95% CI (%)'],table_rows,'Table V · All 59 closed-loop LIBERO campaigns',attrs)
     tokens['robot_intro'] = esc(real_robot['intro'])
-    tokens['robot_trials'], tokens['robot_task_tabs'], robot_media = make_robot_trials(real_robot)
-    tokens['robot_results'] = make_robot_results(real_robot) + make_robot_results_pi05(real_robot)
-    tokens['robot_compare'], compare_media = make_robot_compare(real_robot)
-    robot_media = list(robot_media) + compare_media
+    groot_compare, compare_media = make_robot_compare(real_robot.get('comparisons', []), 'Five engines, one episode',
+                                                      'GR00T N1.7 · pick a task; every engine plays at once so their pace can be compared')
+    pi05_compare, pi05_media = make_robot_compare(real_robot.get('comparisons_pi05', []), 'π0.5 · three engines, one episode',
+                                                  'π0.5 · every engine plays at once so their pace can be compared')
+    # GR00T videos, GR00T success, then π0.5 videos and π0.5 success.
+    tokens['robot_compare'] = groot_compare + make_robot_results(real_robot) + pi05_compare
+    tokens['robot_results'] = make_robot_results_pi05(real_robot)
+    compare_media += pi05_media
+    robot_media = compare_media
     tokens['overview_media'], overview_media = make_overview_media()
     tokens['bibtex'] = esc('@misc{anonymous2026foldquantvla,\n  title  = {' + meta['title'] + '},\n  author = {{Anonymous Authors}},\n  year   = {2026},\n  note   = {Anonymous ICRA submission}\n}')
     page = (ROOT / 'index.template.html').read_text(encoding='utf-8')

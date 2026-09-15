@@ -4,7 +4,7 @@
     {
       "key": "n17",
       "name": "GR00T N1.7",
-      "meta": "FoldQuant release harness · NVIDIA per-suite N1.7 LIBERO checkpoints · 20 initial states/task · H = 16, K = 8",
+      "meta": "LIBERO four suites · 200 episodes per suite",
       "rows": [
         {
           "method": "BF16 PyTorch",
@@ -63,7 +63,7 @@
           ]
         }
       ],
-      "footnote": "All five rows share one harness and one released code path: NVIDIA per-suite N1.7 LIBERO checkpoints, 20 initial states per task, H = 16, K = 8. † HoloQ-VLA and DuQuant are our emulated implementations of those methods in the same release repository."
+      "footnote": "FoldQuant rows are real INT4 / INT8 TensorRT engines. † HoloQ-VLA and DuQuant are our emulated implementations of those methods in the same release repository."
     },
     {
       "key": "pi05",
@@ -153,7 +153,7 @@
           ]
         }
       ],
-      "footnote": "BF16 and FoldQuant rows: FoldQuant released openpi harness, 20 trials per task, K = 5, seed 7. HoloQ-VLA, DuQuant, QuantVLA and SmoothQuant: reported by HoloQ-VLA (emulated quantization, 10 calibration samples); their FP16 reference is also 97.1%. Our reproduction of HoloQ-VLA W4A4 on the long suite reaches 94.0% against 96.0% reported (t = −0.82, p = 0.44)."
+      "footnote": "FoldQuant rows are real INT4 / INT8 TensorRT engines. BF16 and FoldQuant rows: FoldQuant released openpi harness, 20 trials per task, K = 5, seed 7. HoloQ-VLA, DuQuant, QuantVLA and SmoothQuant: reported by HoloQ-VLA (emulated quantization, 10 calibration samples); their FP16 reference is also 97.1%. Our reproduction of HoloQ-VLA W4A4 on the long suite reaches 94.0% against 96.0% reported (t = −0.82, p = 0.44)."
     }
   ]
 }

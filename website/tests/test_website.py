@@ -123,6 +123,9 @@ class BuildTests(unittest.TestCase):
         self.assertIn('0.99817', self.html)
         self.assertIn('0.99942', self.html)
         self.assertNotIn('class="sr-cell"', self.html)
+        self.assertIn('id="simpler"', self.html)
+        self.assertLess(self.html.index('id="libero"'), self.html.index('id="simpler"'))
+        self.assertIn('<td><strong>64.2%</strong></td>', self.html)
 
     def test_real_robot_reel_is_ready_without_publishing_private_media(self):
         data = site.load('real_robot')
@@ -130,10 +133,15 @@ class BuildTests(unittest.TestCase):
         self.assertEqual([trial['platform'] for trial in data['trials']], ['ALOHA', 'SO101', 'SO101', 'SO101'])
         self.assertTrue(all(len(trial['views']) == 1 for trial in data['trials']))
         self.assertIn('id="robot-demos"', self.html)
-        self.assertEqual(self.html.count('class="robot-card"'), 4)
+        self.assertEqual(self.html.count('class="robot-card"'), 0)
+        tabs = re.findall(r'data-task-panel="task-([a-z0-9-]+)"', self.html)
+        self.assertEqual(tabs, ['so101-blue-on-red', 'so101-banana', 'so101-blocks-cup', 'aloha-banana', 'pi05-so101-blue-on-red'])
+        self.assertEqual(self.html.count('class="benchmark-panel robot-compare"'), 2)
+        self.assertEqual(self.html.count('class="compare-scene-tabs"'), 4)
+        self.assertEqual(self.html.count('<button type="button" data-scene='), 20)
         media = self.output / 'media'
         published = sorted(x.relative_to(media).as_posix() for x in media.rglob('*') if x.is_file()) if media.exists() else []
-        clip = re.compile(r'real-robot/[a-z0-9-]+/[a-z0-9-]+\.mp4')
+        clip = re.compile(r'real-robot/[a-z0-9-]+/(scene-[0-9]+/)?[a-z0-9-]+\.mp4')
         self.assertTrue(all(p == 'overview.mp4' or clip.fullmatch(p) for p in published), published)
         # Raw LeRobot recordings (parquet, meta, per-camera episodes) never reach the site.
         self.assertFalse(any(x.suffix in ('.parquet', '.jsonl', '.json') for x in media.rglob('*')) if media.exists() else False)

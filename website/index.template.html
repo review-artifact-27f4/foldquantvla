@@ -27,7 +27,7 @@
 <header class="site-header">
   <nav class="nav-shell" aria-label="Main navigation">
     <a class="brand" href="./" aria-label="FoldQuantVLA home"><img src="assets/mark.svg" width="33" height="33" alt=""><span>FoldQuantVLA</span></a>
-    <div class="nav-links"><a href="#overview">Overview</a><a href="#method">Method</a><a href="#closed-loop-preview">LIBERO</a><a href="#robot-demos">Real Robot</a><a href="#results">Results</a><a href="#analysis">Analysis</a><a href="#citation">Citation</a></div>
+    <div class="nav-links"><a href="#overview">Overview</a><a href="#method">Method</a><a href="#closed-loop-preview">Simulation</a><a href="#robot-demos">Real Robot</a><a href="#results">Results</a><a href="#analysis">Analysis</a><a href="#citation">Citation</a></div>
   </nav>
 </header>
 <main id="main">
@@ -51,7 +51,7 @@
   </section>
   <section class="section container overview" id="overview" aria-labelledby="overview-title">
     <div class="section-heading"><p class="section-label">Overview</p><h2 id="overview-title">A consistent fold.<br>A clearer measurement.</h2></div>
-    <div class="overview-copy"><p class="lead">What does lower precision actually buy a robot policy?</p><p>FoldQuantVLA fixes a shared change of basis at each activation site, folds it into weights and normalization gains, and rounds once. A common build path produces floating-point, eight-bit, and four-bit engines for the language backbone and iterative action expert.</p><p>We evaluate the resulting engines with compiled floating-point controls and 59 closed-loop LIBERO campaigns. The controls separate deployment speedups from precision gains; the rollouts show where offline action fidelity stops predicting task success.</p></div>
+    <div class="overview-copy"><p class="lead">What does lower precision actually buy a robot policy?</p><p>FoldQuantVLA fixes a shared change of basis at each activation site, folds it into weights and normalization gains, and rounds once. A common build path produces floating-point, eight-bit, and four-bit engines for the language backbone and iterative action expert.</p><p>We evaluate the resulting engines with compiled floating-point controls and 48 closed-loop LIBERO campaigns. The controls separate deployment speedups from precision gains; the rollouts show where offline action fidelity stops predicting task success.</p></div>
     <div class="contributions">
       <article><span class="contribution-symbol" aria-hidden="true">↳</span><h3>Consistent by construction</h3><p>Every projection sharing an activation site uses the same transform. Calibration, exported weights, and runtime stay in the same coordinates.</p></article>
       <article><span class="contribution-symbol" aria-hidden="true">▦</span><h3>Native low-bit execution</h3><p>Custom TensorRT plugins fuse activation transforms and quantization with integer tensor-core GEMMs on desktop and Jetson GPUs.</p></article>
@@ -69,23 +69,22 @@
   <section class="section benchmark-preview" id="closed-loop-preview" aria-labelledby="benchmark-preview-title">
     <div class="container">
       <div class="benchmark-intro">
-        <div class="section-heading"><p class="section-label">Closed-loop benchmark · LIBERO</p><h2 id="benchmark-preview-title">Success survives<br>the precision change.</h2></div>
-        <div><p>FoldQuantVLA against low-bit baselines on LIBERO, suite by suite, with the BF16 reference first.</p><p>The note under each table gives the protocol behind every row.</p></div>
+        <div class="section-heading"><p class="section-label">Closed-loop simulation · LIBERO &amp; SimplerEnv</p><h2 id="benchmark-preview-title">Success survives<br>the precision change.</h2></div>
+        <div><p>FoldQuantVLA against low-bit baselines in two simulators, LIBERO and SimplerEnv, with the BF16 reference first.</p><p>The note under each table gives the protocol behind every row.</p></div>
       </div>
       <div class="benchmark-tabs" aria-label="Checkpoint" hidden><button id="benchmark-tab-n17" data-benchmark="benchmark-n17">GR00T N1.7</button><button id="benchmark-tab-pi05" data-benchmark="benchmark-pi05">π0.5</button></div>
       <div class="benchmark-panels">{{benchmark_preview}}</div>
-      <p class="benchmark-note">FoldQuant rows are real INT4 / INT8 TensorRT engines. N1.7 paired W4A4 + o/d INT8 − W4A4: +6 episodes, t(39) = 0.58, p = 0.57. π₀.₅ released-harness pair: +4, t(39) = 0.81, p = 0.42.</p>
       <div class="libero-own" id="libero">
         <div class="panel-heading"><div><h3 id="libero-title">FoldQuantVLA across four checkpoints</h3><p>LIBERO · four suites · 40 tasks · 800 episodes per configuration</p></div></div>
         {{libero_summary}}
-        <p class="benchmark-note">H is the action chunk length and K the executed prefix. BF16 is reported both in PyTorch and as the floating-point TensorRT export; FoldQuant arms run on TensorRT. SR is closed-loop success against each checkpoint’s own BF16 PyTorch reference. Median cosine is held-out decoded-action cosine against BF16 PyTorch. W4A4 + o/d INT8 is FoldQuant W4A4 with o_proj and down_proj kept at INT8. Each o/d INT8 row is paired with its own uniform-W4A4 partner (same preset base and calibration); all four pairs are statistically indistinguishable (N1.6 +10 episodes, p = 0.17; N1.7 +3, p = 0.77; N1.5 −3, p = 0.78; π0.5 +4, p = 0.42): no closed-loop cost and no detectable gain. The quality argument for o/d INT8 is the held-out worst case and the real-robot results. On these four checkpoints no quantized arm shows a success loss that survives task-clustered testing with Holm correction; this is not a claim of equivalence.</p>
+        <p class="latency-note libero-foot">H is the action chunk length and K the executed prefix.</p>
       </div>
+      <div class="simpler-own">{{simpler_summary}}</div>
     </div>
   </section>
   <section class="section robot-section" id="robot-demos" aria-labelledby="robot-title">
     <div class="container">
       <div class="section-heading robot-heading"><p class="section-label">Real-world tasks</p><h2 id="robot-title">Four tasks, two robot platforms</h2><p class="section-intro">{{robot_intro}}</p></div>
-      <div class="robot-grid">{{robot_trials}}</div>
       {{robot_compare}}
       {{robot_results}}
       
@@ -98,24 +97,21 @@
     <section class="benchmark-panel latency-panel" id="jetson" aria-labelledby="jetson-title">
       <header><div><h3 id="jetson-title">Jetson AGX Orin · on-device</h3><p>Four checkpoints · TensorRT 10.3 · batch 1 · observation-to-action chunk</p></div></header>
       {{jetson_summary}}
-      <p class="latency-note">“GPU” is device time and “E2E” observation-to-action; Hz is 1000 / E2E. “vs TRT BF16” is relative to the unquantized TensorRT engine of the same checkpoint. N1.6 plans: 5,325 / 3,618 / 2,525 / 3,901 / 3,077 MB for TRT BF16, W8A8, W4A4, SQ, AWQ. torch.compile is the compiled PyTorch policy on the board.</p>
     </section>
     <section class="benchmark-panel latency-panel" id="desktop" aria-labelledby="desktop-title">
       <header><div><h3 id="desktop-title">RTX 4070 Ti SUPER · desktop</h3><p>Four checkpoints · TensorRT 10.15 · batch 1 · observation-to-action chunk</p></div></header>
       {{desktop_summary}}
-      <p class="latency-note">“GPU” is the sum of model components and “E2E” the whole call; Hz is 1000 / E2E; “vs TRT BF16” divides the TRT BF16 E2E of the same run. torch.compile hides components, so its GPU time is n/a. These timers differ from the framework runtime used in the paper, so compare arms within a family.</p>
     </section>
     </div>
     <section class="benchmark-panel memory-panel" id="memory" aria-labelledby="memory-title">
       <header><div><h3 id="memory-title">GPU memory · RTX 4070 Ti SUPER</h3><p>Four checkpoints · batch 1 · steady device memory during inference, one process per arm</p></div></header>
       {{memory_summary}}
-      <p class="latency-note">Steady device memory is the median over 60 inference calls after warmup, counting the CUDA context and every allocator. Floor is what the arm’s computation needs: the PyTorch weights an engine replaces are never placed on the GPU. As served is what the released server holds today, with those weights still loaded, and is the figure to size hardware against; the gap is the replaced weights. Eager PyTorch keeps all weights, so both columns match. “Weights” is the serialized TensorRT plans for engine arms and the BF16 parameter size for eager PyTorch. A cross-check on GR00T N1.6 under the framework runtime agrees with the sampler within 23 MiB and gives the same float-to-W4A4 saving (1,678 vs 1,676 MiB); absolute floors shift with which components stay in PyTorch, the saving does not.</p>
     </section>
   </section>
   <section class="section analysis-section" id="analysis" aria-labelledby="analysis-title"><div class="container">
     <div class="section-heading"><p class="section-label">What the controls reveal</p><h2 id="analysis-title">Smaller bits.<br>A more nuanced picture.</h2></div>
     <div class="analysis-grid">
-      <article><span class="analysis-index" aria-hidden="true">↘</span><h3>Compilation explains much of the speedup.</h3><p>The compiled float engine already supplies 63–75% of the eager-to-W4A4 reduction on the desktop and 83–92% on Jetson AGX Orin, where four-bit adds the last 8–17%. Reporting speedups against compiled float engines keeps graph optimisation from being credited to quantization.</p></article>
+      <article><span class="analysis-index" aria-hidden="true">↘</span><h3>Compilation explains much of the speedup.</h3><p>The compiled float engine already supplies 61–75% of the eager-to-W4A4 reduction on the desktop and 83–92% on Jetson AGX Orin, where four-bit adds the last 8–17%. Reporting speedups against compiled float engines keeps graph optimisation from being credited to quantization.</p></article>
       <article><span class="analysis-index" aria-hidden="true">▧</span><h3>Low-bit engines cut GPU memory.</h3><p>When the weights an engine replaces are not kept on the GPU, FoldQuant W4A4 needs 20–35% less steady device memory than the TRT BF16 engine on all four checkpoints. Vision, embeddings and runtime workspaces set the floor that bit width cannot remove.</p></article>
       <article><span class="analysis-index" aria-hidden="true">≈</span><h3>Offline fidelity screens; closed loop decides.</h3><p>Above 0.99 held-out action cosine, success differences between arms stay within closed-loop noise and are not ordered by cosine. High cosine screens a broken configuration without ranking the working ones.</p></article>
     </div>

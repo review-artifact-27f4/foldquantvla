@@ -137,9 +137,13 @@
 .compare-task-tabs{display:flex;flex-wrap:wrap;gap:6px;padding:16px 27px 0}.compare-task-tabs[hidden]{display:none}
 .compare-task-tabs button{min-height:38px;padding:7px 14px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--muted);font:inherit;font-size:13px;font-weight:600;cursor:pointer}
 .compare-task-tabs button[aria-selected="true"]{background:#17201c;border-color:#17201c;color:#fff}
-.compare-head{padding:14px 27px 0}.compare-head h3{font-size:16px}.compare-head p{font-size:11px;color:var(--muted);margin-top:3px}
+.compare-head{padding:14px 27px 0}.compare-scene-tabs{display:flex;flex-wrap:wrap;gap:6px;padding:12px 27px 0}.compare-scene-tabs button{min-height:32px;padding:5px 12px;border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--muted);font:inherit;font-size:12px;font-weight:600;cursor:pointer}.compare-scene-tabs button[aria-pressed="true"]{background:#17201c;border-color:#17201c;color:#fff}.compare-head h3{font-size:16px}.compare-head p{font-size:11px;color:var(--muted);margin-top:3px}
 .compare-ready .compare-tasks{display:grid}.compare-ready .compare-task{grid-area:1/1}.compare-ready .compare-task.is-inactive{visibility:hidden;pointer-events:none}
-@media(max-width:700px){.compare-task-tabs,.compare-head{padding-left:14px;padding-right:14px}}
+@media(max-width:700px){.compare-task-tabs,.compare-head,.compare-scene-tabs{padding-left:14px;padding-right:14px}}
 .robot-prompt{font-size:12px;line-height:1.6;color:var(--ink);font-style:italic}.robot-prompt span{display:inline-block;margin-right:6px;font-style:normal;font-size:10px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:var(--muted)}.compare-head .robot-prompt{margin-top:4px;font-size:13px}
 .memory-panel{margin-top:26px}
 .provisional-tag{color:#9a5b12;border-color:#ecd3a9;background:#fff8ec;align-self:flex-start}
+.simpler-own{margin-top:30px}
+.simpler-panel .compare-table th,.simpler-panel .compare-table td{padding-inline:8px}.simpler-panel .compare-table tbody th{white-space:normal;min-width:9em}
+.simpler-panel .compare-table thead th{white-space:normal;vertical-align:middle;text-align:center;max-width:7.5em;padding-block:8px;font-size:11px;font-weight:600}.simpler-panel .compare-table thead tr:first-child th[colspan]{text-align:center;border-bottom:1px solid var(--line)}
+.libero-own>.benchmark-table-scroll{border-bottom-left-radius:0;border-bottom-right-radius:0}.libero-own>.libero-foot{border:1px solid var(--line);border-top:0;border-radius:0 0 14px 14px;background:#fff}

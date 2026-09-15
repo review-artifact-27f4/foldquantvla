@@ -5,7 +5,7 @@
       "key": "t1",
       "platform": "ALOHA",
       "title": "ALOHA · Banana",
-      "instruction": "Pick up the banana and place it in the bot, then close the lid",
+      "instruction": "Use the right gripper to pick up the banana and place it into the pot. Then pick up the lid with the right gripper and place it on top of the pot to close it.",
       "policy": "GR00T N1.7 · Jetson AGX Orin",
       "views": [
         {
@@ -15,13 +15,13 @@
           "poster": ""
         }
       ],
-      "prompt": "Pick up the banana and place it in the bot, then close the lid"
+      "prompt": "Use the right gripper to pick up the banana and place it into the pot. Then pick up the lid with the right gripper and place it on top of the pot to close it."
     },
     {
       "key": "t2",
       "platform": "SO101",
       "title": "SO101 · Banana",
-      "instruction": "Pick up the banana and place it in the bot, then close the lid",
+      "instruction": "Pick up the banana and place it in the pot, then close the lid",
       "policy": "GR00T N1.7 · Jetson AGX Orin",
       "views": [
         {
@@ -31,7 +31,7 @@
           "poster": ""
         }
       ],
-      "prompt": "Pick up the banana and place it in the bot, then close the lid"
+      "prompt": "Pick up the banana and place it in the pot, then close the lid"
     },
     {
       "key": "t3",
@@ -172,125 +172,11 @@
   },
   "comparisons": [
     {
-      "key": "aloha-banana",
-      "title": "ALOHA · Banana into pot, then close the lid",
-      "meta": "All engines start together from a matched scene setup · high camera · 4× speed",
-      "task_index": 0,
-      "arms": [
-        {
-          "key": "bf16-pytorch",
-          "label": "BF16 PyTorch",
-          "result_label": "BF16 PyTorch"
-        },
-        {
-          "key": "trt-bf16",
-          "label": "TRT BF16",
-          "result_label": "TRT BF16 (float engine)"
-        },
-        {
-          "key": "foldquant-w8a8",
-          "label": "FoldQuant W8A8",
-          "result_label": "FoldQuant W8A8",
-          "ours": true
-        },
-        {
-          "key": "foldquant-w4a4",
-          "label": "FoldQuant W4A4",
-          "result_label": "FoldQuant W4A4",
-          "ours": true
-        },
-        {
-          "key": "foldquant-w4a4-od-int8",
-          "label": "FoldQuant W4A4 + o/d INT8",
-          "result_label": "FoldQuant W4A4 + o/d INT8",
-          "ours": true
-        }
-      ],
-      "tab": "ALOHA · Banana",
-      "prompt": "Pick up the banana and place it in the bot, then close the lid"
-    },
-    {
-      "key": "so101-banana",
-      "title": "SO-101 · Pick up the banana",
-      "tab": "SO-101 · Banana",
-      "task_index": 1,
-      "meta": "All engines start together from a matched scene setup · external camera · 4× speed",
-      "arms": [
-        {
-          "key": "bf16-pytorch",
-          "label": "BF16 PyTorch",
-          "result_label": "BF16 PyTorch"
-        },
-        {
-          "key": "trt-bf16",
-          "label": "TRT BF16",
-          "result_label": "TRT BF16 (float engine)"
-        },
-        {
-          "key": "foldquant-w8a8",
-          "label": "FoldQuant W8A8",
-          "result_label": "FoldQuant W8A8",
-          "ours": true
-        },
-        {
-          "key": "foldquant-w4a4",
-          "label": "FoldQuant W4A4",
-          "result_label": "FoldQuant W4A4",
-          "ours": true
-        },
-        {
-          "key": "foldquant-w4a4-od-int8",
-          "label": "FoldQuant W4A4 + o/d INT8",
-          "result_label": "FoldQuant W4A4 + o/d INT8",
-          "ours": true
-        }
-      ],
-      "prompt": "Pick up the banana and place it in the bot, then close the lid"
-    },
-    {
-      "key": "so101-blocks-cup",
-      "title": "SO-101 · Put all blocks into the cup",
-      "tab": "SO-101 · Blocks → cup",
-      "task_index": 2,
-      "meta": "All engines start together from a matched scene setup · external camera · 4× speed",
-      "arms": [
-        {
-          "key": "bf16-pytorch",
-          "label": "BF16 PyTorch",
-          "result_label": "BF16 PyTorch"
-        },
-        {
-          "key": "trt-bf16",
-          "label": "TRT BF16",
-          "result_label": "TRT BF16 (float engine)"
-        },
-        {
-          "key": "foldquant-w8a8",
-          "label": "FoldQuant W8A8",
-          "result_label": "FoldQuant W8A8",
-          "ours": true
-        },
-        {
-          "key": "foldquant-w4a4",
-          "label": "FoldQuant W4A4",
-          "result_label": "FoldQuant W4A4",
-          "ours": true
-        },
-        {
-          "key": "foldquant-w4a4-od-int8",
-          "label": "FoldQuant W4A4 + o/d INT8",
-          "result_label": "FoldQuant W4A4 + o/d INT8",
-          "ours": true
-        }
-      ],
-      "prompt": "Pick all cubes and place into cup"
-    },
-    {
       "key": "so101-blue-on-red",
       "title": "SO-101 · Blue block on the red block",
       "tab": "SO-101 · Blue on red",
       "task_index": 3,
-      "meta": "All engines start together from a matched scene setup · external camera · 4× speed",
+      "meta": "All engines start together from a matched setup in each of five scenes · external camera · 4× speed",
       "arms": [
         {
           "key": "bf16-pytorch",
@@ -326,7 +212,124 @@
           "ours": true
         }
       ],
-      "prompt": "Pick blue cube and place on red cube"
+      "prompt": "Pick blue cube and place on red cube",
+      "scenes": 5
+    },
+    {
+      "key": "so101-banana",
+      "title": "SO-101 · Pick up the banana",
+      "tab": "SO-101 · Banana",
+      "task_index": 1,
+      "meta": "All engines start together from a matched setup in each of five scenes · external camera · 4× speed",
+      "arms": [
+        {
+          "key": "bf16-pytorch",
+          "label": "BF16 PyTorch",
+          "result_label": "BF16 PyTorch"
+        },
+        {
+          "key": "trt-bf16",
+          "label": "TRT BF16",
+          "result_label": "TRT BF16 (float engine)"
+        },
+        {
+          "key": "foldquant-w8a8",
+          "label": "FoldQuant W8A8",
+          "result_label": "FoldQuant W8A8",
+          "ours": true
+        },
+        {
+          "key": "foldquant-w4a4",
+          "label": "FoldQuant W4A4",
+          "result_label": "FoldQuant W4A4",
+          "ours": true
+        },
+        {
+          "key": "foldquant-w4a4-od-int8",
+          "label": "FoldQuant W4A4 + o/d INT8",
+          "result_label": "FoldQuant W4A4 + o/d INT8",
+          "ours": true
+        }
+      ],
+      "prompt": "Pick up the banana and place it in the pot, then close the lid",
+      "scenes": 5
+    },
+    {
+      "key": "so101-blocks-cup",
+      "title": "SO-101 · Put all blocks into the cup",
+      "tab": "SO-101 · Blocks → cup",
+      "task_index": 2,
+      "meta": "All engines start together from a matched setup in each of five scenes · external camera · 4× speed",
+      "arms": [
+        {
+          "key": "bf16-pytorch",
+          "label": "BF16 PyTorch",
+          "result_label": "BF16 PyTorch"
+        },
+        {
+          "key": "trt-bf16",
+          "label": "TRT BF16",
+          "result_label": "TRT BF16 (float engine)"
+        },
+        {
+          "key": "foldquant-w8a8",
+          "label": "FoldQuant W8A8",
+          "result_label": "FoldQuant W8A8",
+          "ours": true
+        },
+        {
+          "key": "foldquant-w4a4",
+          "label": "FoldQuant W4A4",
+          "result_label": "FoldQuant W4A4",
+          "ours": true
+        },
+        {
+          "key": "foldquant-w4a4-od-int8",
+          "label": "FoldQuant W4A4 + o/d INT8",
+          "result_label": "FoldQuant W4A4 + o/d INT8",
+          "ours": true
+        }
+      ],
+      "prompt": "Pick all cubes and place into cup",
+      "scenes": 5
+    },
+    {
+      "key": "aloha-banana",
+      "title": "ALOHA · Banana into pot, then close the lid",
+      "meta": "All engines start together from a matched scene setup · high camera · 4× speed",
+      "task_index": 0,
+      "arms": [
+        {
+          "key": "bf16-pytorch",
+          "label": "BF16 PyTorch",
+          "result_label": "BF16 PyTorch"
+        },
+        {
+          "key": "trt-bf16",
+          "label": "TRT BF16",
+          "result_label": "TRT BF16 (float engine)"
+        },
+        {
+          "key": "foldquant-w8a8",
+          "label": "FoldQuant W8A8",
+          "result_label": "FoldQuant W8A8",
+          "ours": true
+        },
+        {
+          "key": "foldquant-w4a4",
+          "label": "FoldQuant W4A4",
+          "result_label": "FoldQuant W4A4",
+          "ours": true
+        },
+        {
+          "key": "foldquant-w4a4-od-int8",
+          "label": "FoldQuant W4A4 + o/d INT8",
+          "result_label": "FoldQuant W4A4 + o/d INT8",
+          "ours": true
+        }
+      ],
+      "tab": "ALOHA · Banana",
+      "prompt": "Use the right gripper to pick up the banana and place it into the pot. Then pick up the lid with the right gripper and place it on top of the pot to close it."
     }
   ],
   "results_pi05": {
@@ -363,5 +366,30 @@
       }
     ],
     "note": "20 episodes per arm on one task. Median logged-observation action cosine of W4A4 vs BF16 PyTorch is 0.98994; its backbone cosine (0.819) is the lowest measured on either robot while success stays at the reference. W8A8 and W4A4 + o/d INT8 were not run for π0.5 on the robot."
-  }
+  },
+  "comparisons_pi05": [
+    {
+      "key": "pi05-so101-blue-on-red",
+      "title": "π0.5 · SO-101 · Blue block on the red block",
+      "tab": "SO-101 · Blue on red",
+      "meta": "All engines start together from a matched setup in each of five scenes · external camera · 4× speed",
+      "scenes": 5,
+      "arms": [
+        {
+          "key": "bf16-pytorch",
+          "label": "BF16 PyTorch"
+        },
+        {
+          "key": "trt-bf16",
+          "label": "TRT BF16"
+        },
+        {
+          "key": "foldquant-w4a4",
+          "label": "FoldQuant W4A4",
+          "ours": true
+        }
+      ],
+      "prompt": "Pick blue cube and place on red cube"
+    }
+  ]
 }

@@ -210,18 +210,40 @@
     const tasks = [...block.querySelectorAll('.compare-task')];
     let active = null;
     const sync = task => {
-      const videos = [...task.querySelectorAll('video')];
+      // Multi-scene tasks show one scene row at a time; only that row's videos play.
+      const rows = [...task.querySelectorAll('.compare-grid')];
+      const sceneButtons = [...task.querySelectorAll('.compare-scene-tabs button')];
+      let row = rows[0];
+      let videos = [...row.querySelectorAll('video')];
       let done = new Set();
+      let timer = null;
       const restart = () => {
         if (active !== task) return;
         done = new Set();
         videos.forEach(v => { v.currentTime = 0; v.play().catch(() => {}); });
       };
-      videos.forEach(v => v.addEventListener('ended', () => { done.add(v); if (done.size === videos.length) setTimeout(restart, 800); }));
+      rows.forEach(r => r.querySelectorAll('video').forEach(v => v.addEventListener('ended', () => {
+        if (r !== row) return;
+        done.add(v);
+        if (done.size === videos.length) setTimeout(restart, 800);
+      })));
       task._restart = () => {
-        const wait = () => (videos.every(v => v.readyState >= 3) ? restart() : setTimeout(wait, 150));
+        clearTimeout(timer);
+        const current = row;
+        const wait = () => { if (current !== row) return; videos.every(v => v.readyState >= 3) ? restart() : (timer = setTimeout(wait, 150)); };
         wait();
       };
+      const showScene = n => {
+        row = rows.find(r => r.dataset.scene === n) || rows[0];
+        rows.forEach(r => {
+          r.hidden = r !== row;
+          if (r !== row) r.querySelectorAll('video').forEach(v => v.pause());
+        });
+        sceneButtons.forEach(b => b.setAttribute('aria-pressed', String(b === sceneButtons[rows.indexOf(row)])));
+        videos = [...row.querySelectorAll('video')];
+      };
+      sceneButtons.forEach(b => b.addEventListener('click', () => { showScene(b.dataset.scene); if (active === task) task._restart(); }));
+      if (sceneButtons.length) showScene(sceneButtons[0].dataset.scene);
     };
     tasks.forEach(sync);
     const select = id => {

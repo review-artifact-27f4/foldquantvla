@@ -87,29 +87,160 @@ def scene_question(t, d):
     return img
 
 
+# Figure regions as fractions of fig_overview.png (x0, y0, x1, y1): A = basis, B = offline, C = online.
+FIG_REGIONS = [(0.004, 0.04, 0.478, 0.94), (0.508, 0.04, 0.992, 0.495), (0.508, 0.505, 0.992, 0.965)]
+FIG_FULL = (0.0, 0.0, 1.0, 1.0)
+
+
+def camera(figure, region, view_w, view_h):
+    """Rectangle (in figure pixels) with the view's aspect that contains `region`, clamped to the figure."""
+    fw, fh = figure.size
+    x0, y0, x1, y1 = region[0] * fw, region[1] * fh, region[2] * fw, region[3] * fh
+    cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
+    w, h = (x1 - x0) * 1.04, (y1 - y0) * 1.04
+    aspect = view_w / view_h
+    if w / h < aspect:
+        w = h * aspect
+    else:
+        h = w / aspect
+    return cx, cy, w, h
+
+
 def scene_method(t, d, figure):
     img = canvas(); dr = ImageDraw.Draw(img); a = fade(t, d)
     text(dr, (120, 90), 'Method', 30, 600, RED, 'la', a)
     text(dr, (120, 132), 'Fold the constants. Fuse the computation.', 58, 700, INK, 'la', a)
-    card_w = 1680
-    zoom = 0.96 + 0.04 * ease(t / d)
-    fw = int(card_w * zoom); fh = int(figure.height * fw / figure.width)
-    fig = figure.resize((fw, fh), Image.LANCZOS)
+    vx, vy, vw, vh = 120, 240, 1680, 640
+    # Timeline: whole figure, then zoom to A, B, C in step with the three captions.
+    lead, span = 1.4, (d - 1.4) / 3
+    idx = -1 if t < lead else min(2, int((t - lead) / span))
+    local = 0.0 if idx < 0 else (t - lead - idx * span)
+    prev = FIG_FULL if idx <= 0 else FIG_REGIONS[idx - 1]
+    target = FIG_FULL if idx < 0 else FIG_REGIONS[idx]
+    k = 1.0 if idx < 0 else ease(local / 0.9)
+    c0, c1 = camera(figure, prev, vw, vh), camera(figure, target, vw, vh)
+    cx, cy, w, h = (c0[i] + (c1[i] - c0[i]) * k for i in range(4))
+    view = Image.new('RGB', (vw, vh), BG)
+    fw, fh = figure.size
+    box = (cx - w / 2, cy - h / 2, cx + w / 2, cy + h / 2)
+    sx0, sy0, sx1, sy1 = max(0, box[0]), max(0, box[1]), min(fw, box[2]), min(fh, box[3])
+    crop = figure.crop((int(sx0), int(sy0), int(sx1), int(sy1)))
+    scale = vw / w
+    crop = crop.resize((max(1, int((sx1 - sx0) * scale)), max(1, int((sy1 - sy0) * scale))), Image.BILINEAR)
+    view.paste(crop, (int((sx0 - box[0]) * scale), int((sy0 - box[1]) * scale)))
+    # Dim everything outside the active panel so the eye follows the caption.
+    if idx >= 0:
+        rx0, ry0, rx1, ry1 = target
+        px0, py0 = int((rx0 * fw - box[0]) * scale), int((ry0 * fh - box[1]) * scale)
+        px1, py1 = int((rx1 * fw - box[0]) * scale), int((ry1 * fh - box[1]) * scale)
+        mask = Image.new('L', (vw, vh), int(150 * k)); ImageDraw.Draw(mask).rectangle((px0, py0, px1, py1), fill=0)
+        view = Image.composite(Image.new('RGB', (vw, vh), BG), view, mask)
+        ImageDraw.Draw(view).rounded_rectangle((px0 - 6, py0 - 6, px1 + 6, py1 + 6), 14, outline=blend(RED, k), width=4)
     if a < 1:
-        fig = Image.blend(Image.new('RGB', fig.size, BG), fig, a)
-    img.paste(fig, (120 + (card_w - fw) // 2, 250 + (620 - fh) // 2))
-    steps = ['One shared scaling + rotation|per activation site',
-             'Fold into weights and norm gains|then round once',
-             'Native INT8 / INT4 GEMMs|in fused TensorRT plugins']
-    idx = min(len(steps) - 1, int(t / (d / len(steps))))
-    for i, s in enumerate(steps):
+        view = Image.blend(Image.new('RGB', view.size, BG), view, a)
+    img.paste(view, (vx, vy))
+    steps = ['One shared scaling + rotation|per activation site (A)',
+             'Fold into weights, round once|stored as packed integers (B)',
+             'Native INT8 / INT4 GEMMs|in fused TensorRT plugins (C)']
+    for i, s_ in enumerate(steps):
         on = i == idx
         x = 120 + i * 570
         dr.rounded_rectangle((x, 915, x + 540, 1005), 14, fill=blend(SOFT if on else (255, 255, 255), a), outline=blend(RED if on else LINE, a), width=2)
-        text(dr, (x + 26, 960), f'{i + 1}', 34, 700, blend(RED, 1) if on else GREY, 'lm', a)
-        l1, l2 = s.split('|')
+        text(dr, (x + 26, 960), f'{i + 1}', 34, 700, RED if on else GREY, 'lm', a)
+        l1, l2 = s_.split('|')
         text(dr, (x + 66, 943), l1, 24, 600 if on else 400, INK if on else MUTED, 'lm', a)
         text(dr, (x + 66, 978), l2, 24, 600 if on else 400, INK if on else MUTED, 'lm', a)
+    return img
+
+
+# Illustrative activation magnitudes for one site: two outlier channels dominate the range.
+CHANNELS = [0.16, 0.11, 0.19, 0.09, 0.14, 0.21, 0.12, 1.00, 0.17, 0.10, 0.15, 0.13, 0.20, 0.08, 0.18, 0.12,
+            0.16, 0.10, 0.14, 0.19, 0.11, 0.78, 0.13, 0.17, 0.09, 0.15, 0.20, 0.12, 0.18, 0.10, 0.14, 0.16]
+LEVELS = 7  # positive INT4 levels
+
+
+def channel_chart(dr, box, values, a, quant_k=0.0, scale_max=None):
+    """Bars for activation magnitudes, the INT4 grid spanning their range, and (optionally) the rounded values."""
+    x0, y0, x1, y1 = box
+    vmax = scale_max or max(values)
+    step = vmax / LEVELS
+    full = 1.0 if scale_max is None else max(values) / scale_max
+    for lv in range(1, LEVELS + 1):
+        y = y1 - (y1 - y0) * lv * step / vmax * 0.92
+        for xx in range(x0, x1, 22):
+            dr.line((xx, y, xx + 11, y), fill=blend(RED if lv == LEVELS else (226, 187, 187), a * 0.9), width=2)
+    text(dr, (x1 + 14, y1 - (y1 - y0) * 0.92), 'INT4 max', 22, 600, RED, 'lm', a)
+    n = len(values); bw = (x1 - x0) / n
+    for i, v in enumerate(values):
+        h = (y1 - y0) * v / vmax * 0.92
+        bx = x0 + i * bw + bw * 0.18
+        col = RED if CHANNELS[i] > 0.5 else GREY  # the outlier channels stay marked through every step
+        dr.rectangle((bx, y1 - h, bx + bw * 0.64, y1), fill=blend(col if not quant_k else (205, 214, 208), a))
+        if quant_k:
+            qv = round(v / step) * step
+            qh = (y1 - y0) * qv / vmax * 0.92
+            dr.rectangle((bx - 2, y1 - qh, bx + bw * 0.64 + 2, y1), outline=blend(GREEN, a * quant_k), width=3)
+    dr.line((x0, y1, x1, y1), fill=blend(INK, a), width=2)
+
+
+def sup_text(dr, xy, parts, size, fill, a):
+    """Draw text with superscripts: parts is a list of (string, is_superscript)."""
+    x, y = xy
+    for value, sup in parts:
+        f = font(int(size * (0.6 if sup else 1)), 700)
+        dy = -size * 0.38 if sup else 0
+        dr.text((x, y + dy), value, font=f, fill=blend(fill, a), anchor='lm')
+        x += dr.textlength(value, font=f) + (4 if sup else 0)
+    return x
+
+
+def scene_fold_why(t, d):
+    img = canvas(); dr = ImageDraw.Draw(img); a = fade(t, d)
+    text(dr, (120, 90), 'Why naive low-bit breaks', 30, 600, RED, 'la', a)
+    text(dr, (120, 132), 'A few outlier channels stretch the INT4 grid', 58, 700, INK, 'la', a)
+    grow = ease(t / 1.4)
+    vals = [v * grow + 1e-3 for v in CHANNELS]
+    qk = a * ease((t - 2.6) / 0.8)
+    channel_chart(dr, (160, 300, 1500, 880), vals, a, qk, scale_max=1.0)
+    text(dr, (160, 930), 'Activation magnitude per channel (illustrative)', 26, 400, MUTED, 'la', a)
+    k = a * ease((t - 3.4) / 0.7)
+    dr.rounded_rectangle((1560, 420, 1820, 720), 16, fill=blend(SOFT, k), outline=blend(RED, k), width=2)
+    text(dr, (1690, 490), '2 channels', 34, 700, RED, 'mm', k)
+    text(dr, (1690, 540), 'set the range', 26, 400, INK, 'mm', k)
+    text(dr, (1690, 610), '30 channels', 34, 700, INK, 'mm', k)
+    text(dr, (1690, 660), 'round to one level', 26, 400, INK, 'mm', k)
+    return img
+
+
+def scene_fold_how(t, d):
+    img = canvas(); dr = ImageDraw.Draw(img); a = fade(t, d)
+    text(dr, (120, 90), 'Method · consistent folding', 30, 600, RED, 'la', a)
+    text(dr, (120, 132), 'Change the basis once, then round once', 58, 700, INK, 'la', a)
+    mean = sum(CHANNELS) / len(CHANNELS)
+    k1, k2 = ease((t - 0.6) / 2.2), ease((t - 3.4) / 2.2)
+    scaled = [v + ((v ** 0.5) * mean ** 0.5 - v) * k1 for v in CHANNELS]
+    rotated = [v + (mean * 1.35 + (v - mean) * 0.18 - v) * k2 for v in scaled]
+    qk = a * ease((t - 6.0) / 0.8)
+    channel_chart(dr, (160, 300, 1060, 800), rotated, a, qk)
+    text(dr, (160, 850), 'Same channels after scaling and rotation', 26, 400, MUTED, 'la', a)
+    steps = [('1', 'Channel scaling S', 'tames outlier channels', 0.0),
+             ('2', 'Shared rotation R', 'spreads energy across channels', 3.0),
+             ('3', 'Fold into weights, round once', 'native INT8 / INT4 GEMMs', 6.0)]
+    for i, (num, head, sub, start) in enumerate(steps):
+        on = t >= start and (i == len(steps) - 1 or t < steps[i + 1][3])
+        k = a * ease((t - start) / 0.5)
+        y = 300 + i * 150
+        dr.rounded_rectangle((1180, y, 1800, y + 120), 16, fill=blend(SOFT if on else (255, 255, 255), k), outline=blend(RED if on else LINE, k), width=2)
+        text(dr, (1220, y + 60), num, 44, 700, RED if on else GREY, 'lm', k)
+        text(dr, (1280, y + 42), head, 32, 700, INK, 'lm', k)
+        text(dr, (1280, y + 84), sub, 24, 400, MUTED, 'lm', k)
+    k = a * ease((t - 6.4) / 0.7)
+    dr.rounded_rectangle((160, 900, 1800, 1030), 18, fill=blend((255, 255, 255), k), outline=blend(LINE, k), width=2)
+    x = sup_text(dr, (220, 965), [('W x  =  ', False), ('(W S', False), ('-1', True), (' R', False), ('T', True), (')', False)], 48, INK, k)
+    x = sup_text(dr, (x, 965), [('  ·  ', False)], 48, MUTED, k)
+    x = sup_text(dr, (x, 965), [('(R S x)', False)], 48, GREEN, k)
+    text(dr, (x + 60, 945), 'Exact before rounding.', 28, 700, INK, 'lm', k)
+    text(dr, (x + 60, 988), 'Weights folded offline; activations transformed online.', 24, 400, MUTED, 'lm', k)
     return img
 
 
@@ -205,56 +336,87 @@ def encode_frames(path, duration, render, threads):
         raise RuntimeError(f'ffmpeg failed for {path}')
 
 
-def robot_scene(path, cfg, results, preview_clip, threads, work):
-    """Five engines, one task, side by side; clips are trimmed, sped up and tiled."""
+def probe_duration(path):
+    out = subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', str(path)],
+                         capture_output=True, text=True, check=True)
+    return float(out.stdout.strip())
+
+
+def badge(path, ok, label):
+    """Outcome badge drawn with shapes (the font has no check/cross glyphs)."""
+    f = font(30, 700)
+    tw = int(ImageDraw.Draw(Image.new('RGB', (1, 1))).textlength(label, font=f))
+    img = Image.new('RGBA', (tw + 96, 60), (0, 0, 0, 0)); dr = ImageDraw.Draw(img)
+    col = GREEN if ok else RED
+    dr.rounded_rectangle((0, 0, img.width - 1, 59), 30, fill=col + (235,))
+    if ok:
+        dr.line((24, 31, 36, 43, 56, 19), fill=(255, 255, 255), width=6, joint='curve')
+    else:
+        dr.line((24, 18, 50, 42), fill=(255, 255, 255), width=6); dr.line((50, 18, 24, 42), fill=(255, 255, 255), width=6)
+    dr.text((72, 30), label, font=f, fill=(255, 255, 255), anchor='lm')
+    img.save(path)
+    return img.size
+
+
+def robot_scene(path, cfg, results, preview_clip, threads, work, tag):
+    """Engines side by side on one task; clips are trimmed, sped up and tiled; outcome badges appear when a clip ends."""
     arms = cfg['arms']
-    duration = cfg['duration_s']
-    speed = cfg['speed']
-    cell_w, cell_h, top = 316, 562, 250
-    gap = (W - 120 * 2 - cell_w * len(arms)) // (len(arms) - 1)
-    # Static overlay: titles, labels, success counts.
+    duration, speed = cfg['duration_s'], cfg['speed']
+    cell_w, cell_h = cfg['cell']
+    top = cfg.get('top', 250)
+    gap = (W - 120 * 2 - cell_w * len(arms)) // max(1, len(arms) - 1)
     over = canvas(); dr = ImageDraw.Draw(over)
-    text(dr, (120, 90), f'Real robot · {cfg["policy"]} · {speed:g}× speed', 30, 600, RED)
-    text(dr, (120, 132), f'Same task, five engines: {cfg["task_title"]}', 58, 700, INK)
+    text(dr, (120, 90), f'{cfg["kicker"]} · {speed:g}× speed', 30, 600, RED)
+    text(dr, (120, 132), cfg['title'], 58, 700, INK)
     task_index = cfg.get('task_index')
     by_label = {r['label']: r for r in results['arms']}
-    placeholders = []
     for i, arm in enumerate(arms):
         x = 120 + i * (cell_w + gap)
-        dr.rounded_rectangle((x - 3, top - 3, x + cell_w + 3, top + cell_h + 3), 12, fill=LINE)
-        text(dr, (x, top + cell_h + 44), arm['label'], 26, 700, GREEN if arm.get('ours') else INK)
-        text(dr, (x, top + cell_h + 80), arm['precision'], 22, 400, MUTED)
+        dr.rounded_rectangle((x - 4, top - 4, x + cell_w + 4, top + cell_h + 4), 14, fill=RED if arm.get('outcome') == 'fail' else (GREEN if arm.get('ours') else LINE))
+        text(dr, (x, top + cell_h + 44), arm['label'], 32, 700, GREEN if arm.get('ours') else INK)
         res = by_label.get(arm.get('result_label', arm['label']))
-        if res and task_index is not None and res['tasks'][task_index] is not None:
-            text(dr, (x, top + cell_h + 124), f'{100 * res["tasks"][task_index] / results["episodes_per_task"]:.0f}% SR', 24, 600, INK)
-        src = arm.get('src') or preview_clip
-        if not src:
-            placeholders.append(i)
+        line = arm['precision']
+        if res and task_index is not None and isinstance(res['tasks'][task_index], int):
+            n = res['tasks'][task_index]
+            line += f'  ·  {100 * n / results["episodes_per_task"]:.0f}% SR over {results["episodes_per_task"]} episodes'
+        text(dr, (x, top + cell_h + 86), line, 24, 400, MUTED)
+        if arm.get('note'):
+            text(dr, (x, top + cell_h + 122), arm['note'], 24, 600, RED if arm.get('outcome') == 'fail' else INK)
+        if not (arm.get('src') or preview_clip):
             dr.rounded_rectangle((x, top, x + cell_w, top + cell_h), 10, fill=(22, 35, 28))
             text(dr, (x + cell_w // 2, top + cell_h // 2), 'Video forthcoming', 26, 500, (200, 214, 205), 'mm')
     if preview_clip and not all(a.get('src') for a in arms):
         dr.rounded_rectangle((W - 700, 1020, W - 120, 1066), 10, fill=SOFT, outline=RED, width=2)
         text(dr, (W - 410, 1043), 'LAYOUT PREVIEW · same sample clip in every cell', 22, 700, RED, 'mm')
     text(dr, (120, 1045), cfg.get('footnote', ''), 22, 400, GREY)
-    overlay = work / 'robot_overlay.png'; over.save(overlay)
+    overlay = work / f'{tag}_overlay.png'; over.save(overlay)
 
-    inputs, filters, labels = ['-loop', '1', '-i', str(overlay)], [], []
+    inputs, filters, layers = ['-loop', '1', '-i', str(overlay)], [], []
     k = 1
     for i, arm in enumerate(arms):
         src = arm.get('src') or preview_clip
         if not src:
             continue
+        src = Path(src).expanduser()
         start = float(arm.get('start_s', 0))
-        inputs += ['-ss', f'{start}', '-i', str(Path(src).expanduser())]
-        filters.append(f'[{k}:v]setpts=(PTS-STARTPTS)/{speed},fps={FPS},scale={cell_w}:{cell_h}:force_original_aspect_ratio=increase,'
+        turn = {'cw': 'transpose=1,', 'ccw': 'transpose=2,'}.get(arm.get('rotate', ''), '')
+        inputs += ['-ss', f'{start}', '-i', str(src)]
+        filters.append(f'[{k}:v]setpts=(PTS-STARTPTS)/{speed},fps={FPS},{turn}scale={cell_w}:{cell_h}:force_original_aspect_ratio=increase,'
                        f'crop={cell_w}:{cell_h},format=yuv420p,tpad=stop_mode=clone:stop_duration={duration}[c{i}]')
-        labels.append((i, f'c{i}'))
-        k += 1
-    chain, last = [], '0:v'
-    for n, (i, lab) in enumerate(labels):
         x = 120 + i * (cell_w + gap)
+        layers.append((f'c{i}', x, top, ''))
+        k += 1
+        if arm.get('outcome') in ('success', 'fail'):
+            ends = min(duration - 1.0, (probe_duration(src) - start) / speed)
+            bpath = work / f'{tag}_badge{i}.png'
+            bw, _ = badge(bpath, arm['outcome'] == 'success', 'Success' if arm['outcome'] == 'success' else 'Failed')
+            inputs += ['-loop', '1', '-i', str(bpath)]
+            layers.append((f'{k}:v', x + cell_w - bw - 18, top + 18, f":enable='gte(t,{ends:.2f})'"))
+            k += 1
+    chain, last = [], '0:v'
+    for n, (lab, x, y, enable) in enumerate(layers):
         out = f'o{n}'
-        chain.append(f'[{last}][{lab}]overlay={x}:{top}:shortest=0[{out}]')
+        chain.append(f'[{last}][{lab}]overlay={x}:{y}:shortest=0{enable}[{out}]')
         last = out
     fade_f = f'[{last}]trim=duration={duration},fade=t=in:st=0:d=0.45,fade=t=out:st={duration - 0.45}:d=0.45,format=yuv420p[v]'
     graph = ';'.join(filters + chain + [fade_f])
@@ -277,26 +439,30 @@ def main():
     out = Path(args.output); out.parent.mkdir(parents=True, exist_ok=True)
     if args.install and args.preview_clip:
         raise SystemExit('Refusing to install a layout preview into the website.')
-    arms = cfg['robot_compare']['arms']
-    if args.install and any(a.get('src') for a in arms) and not all(a.get('src') for a in arms):
-        raise SystemExit('Refusing to install a robot comparison with missing engine clips.')
+    robot_cfgs = cfg['robot_scenes']
+    for rc in robot_cfgs:
+        if args.install and any(a.get('src') for a in rc['arms']) and not all(a.get('src') for a in rc['arms']):
+            raise SystemExit('Refusing to install a robot comparison with missing engine clips.')
     with tempfile.TemporaryDirectory() as tmp:
         work = Path(tmp); parts = []
         scenes = [('title', 4.5, lambda t, d: scene_title(t, d, meta)),
                   ('question', 5.0, scene_question),
-                  ('method', 9.0, lambda t, d: scene_method(t, d, figure)),
+                  ('fold_why', 6.5, scene_fold_why),
+                  ('fold_how', 10.0, scene_fold_how),
+                  ('method', 11.0, lambda t, d: scene_method(t, d, figure)),
                   ('orin', 8.0, lambda t, d: scene_orin(t, d, orin)),
                   ('libero', 7.5, lambda t, d: scene_libero(t, d, compare)),
                   ('fidelity', 6.5, scene_fidelity)]
         for name, dur, fn in scenes:
             part = work / f'{len(parts):02d}_{name}.mp4'; encode_frames(part, dur, fn, args.threads); parts.append(part)
             print('rendered', name)
-        if args.preview_clip or any(a.get('src') for a in cfg['robot_compare']['arms']):
-            part = work / f'{len(parts):02d}_robot.mp4'
-            robot_scene(part, cfg['robot_compare'], robot['results'], args.preview_clip, args.threads, work); parts.append(part)
-            print('rendered robot')
-        else:
-            print('skipped robot comparison (no clips yet)')
+        for n, rc in enumerate(robot_cfgs):
+            if not (args.preview_clip or any(a.get('src') for a in rc['arms'])):
+                print('skipped robot scene', n, '(no clips yet)')
+                continue
+            part = work / f'{len(parts):02d}_robot{n}.mp4'
+            robot_scene(part, rc, robot['results'], args.preview_clip, args.threads, work, f'robot{n}'); parts.append(part)
+            print('rendered robot scene', n)
         print('rendering outro')
         part = work / f'{len(parts):02d}_outro.mp4'; encode_frames(part, 4.0, lambda t, d: scene_outro(t, d, meta), args.threads); parts.append(part)
         listing = work / 'list.txt'; listing.write_text(''.join(f"file '{p}'\n" for p in parts))

@@ -36,6 +36,116 @@
           "episode": 3
         }
       ]
+    },
+    {
+      "key": "so101-banana",
+      "speed": 4,
+      "height": 480,
+      "arms": [
+        {
+          "key": "bf16-pytorch",
+          "src": "~/so101_processed/so101_banana/Pytorch_banana/IMG_5497.MOV"
+        },
+        {
+          "key": "trt-bf16",
+          "src": "~/so101_processed/so101_banana/E_BF16_banana/IMG_5517.MOV"
+        },
+        {
+          "key": "foldquant-w8a8",
+          "src": "~/so101_processed/so101_banana/E_W8A8_banana/IMG_5539.MOV"
+        },
+        {
+          "key": "foldquant-w4a4",
+          "src": "~/so101_processed/so101_banana/E_W4A4_banana/IMG_5559.MOV"
+        },
+        {
+          "key": "foldquant-w4a4-od-int8",
+          "src": "~/so101_processed/so101_banana/E_W4A4res8_banana/IMG_5584.MOV"
+        }
+      ],
+      "aspect": "4:3"
+    },
+    {
+      "key": "so101-blocks-cup",
+      "speed": 4,
+      "height": 480,
+      "arms": [
+        {
+          "key": "bf16-pytorch",
+          "src": "~/so101_processed/so101_cup/Pytorch_cup/IMG_5607.MOV"
+        },
+        {
+          "key": "trt-bf16",
+          "src": "~/so101_processed/so101_cup/E_BF16_cup/IMG_5628.MOV"
+        },
+        {
+          "key": "foldquant-w8a8",
+          "src": "~/so101_processed/so101_cup/E_W8A8_cup/IMG_5648.MOV"
+        },
+        {
+          "key": "foldquant-w4a4",
+          "src": "~/so101_processed/so101_cup/E_W4A4_cup/IMG_5673.MOV"
+        },
+        {
+          "key": "foldquant-w4a4-od-int8",
+          "src": "~/so101_processed/so101_cup/E_W4A4res8_cup/IMG_5696.MOV"
+        }
+      ],
+      "aspect": "4:3"
+    },
+    {
+      "key": "so101-blue-on-red",
+      "speed": 4,
+      "height": 480,
+      "arms": [
+        {
+          "key": "bf16-pytorch",
+          "src": "~/so101_processed/so101_block/Pytorch_block/IMG_5716.MOV"
+        },
+        {
+          "key": "trt-bf16",
+          "src": "~/so101_processed/so101_block/E_BF16_block/IMG_5745.MOV"
+        },
+        {
+          "key": "modelopt-w8a8-sq",
+          "src": "~/so101_processed/so101_block/ModelOpt_SQ_block/IMG_5858.MOV"
+        },
+        {
+          "key": "foldquant-w8a8",
+          "src": "~/so101_processed/so101_block/E_W8A8_block/IMG_5779.MOV"
+        },
+        {
+          "key": "foldquant-w4a4",
+          "src": "~/so101_processed/so101_block/E_W4A4_block/IMG_5806.MOV"
+        },
+        {
+          "key": "foldquant-w4a4-od-int8",
+          "src": "~/so101_processed/so101_block/E_W4A4res8_block/IMG_5830.MOV"
+        }
+      ],
+      "aspect": "4:3"
+    },
+    {
+      "key": "pi05-so101-blue-on-red",
+      "speed": 4,
+      "height": 480,
+      "arms": [
+        {
+          "key": "bf16-pytorch",
+          "src": "~/so101_processed/so101_block/Pytorch_pi_block/IMG_3619.MOV",
+          "rotate": "cw"
+        },
+        {
+          "key": "trt-bf16",
+          "src": "~/so101_processed/so101_block/E_BF16_pi_block/IMG_5862.MOV"
+        },
+        {
+          "key": "foldquant-w4a4",
+          "src": "~/so101_processed/so101_block/E_W4A4_pi_block/IMG_3640.MOV",
+          "rotate": "cw"
+        }
+      ],
+      "aspect": "4:3"
     }
   ]
 }
