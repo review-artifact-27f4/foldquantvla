@@ -220,6 +220,52 @@ def make_latency_tables(jetson, desktop):
     return jetson_html, desktop_html, ''
 
 
+def make_memory_tables(desktop):
+    mem = load('memory')
+    names = {r['key']: r['name'] for r in desktop['rows']}
+    arms = [('TRT BF16 (float engine)', 'bf16', 'baseline'), ('Eager PyTorch', 'bf16', ''), ('ModelOpt W8A8 SQ', 'int8', ''),
+            ('ModelOpt W4A16 AWQ', 'int4', ''), ('FoldQuant W8A8', 'int8', 'ours'), ('FoldQuant W4A4', 'int4', 'ours'),
+            ('FoldQuant W4A4 + o/d INT8', 'int4', 'ours')]
+    head = ('<thead><tr><th scope="col">Arm</th><th scope="col">Prec.</th><th scope="col">Steady GPU memory (MiB) ↓</th>'
+            '<th scope="col">Engines on disk (MB) ↓</th><th scope="col">Memory vs TRT BF16</th></tr></thead>')
+    keys = [k for k in PAPER_CHECKPOINTS if k in mem['families']]
+    opts = ''.join(f'<option value="mem-{k}">{esc(names[k])}</option>' for k in keys)
+    panels = []
+    for k in keys:
+        fam = mem['families'][k]
+        ref = fam['TRT BF16 (float engine)'][0]
+        rows = []
+        for label, prec, kind in arms:
+            v = fam.get(label)
+            cls = f' class="{kind}"' if kind else ''
+            if v is None:
+                rows.append(f'<tr{cls}><th scope="row">{label}</th><td class="prec">{prec}</td><td colspan="3" class="na">—</td></tr>')
+                continue
+            steady, disk = v[0], v[1]
+            tag = v[2] if len(v) > 2 else ''
+            disk_txt = f'{disk:,}<small>parameters</small>' if tag == 'params' else f'{disk:,}'
+            mark = '<sup>§</sup>' if tag == 'framework' else ''
+            if label.startswith('TRT BF16'):
+                vs = '<td class="na">ref</td>'
+            else:
+                d = (steady - ref) / ref * 100
+                cls_d = 'gain' if d <= -0.5 else ('loss' if d >= 0.5 else '')
+                vs = f'<td class="{cls_d}"><strong>{"−" if d < 0 else "+"}{abs(d):.0f}%</strong></td>'
+            rows.append(f'<tr{cls}><th scope="row">{label}</th><td class="prec">{prec}</td><td><strong>{steady:,}</strong>{mark}</td><td>{disk_txt}</td>{vs}</tr>')
+        bits = []
+        if any(len(v) > 2 and v[2] == 'framework' for v in fam.values() if v):
+            bits.append('§ framework runtime; engine-backed modules are shims, so no PyTorch weights stay resident')
+        if mem['notes'].get(k):
+            bits.append(mem['notes'][k])
+        foot = f'<p class="family-note">{esc(" · ".join(bits))}</p>' if bits else ''
+        panels.append(f'<div class="family-panel" data-family-group="memory" data-family="mem-{k}"><h4 class="family-name">{esc(names[k])}</h4>'
+                      f'<div class="benchmark-table-scroll" tabindex="0" role="region" aria-label="{esc(names[k])} memory">'
+                      f'<table class="results-table">{head}<tbody>{"".join(rows)}</tbody></table></div>{foot}</div>')
+    switch = (f'<div class="family-switch enhanced-control" hidden><label for="memory-family">Model family'
+              f'<select id="memory-family" data-family-group="memory">{opts}</select></label></div>')
+    return switch + '<div class="family-panels">' + ''.join(panels) + '</div>'
+
+
 def make_benchmark_preview(compare):
     panels = []
     for panel in compare['panels']:
@@ -420,6 +466,7 @@ def build(output, base_url=''):
     tokens['jetson_charts'] = bar_chart(jetson['rows'], 'e2e_ms', 'ms', 'Observation-to-action latency', 'jetson-latency', 200) + bar_chart(jetson['rows'], 'engine_mb', 'MB', 'Serialized engine size', 'jetson-size', 6000)
     tokens['jetson_table'] = table(['Configuration', 'GPU (ms)', 'E2E (ms)', 'Hz', 'vs float', 'Engine (MB)', 'Build (s)'], [[r['label'], number(r['gpu_ms']),r['e2e_ms'],f'{r["hz"]:.1f}',f'{r["speedup_vs_float"]:.2f}×',f'{r["engine_mb"]:,}',f'{r["build_s"]:,}'] for r in jetson['rows']], 'Table IV · Jetson AGX Orin / GR00T N1.6')
     tokens['jetson_summary'], tokens['desktop_summary'], _ = make_latency_tables(jetson, desktop)
+    tokens['memory_summary'] = make_memory_tables(desktop)
     tokens['desktop_options'] = ''.join(f'<option value="{r["key"]}">{esc(r["name"])}</option>' for r in desktop['rows'])
     tokens['desktop_table'] = table(['Checkpoint', 'Eager (ms)', 'Compiled (ms)', 'W8A8 (ms)', 'W4A4 (ms)', 'Eager / W4A4', 'Compile share', '8→4 reduction', 'Control'], [[r['name'],number(r['eager']),number(r['compiled']),number(r['int8']),number(r['int4']),f'{r["eager_speedup"]:.2f}×',f'{r["compiled_share_pct"]:.1f}%',f'{r["int8_to_int4_pct"]:.1f}%',r['control']] for r in desktop['rows']], 'Table II · Desktop end-to-end precision ladder')
     tokens['head_table'] = table(['Checkpoint','Eager (ms)','Compiled float (ms)','W8A8 (ms)','W4A4 (ms)'], [[r['name']]+[f'{r[k]:.2f}' for k in ('eager','compiled','int8','int4')] for r in desktop['head_rows']], 'Table II · Action-head-only latency')

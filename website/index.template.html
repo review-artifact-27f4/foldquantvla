@@ -92,8 +92,8 @@
     </div>
   </section>
   <section class="section container results-section" id="results" aria-labelledby="results-title">
-    <div class="section-heading results-heading"><div><p class="section-label">Results · Latency</p><h2 id="results-title">Efficiency, with the controls.</h2></div><p>Pick a target, then a model family.<br>Every arm of that family in one table.</p></div>
-    <div class="latency-tabs" aria-label="Latency view" hidden><button id="latency-tab-jetson" data-latency="jetson">Jetson AGX Orin</button><button id="latency-tab-desktop" data-latency="desktop">RTX 4070 Ti SUPER · desktop</button></div>
+    <div class="section-heading results-heading"><div><p class="section-label">Results · Latency &amp; memory</p><h2 id="results-title">Efficiency, with the controls.</h2></div><p>Pick a target, then a model family.<br>Every arm of that family in one table.</p></div>
+    <div class="latency-tabs" aria-label="Latency view" hidden><button id="latency-tab-jetson" data-latency="jetson">Jetson AGX Orin</button><button id="latency-tab-desktop" data-latency="desktop">RTX 4070 Ti SUPER · desktop</button><button id="latency-tab-memory" data-latency="memory">GPU memory · desktop</button></div>
     <div class="latency-stack">
     <section class="benchmark-panel latency-panel" id="jetson" aria-labelledby="jetson-title">
       <header><div><h3 id="jetson-title">Jetson AGX Orin · on-device</h3><p>Four checkpoints · TensorRT 10.3 · batch 1 · observation-to-action chunk</p></div></header>
@@ -105,13 +105,18 @@
       {{desktop_summary}}
       <p class="latency-note">“GPU” is the sum of model components and “E2E” the whole call; Hz is 1000 / E2E; “vs TRT BF16” divides the TRT BF16 E2E of the same run. torch.compile hides components, so its GPU time is n/a. These timers differ from the framework runtime used in the paper, so compare arms within a family.</p>
     </section>
+    <section class="benchmark-panel latency-panel" id="memory" aria-labelledby="memory-title">
+      <header><div><h3 id="memory-title">GPU memory · RTX 4070 Ti SUPER</h3><p>Four checkpoints · batch 1 · steady memory during inference, one process per arm</p></div></header>
+      {{memory_summary}}
+      <p class="latency-note">Steady GPU memory is the per-process median over 60 inference calls after warmup. Engine arms release the PyTorch weights of every module their engines replace; vision tower, embeddings and encoders stay in PyTorch. “Engines on disk” sums the serialized plans of the arm; for eager PyTorch it is the parameter size.</p>
+    </section>
     </div>
   </section>
   <section class="section analysis-section" id="analysis" aria-labelledby="analysis-title"><div class="container">
     <div class="section-heading"><p class="section-label">What the controls reveal</p><h2 id="analysis-title">Smaller bits.<br>A more nuanced picture.</h2></div>
     <div class="analysis-grid">
       <article><span class="analysis-index" aria-hidden="true">↘</span><h3>Compilation explains much of the speedup.</h3><p>The compiled control already supplies 63.2–74.7% of the eager-to-W4A4 reduction on the four checkpoints. Reporting speedups against compiled float engines keeps graph optimisation from being credited to quantization.</p></article>
-      <article><span class="analysis-index" aria-hidden="true">▧</span><h3>Engine size is not peak device memory.</h3><p>Packed weights shrink the serialized artifact. Vision, unquantized operators, workspaces, and runtime context still occupy memory. The 2.11× Jetson artifact reduction is not a claim about peak GPU memory or power use.</p></article>
+      <article><span class="analysis-index" aria-hidden="true">▧</span><h3>Low-bit engines cut GPU memory.</h3><p>With the replaced PyTorch weights released, FoldQuant W4A4 needs 20–35% less steady GPU memory than the TRT BF16 engine on GR00T N1.5, N1.6 and π0.5. Vision, embeddings and runtime workspaces set the floor that bit width cannot remove.</p></article>
       <article><span class="analysis-index" aria-hidden="true">≈</span><h3>Offline fidelity screens; closed loop decides.</h3><p>Above 0.99 held-out action cosine, success differences between arms stay within closed-loop noise and are not ordered by cosine. High cosine screens a broken configuration without ranking the working ones.</p></article>
     </div>
   </div></section>

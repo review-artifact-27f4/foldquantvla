@@ -1,0 +1,132 @@
+{
+  "source": "steady_memory.md 2026-09-15, RTX 4070 Ti SUPER, nvidia-smi per process at 10 Hz over 60 timed calls after 10 warmups, plateau median, one fresh process per arm, exclusive GPU",
+  "families": {
+    "n17": {
+      "Eager PyTorch": [
+        6446,
+        5997,
+        "params"
+      ],
+      "TRT BF16 (float engine)": [
+        8880,
+        6182
+      ],
+      "ModelOpt W8A8 SQ": [
+        7548,
+        4822
+      ],
+      "ModelOpt W4A16 AWQ": [
+        4382,
+        3279,
+        "framework"
+      ],
+      "FoldQuant W8A8": [
+        7832,
+        4560
+      ],
+      "FoldQuant W4A4": [
+        7246,
+        3518
+      ],
+      "FoldQuant W4A4 + o/d INT8": [
+        7196,
+        3687
+      ]
+    },
+    "n16": {
+      "Eager PyTorch": [
+        6924,
+        6269,
+        "params"
+      ],
+      "TRT BF16 (float engine)": [
+        6220,
+        3626
+      ],
+      "ModelOpt W8A8 SQ": [
+        4810,
+        3699,
+        "framework"
+      ],
+      "ModelOpt W4A16 AWQ": [
+        4006,
+        2923,
+        "framework"
+      ],
+      "FoldQuant W8A8": [
+        5128,
+        2006
+      ],
+      "FoldQuant W4A4": [
+        4542,
+        964
+      ],
+      "FoldQuant W4A4 + o/d INT8": [
+        4492,
+        1134
+      ]
+    },
+    "n15": {
+      "Eager PyTorch": [
+        5774,
+        5196,
+        "params"
+      ],
+      "TRT BF16 (float engine)": [
+        5168,
+        2208
+      ],
+      "ModelOpt W8A8 SQ": [
+        4462,
+        3112,
+        "framework"
+      ],
+      "ModelOpt W4A16 AWQ": [
+        4040,
+        2641,
+        "framework"
+      ],
+      "FoldQuant W8A8": [
+        4470,
+        1223
+      ],
+      "FoldQuant W4A4": [
+        4130,
+        606
+      ],
+      "FoldQuant W4A4 + o/d INT8": [
+        4078,
+        702
+      ]
+    },
+    "pi05": {
+      "Eager PyTorch": [
+        7668,
+        7127,
+        "params"
+      ],
+      "TRT BF16 (float engine)": [
+        6948,
+        4624
+      ],
+      "ModelOpt W8A8 SQ": null,
+      "ModelOpt W4A16 AWQ": null,
+      "FoldQuant W8A8": [
+        4906,
+        2330
+      ],
+      "FoldQuant W4A4": [
+        4532,
+        1286
+      ],
+      "FoldQuant W4A4 + o/d INT8": [
+        4630,
+        1592
+      ]
+    }
+  },
+  "notes": {
+    "n17": "The upstream N1.7 TensorRT pipeline keeps about 2.1 GiB of torch binding buffers and engine weight copies, so every N1.7 engine arm sits above eager while still ordering by engine size.",
+    "pi05": "ModelOpt SQ / AWQ are not buildable on a 16 GB GPU."
+  }
+}
