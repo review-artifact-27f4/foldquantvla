@@ -109,7 +109,7 @@
     <section class="benchmark-panel memory-panel" id="memory" aria-labelledby="memory-title">
       <header><div><h3 id="memory-title">GPU memory · RTX 4070 Ti SUPER</h3><p>Four checkpoints · batch 1 · steady device memory during inference, one process per arm</p></div></header>
       {{memory_summary}}
-      <p class="latency-note">Steady device memory is the median over 60 inference calls after warmup, counting the CUDA context and every allocator. Floor is what the arm’s computation needs: the PyTorch weights an engine replaces are never placed on the GPU. As served is what the released server holds today, with those weights still loaded, and is the figure to size hardware against; the gap is the replaced weights. Eager PyTorch keeps all weights, so both columns match. “Engines on disk” sums the serialized plans of the arm.</p>
+      <p class="latency-note">Steady device memory is the median over 60 inference calls after warmup, counting the CUDA context and every allocator. Floor is what the arm’s computation needs: the PyTorch weights an engine replaces are never placed on the GPU. As served is what the released server holds today, with those weights still loaded, and is the figure to size hardware against; the gap is the replaced weights. Eager PyTorch keeps all weights, so both columns match. “Engines on disk” sums the serialized plans of the arm. A cross-check on GR00T N1.6 under the framework runtime agrees with the sampler within 23 MiB and gives the same float-to-W4A4 saving (1,678 vs 1,676 MiB); absolute floors shift with which components stay in PyTorch, the saving does not.</p>
     </section>
   </section>
   <section class="section analysis-section" id="analysis" aria-labelledby="analysis-title"><div class="container">
