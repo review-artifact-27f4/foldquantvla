@@ -98,7 +98,7 @@
     <section class="benchmark-panel latency-panel" id="jetson" aria-labelledby="jetson-title">
       <header><div><h3 id="jetson-title">Jetson AGX Orin · on-device</h3><p>Four checkpoints · TensorRT 10.3 · batch 1 · observation-to-action chunk</p></div></header>
       {{jetson_summary}}
-      <p class="latency-note">“GPU” is device time and “E2E” observation-to-action; Hz is 1000 / E2E. “vs TRT BF16” is relative to the unquantized TensorRT engine of the same checkpoint. N1.6 plans: 5,325 / 3,618 / 2,525 / 3,901 / 3,077 MB for TRT BF16, W8A8, W4A4, SQ, AWQ. torch.compile is the compiled PyTorch policy on the board. On π0.5 the compiled and eager rows are within 0.05%; pending verification that the compile arm was applied.</p>
+      <p class="latency-note">“GPU” is device time and “E2E” observation-to-action; Hz is 1000 / E2E. “vs TRT BF16” is relative to the unquantized TensorRT engine of the same checkpoint. N1.6 plans: 5,325 / 3,618 / 2,525 / 3,901 / 3,077 MB for TRT BF16, W8A8, W4A4, SQ, AWQ. torch.compile is the compiled PyTorch policy on the board.</p>
     </section>
     <section class="benchmark-panel latency-panel" id="desktop" aria-labelledby="desktop-title">
       <header><div><h3 id="desktop-title">RTX 4070 Ti SUPER · desktop</h3><p>Four checkpoints · TensorRT 10.15 · batch 1 · observation-to-action chunk</p></div></header>
@@ -115,7 +115,7 @@
   <section class="section analysis-section" id="analysis" aria-labelledby="analysis-title"><div class="container">
     <div class="section-heading"><p class="section-label">What the controls reveal</p><h2 id="analysis-title">Smaller bits.<br>A more nuanced picture.</h2></div>
     <div class="analysis-grid">
-      <article><span class="analysis-index" aria-hidden="true">↘</span><h3>Compilation explains much of the speedup.</h3><p>The compiled control already supplies 63.2–74.7% of the eager-to-W4A4 reduction on the four checkpoints. Reporting speedups against compiled float engines keeps graph optimisation from being credited to quantization.</p></article>
+      <article><span class="analysis-index" aria-hidden="true">↘</span><h3>Compilation explains much of the speedup.</h3><p>The compiled float engine already supplies 63–75% of the eager-to-W4A4 reduction on the desktop and 83–92% on Jetson AGX Orin, where four-bit adds the last 8–17%. Reporting speedups against compiled float engines keeps graph optimisation from being credited to quantization.</p></article>
       <article><span class="analysis-index" aria-hidden="true">▧</span><h3>Low-bit engines cut GPU memory.</h3><p>When the weights an engine replaces are not kept on the GPU, FoldQuant W4A4 needs 20–35% less steady device memory than the TRT BF16 engine on all four checkpoints. Vision, embeddings and runtime workspaces set the floor that bit width cannot remove.</p></article>
       <article><span class="analysis-index" aria-hidden="true">≈</span><h3>Offline fidelity screens; closed loop decides.</h3><p>Above 0.99 held-out action cosine, success differences between arms stay within closed-loop noise and are not ordered by cosine. High cosine screens a broken configuration without ranking the working ones.</p></article>
     </div>
