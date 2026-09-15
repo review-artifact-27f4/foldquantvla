@@ -6,7 +6,7 @@
       "Eager PyTorch": [
         6469,
         6469,
-        null
+        6288
       ],
       "TRT BF16 (float engine)": [
         7193,
@@ -39,7 +39,7 @@
       "Eager PyTorch": [
         6947,
         6947,
-        null
+        6574
       ],
       "TRT BF16 (float engine)": [
         10609,
@@ -68,7 +68,7 @@
       "Eager PyTorch": [
         5797,
         5797,
-        null
+        5448
       ],
       "TRT BF16 (float engine)": [
         7987,
@@ -97,7 +97,7 @@
       "Eager PyTorch": [
         7691,
         7691,
-        null
+        7473
       ],
       "TRT BF16 (float engine)": [
         12313,
@@ -125,5 +125,6 @@
   },
   "notes": {
     "n17": "The upstream N1.7 pipeline already deletes replaced modules, so floor equals as served."
-  }
+  },
+  "eager_weights_note": "Eager weights = BF16 parameter bytes of the checkpoint (measured MiB converted to MB)"
 }

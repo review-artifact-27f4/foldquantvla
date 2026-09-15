@@ -226,7 +226,7 @@ def make_memory_tables(desktop):
     arms = [('TRT BF16 (float engine)', 'bf16', 'baseline'), ('Eager PyTorch', 'bf16', ''),
             ('FoldQuant W8A8', 'int8', 'ours'), ('FoldQuant W4A4', 'int4', 'ours'), ('FoldQuant W4A4 + o/d INT8', 'int4', 'ours')]
     head = ('<thead><tr><th scope="col">Arm</th><th scope="col">Prec.</th><th scope="col">Floor (MiB) ↓</th>'
-            '<th scope="col">As served (MiB) ↓</th><th scope="col">Engines on disk (MB) ↓</th><th scope="col">Floor vs TRT BF16</th></tr></thead>')
+            '<th scope="col">As served (MiB) ↓</th><th scope="col">Weights (MB) ↓</th><th scope="col">Floor vs TRT BF16</th></tr></thead>')
     keys = [k for k in PAPER_CHECKPOINTS if k in mem['families']]
     opts = ''.join(f'<option value="mem-{k}">{esc(names[k])}</option>' for k in keys)
     panels = []
