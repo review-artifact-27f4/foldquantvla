@@ -153,7 +153,7 @@
           ]
         }
       ],
-      "footnote": "BF16 and FoldQuant rows: FoldQuant released openpi harness, 20 trials per task, K = 5, seed 7. HoloQ-VLA, DuQuant, QuantVLA and SmoothQuant: reported in HoloQ-VLA Table 2 (emulated quantization, 10 calibration samples); their FP16 reference is also 97.1%. Our reproduction of HoloQ-VLA W4A4 on the long suite reaches 94.0% against 96.0% reported (t = −0.82, p = 0.44)."
+      "footnote": "BF16 and FoldQuant rows: FoldQuant released openpi harness, 20 trials per task, K = 5, seed 7. HoloQ-VLA, DuQuant, QuantVLA and SmoothQuant: reported by HoloQ-VLA (emulated quantization, 10 calibration samples); their FP16 reference is also 97.1%. Our reproduction of HoloQ-VLA W4A4 on the long suite reaches 94.0% against 96.0% reported (t = −0.82, p = 0.44)."
     }
   ]
 }
