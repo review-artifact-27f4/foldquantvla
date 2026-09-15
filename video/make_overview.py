@@ -290,7 +290,6 @@ def scene_libero(t, d, compare):
         w = (x1 - x0) * (sr - lo) / (hi - lo) * k
         dr.rounded_rectangle((x0, y, x0 + max(w, 12), y + 60), 10, fill=blend(col, a))
         text(dr, (x0 + max(w, 12) + 18, y + 30), f'{sr:.2f}%', 30, 600, INK, 'lm', k)
-    text(dr, (x0, 950), f'{lo:.0f}%', 22, 400, GREY, 'la', a); text(dr, (x1, 950), f'{hi:.0f}%', 22, 400, GREY, 'ra', a)
     text(dr, (120, 1010), 'Axis starts at 85%. HoloQ-VLA is our fake-quantized port of the method. Differences are within closed-loop noise.', 22, 400, GREY, 'la', a)
     return img
 
