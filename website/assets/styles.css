@@ -142,3 +142,4 @@
 @media(max-width:700px){.compare-task-tabs,.compare-head{padding-left:14px;padding-right:14px}}
 .robot-prompt{font-size:12px;line-height:1.6;color:var(--ink);font-style:italic}.robot-prompt span{display:inline-block;margin-right:6px;font-style:normal;font-size:10px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:var(--muted)}.compare-head .robot-prompt{margin-top:4px;font-size:13px}
 .memory-panel{margin-top:26px}
+.provisional-tag{color:#9a5b12;border-color:#ecd3a9;background:#fff8ec;align-self:flex-start}
