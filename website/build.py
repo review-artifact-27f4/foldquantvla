@@ -175,7 +175,7 @@ def make_latency_tables(jetson, desktop):
     jpanels = []
     orin_models = [m for m in orin['models'] if not m['name'].startswith(('Evo', 'SmolVLA'))]
     for model in orin_models:
-        values = {r['label']: {'gpu': r['gpu_ms'], 'e2e': r['e2e_ms']} for r in model['arms']}
+        values = {r['label']: {'gpu': r['gpu_ms'], 'e2e': r['e2e_ms'], 'mark': '*' if r.get('unverified') else ''} for r in model['arms']}
         jpanels.append(panel('jetson', model['name'], head, family_rows(values)))
     jetson_html = switcher('jetson', [m['name'] for m in orin_models]) + '<div class="family-panels">' + ''.join(jpanels) + '</div>'
 
