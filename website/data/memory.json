@@ -124,7 +124,6 @@
     }
   },
   "notes": {
-    "n17": "The upstream N1.7 pipeline already deletes replaced modules, so floor equals as served.",
-    "pi05": "ModelOpt SQ / AWQ are not buildable on a 16 GB GPU."
+    "n17": "The upstream N1.7 pipeline already deletes replaced modules, so floor equals as served."
   }
 }

@@ -223,9 +223,8 @@ def make_latency_tables(jetson, desktop):
 def make_memory_tables(desktop):
     mem = load('memory')
     names = {r['key']: r['name'] for r in desktop['rows']}
-    arms = [('TRT BF16 (float engine)', 'bf16', 'baseline'), ('Eager PyTorch', 'bf16', ''), ('ModelOpt W8A8 SQ', 'int8', ''),
-            ('ModelOpt W4A16 AWQ', 'int4', ''), ('FoldQuant W8A8', 'int8', 'ours'), ('FoldQuant W4A4', 'int4', 'ours'),
-            ('FoldQuant W4A4 + o/d INT8', 'int4', 'ours')]
+    arms = [('TRT BF16 (float engine)', 'bf16', 'baseline'), ('Eager PyTorch', 'bf16', ''),
+            ('FoldQuant W8A8', 'int8', 'ours'), ('FoldQuant W4A4', 'int4', 'ours'), ('FoldQuant W4A4 + o/d INT8', 'int4', 'ours')]
     head = ('<thead><tr><th scope="col">Arm</th><th scope="col">Prec.</th><th scope="col">Floor (MiB) ↓</th>'
             '<th scope="col">As served (MiB) ↓</th><th scope="col">Engines on disk (MB) ↓</th><th scope="col">Floor vs TRT BF16</th></tr></thead>')
     keys = [k for k in PAPER_CHECKPOINTS if k in mem['families']]
@@ -255,8 +254,6 @@ def make_memory_tables(desktop):
                 vs = f'<td class="{c}"><strong>{"−" if d < 0 else "+"}{abs(d):.0f}%</strong></td>'
             rows.append(f'<tr{cls}><th scope="row">{label}</th><td class="prec">{prec}</td><td><strong>{floor:,}</strong></td><td>{served:,}</td><td>{disk_txt}</td>{vs}</tr>')
         bits = []
-        if not_measured:
-            bits.append('— ModelOpt arms were not re-measured with this method')
         if mem['notes'].get(k):
             bits.append(mem['notes'][k])
         foot = f'<p class="family-note">{esc(" · ".join(bits))}</p>' if bits else ''
