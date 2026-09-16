@@ -3,39 +3,36 @@
     {
       "kicker": "Real robot · GR00T N1.7 on Jetson AGX Orin · SO-101",
       "title": "Same setup: SmoothQuant fails, FoldQuant (ours) succeeds",
-      "task_index": 3,
-      "speed": 2,
+      "speed": 3,
       "duration_s": 11,
       "cell": [
         820,
         615
       ],
       "top": 230,
-      "footnote": "Prompt: “Pick blue cube and place on red cube”. One episode per engine. ModelOpt SmoothQuant was stopped after this task: jerky motion risked the hardware.",
+      "footnote": "Prompt: “Pick blue cube and place on red cube”. One episode per engine from the same starting layout. SmoothQuant was stopped after this task.",
       "arms": [
         {
           "label": "ModelOpt W8A8 SmoothQuant",
-          "result_label": "ModelOpt W8A8 SmoothQuant*",
           "precision": "INT8",
-          "src": "~/so101_processed/so101_block/ModelOpt_SQ_block/IMG_5858.MOV",
+          "src": "~/so101_processed/so101_block/ModelOpt_SQ_block/IMG_3599.MOV",
+          "rotate": "cw",
           "outcome": "fail",
-          "note": "Jerky motion, misses the cube"
+          "note": "Never completes the stack"
         },
         {
           "label": "FoldQuant W4A4 + o/d INT8",
-          "result_label": "FoldQuant W4A4 + o/d INT8",
           "precision": "INT4",
           "ours": true,
-          "src": "~/so101_processed/so101_block/E_W4A4res8_block/IMG_5830.MOV",
+          "src": "~/so101_processed/so101_block/E_W4A4res8_block/IMG_5840.MOV",
           "outcome": "success",
-          "note": "Smooth grasp and place"
+          "note": "Stacks the blue cube"
         }
       ]
     },
     {
       "kicker": "Real robot · GR00T N1.7 on Jetson AGX Orin · SO-101",
       "title": "All three FoldQuant (ours) engines complete the episode",
-      "task_index": 3,
       "speed": 3,
       "duration_s": 8,
       "cell": [
@@ -43,27 +40,27 @@
         405
       ],
       "top": 290,
-      "footnote": "Prompt: “Pick blue cube and place on red cube”. One episode per engine.",
+      "footnote": "Prompt: “Pick blue cube and place on red cube”. One episode per engine from the same starting layout.",
       "arms": [
         {
           "label": "FoldQuant W8A8",
           "precision": "INT8",
           "ours": true,
-          "src": "~/so101_processed/so101_block/E_W8A8_block/IMG_5784.MOV",
+          "src": "~/so101_processed/so101_block/E_W8A8_block/IMG_5788.MOV",
           "outcome": "success"
         },
         {
           "label": "FoldQuant W4A4",
           "precision": "INT4",
           "ours": true,
-          "src": "~/so101_processed/so101_block/E_W4A4_block/IMG_5809.MOV",
+          "src": "~/so101_processed/so101_block/E_W4A4_block/IMG_5812.MOV",
           "outcome": "success"
         },
         {
           "label": "FoldQuant W4A4 + o/d INT8",
           "precision": "INT4",
           "ours": true,
-          "src": "~/so101_processed/so101_block/E_W4A4res8_block/IMG_5830.MOV",
+          "src": "~/so101_processed/so101_block/E_W4A4res8_block/IMG_5840.MOV",
           "outcome": "success"
         }
       ]
