@@ -31,7 +31,7 @@
           "label": "FoldQuant W4A4",
           "precision": "INT4",
           "ours": true,
-          "src": "~/so101_processed/so101_block/E_W4A4_block/IMG_5812.MOV",
+          "src": "~/so101_processed/so101_block/E_W4A4_block/IMG_5814.MOV",
           "outcome": "success"
         },
         {
