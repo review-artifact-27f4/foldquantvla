@@ -386,14 +386,17 @@ def robot_scene(path, cfg, results, preview_clip, threads, work, tag):
     gap = (W - 120 * 2 - cell_w * len(arms)) // max(1, len(arms) - 1)
     over = canvas(); dr = ImageDraw.Draw(over)
     text(dr, (120, 90), f'{cfg["kicker"]} · {speed:g}× speed', 30, 600, RED)
-    text(dr, (120, 132), cfg['title'], 58, 700, INK)
+    size = 58 if dr.textlength(cfg['title'], font=font(58, 700)) <= 1680 else 46
+    text(dr, (120, 132), cfg['title'], size, 700, INK)
     for i, arm in enumerate(arms):
         x = 120 + i * (cell_w + gap)
         dr.rounded_rectangle((x - 4, top - 4, x + cell_w + 4, top + cell_h + 4), 14, fill=RED if arm.get('outcome') == 'fail' else (GREEN if arm.get('ours') else LINE))
-        text(dr, (x, top + cell_h + 44), arm['label'] + (' (ours)' if arm.get('ours') else ''), 32, 700 if arm.get('ours') else 400, GREEN if arm.get('ours') else INK)
-        text(dr, (x, top + cell_h + 86), arm['precision'], 24, 400, MUTED)
+        # Narrow cells (four or more engines) need smaller captions so labels never collide.
+        lab_size, sub_size = (32, 24) if cell_w >= 520 else (25, 20)
+        text(dr, (x, top + cell_h + 40), arm['label'] + (' (ours)' if arm.get('ours') else ''), lab_size, 700 if arm.get('ours') else 400, GREEN if arm.get('ours') else INK)
+        text(dr, (x, top + cell_h + 40 + lab_size + 10), arm['precision'], sub_size, 400, MUTED)
         if arm.get('note'):
-            text(dr, (x, top + cell_h + 122), arm['note'], 24, 600, RED if arm.get('outcome') == 'fail' else INK)
+            text(dr, (x, top + cell_h + 40 + lab_size + sub_size + 24), arm['note'], sub_size, 600, RED if arm.get('outcome') == 'fail' else INK)
         if not (arm.get('src') or preview_clip):
             dr.rounded_rectangle((x, top, x + cell_w, top + cell_h), 10, fill=(22, 35, 28))
             text(dr, (x + cell_w // 2, top + cell_h // 2), 'Video forthcoming', 26, 500, (200, 214, 205), 'mm')
