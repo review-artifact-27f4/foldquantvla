@@ -373,7 +373,7 @@
       "key": "pi05-so101-blue-on-red",
       "title": "π0.5 · SO-101 · Blue block on the red block",
       "tab": "SO-101 · Blue on red",
-      "meta": "All engines start together from a matched setup in each of five scenes · external camera · 4× speed",
+      "meta": "Engines start together from a matched setup in each scene · one successful episode per engine · external camera · 4× speed",
       "scenes": 5,
       "arms": [
         {
