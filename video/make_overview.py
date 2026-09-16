@@ -413,6 +413,8 @@ def robot_scene(path, cfg, results, preview_clip, threads, work, tag):
         if not src:
             continue
         src = Path(src).expanduser()
+        if not src.is_absolute():
+            src = (HERE / src).resolve()  # config paths are relative to video/
         start = float(arm.get('start_s', 0))
         turn = {'cw': 'transpose=1,', 'ccw': 'transpose=2,'}.get(arm.get('rotate', ''), '')
         inputs += ['-ss', f'{start}', '-i', str(src)]

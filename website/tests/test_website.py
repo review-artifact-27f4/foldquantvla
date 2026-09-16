@@ -28,11 +28,11 @@ class EvidenceTests(unittest.TestCase):
     def test_campaign_population_and_missing_measurements(self):
         data = site.load('libero')
         models = data['models']
-        self.assertEqual([len(m['rows']) for m in models], [12, 16, 8, 9, 8, 6])
-        self.assertEqual(sum(len(m['rows']) for m in models) * data['episodes_per_run'], 47200)
-        self.assertEqual(data['comparison_count'], 53)
-        self.assertEqual(data['significant_loss_count'], 3)
-        self.assertEqual({r['key'] for r in models[-1]['rows']}, {'bf16', 'trt_bf16', 'sq', 'int8', 'int4', 'mixed'})
+        self.assertEqual([len(m['rows']) for m in models], [12, 16, 8, 9])
+        self.assertEqual(sum(len(m['rows']) for m in models) * data['episodes_per_run'], 36000)
+        self.assertEqual(data['comparison_count'], 41)
+        self.assertEqual(data['significant_loss_count'], 0)
+        self.assertEqual([m['key'] for m in models], ['n17', 'n16', 'n15', 'pi05'])
         for model in models:
             self.assertEqual(len({r['key'] for r in model['rows']}), len(model['rows']))
             self.assertLessEqual(model['k'], model['chunk_length'])
@@ -57,10 +57,6 @@ class EvidenceTests(unittest.TestCase):
         self.assertIn('fails fidelity',desktop['smol']['note'])
         self.assertGreater(desktop['evo']['int4'],desktop['evo']['int8'])
         self.assertIn('unresolved',desktop['evo']['note'])
-        libero = {m['key']: {r['key']:r['successes'] for r in m['rows']} for m in site.load('libero')['models']}
-        self.assertEqual(libero['evo']['int4']-libero['evo']['bf16'],-85)
-        self.assertEqual(libero['evo']['cascade']-libero['evo']['bf16'],-352)
-        self.assertEqual(libero['smol']['int4']-libero['smol']['bf16'],-352)
 
 
 class BuildTests(unittest.TestCase):

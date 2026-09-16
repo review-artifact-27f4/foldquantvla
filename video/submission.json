@@ -1,0 +1,129 @@
+{
+ "robot_scenes": [
+  {
+   "kicker": "Real robot · GR00T N1.7 on Jetson AGX Orin · SO-101",
+   "title": "Same setup: SmoothQuant fails, FoldQuant (ours) succeeds",
+   "speed": 3,
+   "duration_s": 10,
+   "cell": [
+    400,
+    300
+   ],
+   "top": 400,
+   "footnote": "Prompt: “Pick blue cube and place on red cube”. One episode per engine from the same starting layout. SmoothQuant was stopped after this task.",
+   "arms": [
+    {
+     "label": "ModelOpt W8A8 SmoothQuant",
+     "precision": "INT8",
+     "src": "~/so101_processed/so101_block/ModelOpt_SQ_block/IMG_3599.MOV",
+     "rotate": "cw",
+     "outcome": "fail",
+     "note": "Never completes the stack"
+    },
+    {
+     "label": "FoldQuant W8A8",
+     "precision": "INT8",
+     "ours": true,
+     "src": "~/so101_processed/so101_block/E_W8A8_block/IMG_5788.MOV",
+     "outcome": "success"
+    },
+    {
+     "label": "FoldQuant W4A4",
+     "precision": "INT4",
+     "ours": true,
+     "src": "~/so101_processed/so101_block/E_W4A4_block/IMG_5814.MOV",
+     "outcome": "success"
+    },
+    {
+     "label": "FoldQuant W4A4 + o/d INT8",
+     "precision": "INT4",
+     "ours": true,
+     "src": "~/so101_processed/so101_block/E_W4A4res8_block/IMG_5840.MOV",
+     "outcome": "success"
+    }
+   ]
+  },
+  {
+   "kicker": "Real robot · GR00T N1.7 on Jetson AGX Orin · SO-101",
+   "title": "Five engines, one layout: pick the banana, put it in the pot, close the lid",
+   "speed": 7,
+   "duration_s": 10,
+   "cell": [
+    320,
+    240
+   ],
+   "top": 420,
+   "footnote": "Prompt: “Pick up the banana and place it in the pot, then close the lid”. Scene 4: one episode per engine from the same starting layout; overhead camera.",
+   "arms": [
+    {
+     "label": "BF16 PyTorch",
+     "precision": "BF16",
+     "src": "~/so101_processed/so101_banana/Pytorch_banana/IMG_5512.MOV",
+     "outcome": "success"
+    },
+    {
+     "label": "TRT BF16",
+     "precision": "BF16",
+     "src": "~/so101_processed/so101_banana/E_BF16_banana/IMG_5533.MOV",
+     "outcome": "success"
+    },
+    {
+     "label": "FoldQuant W8A8",
+     "precision": "INT8",
+     "ours": true,
+     "src": "~/so101_processed/so101_banana/E_W8A8_banana/IMG_5553.MOV",
+     "outcome": "success"
+    },
+    {
+     "label": "FoldQuant W4A4",
+     "precision": "INT4",
+     "ours": true,
+     "src": "~/so101_processed/so101_banana/E_W4A4_banana/IMG_5578.MOV",
+     "outcome": "success"
+    },
+    {
+     "label": "FoldQuant W4A4 + o/d INT8",
+     "precision": "INT4",
+     "ours": true,
+     "src": "~/so101_processed/so101_banana/E_W4A4res8_banana/IMG_5599.MOV",
+     "outcome": "success"
+    }
+   ]
+  },
+  {
+   "kicker": "Real robot · GR00T N1.7 on Jetson AGX Orin · ALOHA",
+   "title": "FoldQuant (ours) on ALOHA: banana in the pot, lid closed",
+   "speed": 6,
+   "duration_s": 12,
+   "cell": [
+    540,
+    405
+   ],
+   "top": 290,
+   "footnote": "Prompt: “Use the right gripper to pick up the banana and place it into the pot. Then pick up the lid and place it on top of the pot.” One episode per engine; high camera.",
+   "arms": [
+    {
+     "label": "FoldQuant W8A8",
+     "precision": "INT8",
+     "ours": true,
+     "src": "../FoldQuantVLA_ALOHA/banana_w8a8/videos/chunk-000/observation.images.color.high/episode_000000.mp4",
+     "outcome": "success"
+    },
+    {
+     "label": "FoldQuant W4A4",
+     "precision": "INT4",
+     "ours": true,
+     "src": "../FoldQuantVLA_ALOHA/banana_w4a4/videos/chunk-000/observation.images.color.high/episode_000002.mp4",
+     "outcome": "success"
+    },
+    {
+     "label": "FoldQuant W4A4 + o/d INT8",
+     "precision": "INT4",
+     "ours": true,
+     "src": "../FoldQuantVLA_ALOHA/banana_w4a4res8/videos/chunk-000/observation.images.color.high/episode_000003.mp4",
+     "outcome": "success"
+    }
+   ]
+  }
+ ]
+}

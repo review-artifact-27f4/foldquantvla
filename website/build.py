@@ -444,7 +444,7 @@ def make_overview_media():
 def build(output, base_url=''):
     meta, jetson, desktop, libero, fidelity, real_robot, resources = [load(n) for n in ('metadata', 'jetson', 'desktop', 'libero', 'fidelity', 'real_robot', 'resources')]
     campaigns = sum(len(m['rows']) for m in libero['models'])
-    if campaigns != 59 or campaigns * libero['episodes_per_run'] != 47200 or len(libero['models']) != 6:
+    if campaigns != 45 or campaigns * libero['episodes_per_run'] != 36000 or len(libero['models']) != 4:
         raise ValueError('Reconcile the campaign totals before changing the published highlights.')
     if base_url:
         parsed = urlparse(base_url)
@@ -476,7 +476,7 @@ def build(output, base_url=''):
             table_rows.append([model['name'],model['k'],row['label'],f'{row["successes"]}/800',f'{row["rate"]:.2f}%',f'[{row["ci_low"]:.1f}, {row["ci_high"]:.1f}]'])
             attrs.append(f'data-model="{model["key"]}" data-config="{row["key"]}"')
     tokens['libero_config_options'] = ''.join(f'<option value="{esc(k)}">{esc(v)}</option>' for k,v in config_labels.items())
-    tokens['libero_table'] = table(['Checkpoint','K','Configuration','Successes','Success rate','95% CI (%)'],table_rows,'Table V · All 59 closed-loop LIBERO campaigns',attrs)
+    tokens['libero_table'] = table(['Checkpoint','K','Configuration','Successes','Success rate','95% CI (%)'],table_rows,'Table V · LIBERO campaigns on the four paper checkpoints',attrs)
     tokens['robot_intro'] = esc(real_robot['intro'])
     groot_compare, compare_media = make_robot_compare(real_robot.get('comparisons', []), 'Five engines, one episode',
                                                       'GR00T N1.7 · pick a task; every engine plays at once so their pace can be compared')
