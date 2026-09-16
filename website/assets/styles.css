@@ -157,3 +157,5 @@
 .paper-title{text-wrap:balance}
 .nowrap{white-space:nowrap}
 .overview>.overview-video{grid-column:1/-1;max-width:none;margin:34px 0 0}
+/* Phones: the wide metrics ("1.20–1.33×", "0.46 → 0.85") overflow a 111px column, so stack metric above its text. */
+@media(max-width:700px){.highlights>div{grid-template-columns:1fr;row-gap:6px}.highlights .metric{grid-row:auto;align-self:start}}
