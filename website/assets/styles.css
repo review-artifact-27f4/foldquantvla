@@ -156,3 +156,4 @@
 @media(max-width:1000px){.overview{gap:0 36px}}
 .paper-title{text-wrap:balance}
 .nowrap{white-space:nowrap}
+.overview>.overview-video{grid-column:1/-1;max-width:none;margin:34px 0 0}
