@@ -35,9 +35,9 @@
       "arms": [
         {
           "key": "bf16-pytorch",
-          "src": "~/so101_processed/so101_block/Pytorch_pi_block/IMG_3627.MOV",
-          "rotate": "cw",
-          "start_s": 2.5
+          "src": "~/so101_processed/so101_block/Pytorch_pi_block/IMG_3670.MOV",
+          "start_s": 0.1,
+          "rotate": "cw"
         },
         {
           "key": "trt-bf16",
@@ -61,9 +61,9 @@
       "arms": [
         {
           "key": "bf16-pytorch",
-          "src": "~/so101_processed/so101_block/Pytorch_pi_block/IMG_3629.MOV",
-          "rotate": "cw",
-          "start_s": 4.0
+          "src": "~/so101_processed/so101_block/Pytorch_pi_block/IMG_3627.MOV",
+          "start_s": 2.5,
+          "rotate": "cw"
         },
         {
           "key": "trt-bf16",
@@ -87,9 +87,9 @@
       "arms": [
         {
           "key": "bf16-pytorch",
-          "src": "~/so101_processed/so101_block/Pytorch_pi_block/IMG_3635.MOV",
-          "rotate": "cw",
-          "start_s": 2.5
+          "src": "~/so101_processed/so101_block/Pytorch_pi_block/IMG_3631.MOV",
+          "start_s": 2.5,
+          "rotate": "cw"
         },
         {
           "key": "trt-bf16",
@@ -113,9 +113,9 @@
       "arms": [
         {
           "key": "bf16-pytorch",
-          "src": "~/so101_processed/so101_block/Pytorch_pi_block/IMG_3636.MOV",
-          "rotate": "cw",
-          "start_s": 10.5
+          "src": "~/so101_processed/so101_block/Pytorch_pi_block/IMG_3637.MOV",
+          "start_s": 0.6,
+          "rotate": "cw"
         },
         {
           "key": "trt-bf16",
@@ -173,8 +173,8 @@
       "arms": [
         {
           "key": "bf16-pytorch",
-          "src": "~/so101_processed/so101_banana/Pytorch_banana/IMG_5501.MOV",
-          "start_s": 2.5
+          "src": "~/so101_processed/so101_banana/Pytorch_banana/IMG_5503.MOV",
+          "start_s": 1.0
         },
         {
           "key": "trt-bf16",
@@ -261,8 +261,8 @@
         },
         {
           "key": "foldquant-w4a4-od-int8",
-          "src": "~/so101_processed/so101_banana/E_W4A4res8_banana/IMG_5601.MOV",
-          "start_s": 2.5
+          "src": "~/so101_processed/so101_banana/E_W4A4res8_banana/IMG_5603.MOV",
+          "start_s": 2.7
         }
       ]
     },
@@ -388,13 +388,13 @@
         },
         {
           "key": "foldquant-w8a8",
-          "src": "~/so101_processed/so101_cup/E_W8A8_cup/IMG_5659.MOV",
-          "start_s": 4.75
+          "src": "~/so101_processed/so101_cup/E_W8A8_cup/IMG_5660.MOV",
+          "start_s": 5.5
         },
         {
           "key": "foldquant-w4a4",
-          "src": "~/so101_processed/so101_cup/E_W4A4_cup/IMG_5683.MOV",
-          "start_s": 3.5
+          "src": "~/so101_processed/so101_cup/E_W4A4_cup/IMG_5688.MOV",
+          "start_s": 4.25
         },
         {
           "key": "foldquant-w4a4-od-int8",
@@ -486,8 +486,8 @@
         },
         {
           "key": "trt-bf16",
-          "src": "~/so101_processed/so101_block/E_BF16_block/IMG_5745.MOV",
-          "start_s": 6.75
+          "src": "~/so101_processed/so101_block/E_BF16_block/IMG_5753.MOV",
+          "start_s": 4.0
         },
         {
           "key": "modelopt-w8a8-sq",
@@ -530,9 +530,9 @@
         },
         {
           "key": "modelopt-w8a8-sq",
-          "src": "~/so101_processed/so101_block/ModelOpt_SQ_block/IMG_3605.MOV",
-          "rotate": "cw",
-          "start_s": 1.17
+          "src": "~/so101_processed/so101_block/ModelOpt_SQ_block/IMG_3601.MOV",
+          "start_s": 1.0,
+          "rotate": "cw"
         },
         {
           "key": "foldquant-w8a8",
@@ -570,9 +570,9 @@
         },
         {
           "key": "modelopt-w8a8-sq",
-          "src": "~/so101_processed/so101_block/ModelOpt_SQ_block/IMG_3603.MOV",
-          "rotate": "cw",
-          "start_s": 2.25
+          "src": "~/so101_processed/so101_block/ModelOpt_SQ_block/IMG_3604.MOV",
+          "start_s": 2.0,
+          "rotate": "cw"
         },
         {
           "key": "foldquant-w8a8",
@@ -586,8 +586,8 @@
         },
         {
           "key": "foldquant-w4a4-od-int8",
-          "src": "~/so101_processed/so101_block/E_W4A4res8_block/IMG_5843.MOV",
-          "start_s": 4.0
+          "src": "~/so101_processed/so101_block/E_W4A4res8_block/IMG_5842.MOV",
+          "start_s": 2.5
         }
       ]
     },
@@ -600,19 +600,19 @@
       "arms": [
         {
           "key": "bf16-pytorch",
-          "src": "~/so101_processed/so101_block/Pytorch_block/IMG_5736.MOV",
-          "start_s": 8.0
+          "src": "~/so101_processed/so101_block/Pytorch_block/IMG_5739.MOV",
+          "start_s": 3.0
         },
         {
           "key": "trt-bf16",
-          "src": "~/so101_processed/so101_block/E_BF16_block/IMG_5764.MOV",
-          "start_s": 4.0
+          "src": "~/so101_processed/so101_block/E_BF16_block/IMG_5766.MOV",
+          "start_s": 6.75
         },
         {
           "key": "modelopt-w8a8-sq",
-          "src": "~/so101_processed/so101_block/ModelOpt_SQ_block/IMG_3608.MOV",
-          "rotate": "cw",
-          "start_s": 2.75
+          "src": "~/so101_processed/so101_block/ModelOpt_SQ_block/IMG_3607.MOV",
+          "start_s": 2.25,
+          "rotate": "cw"
         },
         {
           "key": "foldquant-w8a8",
@@ -650,13 +650,13 @@
         },
         {
           "key": "modelopt-w8a8-sq",
-          "src": "~/so101_processed/so101_block/ModelOpt_SQ_block/IMG_5855.MOV",
-          "start_s": 3.75
+          "src": "~/so101_processed/so101_block/ModelOpt_SQ_block/IMG_3612.MOV",
+          "rotate": "cw"
         },
         {
           "key": "foldquant-w8a8",
-          "src": "~/so101_processed/so101_block/E_W8A8_block/IMG_5779.MOV",
-          "start_s": 7.75
+          "src": "~/so101_processed/so101_block/E_W8A8_block/IMG_5804.MOV",
+          "start_s": 4.0
         },
         {
           "key": "foldquant-w4a4",
@@ -690,8 +690,8 @@
         {
           "key": "trt-bf16",
           "dir": "banana_trt_bf16",
-          "episode": 0,
-          "start_s": 6.1
+          "episode": 1,
+          "start_s": 6.0
         },
         {
           "key": "foldquant-w8a8",
@@ -733,8 +733,8 @@
         {
           "key": "trt-bf16",
           "dir": "banana_trt_bf16",
-          "episode": 5,
-          "start_s": 5.9
+          "episode": 7,
+          "start_s": 6.8
         },
         {
           "key": "foldquant-w8a8",
@@ -837,8 +837,8 @@
         {
           "key": "foldquant-w4a4-od-int8",
           "dir": "banana_w4a4res8",
-          "episode": 12,
-          "start_s": 1.2
+          "episode": 14,
+          "start_s": 4.2
         }
       ]
     },
@@ -874,14 +874,14 @@
         {
           "key": "foldquant-w4a4",
           "dir": "banana_w4a4",
-          "episode": 16,
-          "start_s": 3.4
+          "episode": 17,
+          "start_s": 0.9
         },
         {
           "key": "foldquant-w4a4-od-int8",
           "dir": "banana_w4a4res8",
-          "episode": 16,
-          "start_s": 4.3
+          "episode": 17,
+          "start_s": 3.8
         }
       ]
     }
