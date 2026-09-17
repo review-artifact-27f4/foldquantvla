@@ -496,8 +496,8 @@
         },
         {
           "key": "modelopt-w4a16-awq",
-          "src": "~/so101/modelopt_w4a16_awq_processed/IMG_3683.MOV",
-          "start_s": 1.0
+          "src": "~/so101/modelopt_w4a16_awq_processed/IMG_3685.MOV",
+          "start_s": 2.5
         },
         {
           "key": "foldquant-w8a8",
@@ -541,7 +541,7 @@
         },
         {
           "key": "modelopt-w4a16-awq",
-          "src": "~/so101/modelopt_w4a16_awq_processed/IMG_3687.MOV",
+          "src": "~/so101/modelopt_w4a16_awq_processed/IMG_3689.MOV",
           "start_s": 0.3
         },
         {
@@ -586,8 +586,8 @@
         },
         {
           "key": "modelopt-w4a16-awq",
-          "src": "~/so101/modelopt_w4a16_awq_processed/IMG_3694.MOV",
-          "start_s": 0.9
+          "src": "~/so101/modelopt_w4a16_awq_processed/IMG_3693.MOV",
+          "start_s": 0.3
         },
         {
           "key": "foldquant-w8a8",
@@ -675,8 +675,8 @@
         },
         {
           "key": "modelopt-w4a16-awq",
-          "src": "~/so101/modelopt_w4a16_awq_processed/IMG_3706.MOV",
-          "start_s": 0.8
+          "src": "~/so101/modelopt_w4a16_awq_processed/IMG_3705.MOV",
+          "start_s": 2.5
         },
         {
           "key": "foldquant-w8a8",

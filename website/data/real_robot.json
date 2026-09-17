@@ -114,6 +114,21 @@
         "scope": "T4 only"
       },
       {
+        "label": "ModelOpt W4A16 AWQ*",
+        "kind": "",
+        "tasks": [
+          "not_run",
+          "not_run",
+          "not_run",
+          8
+        ],
+        "wilson": [
+          21.9,
+          61.3
+        ],
+        "scope": "T4 only"
+      },
+      {
         "label": "FoldQuant W8A8",
         "kind": "ours",
         "tasks": [
@@ -168,7 +183,7 @@
         "res8": 0.99983
       }
     },
-    "note": "Arms interleaved with matched object placements. W4A4 + o/d INT8 vs W4A4: +20 / +10 / +5 / +15 pp per task, +12.5 pp on average. ModelOpt W8A8 SmoothQuant stopped after one task (SO-101 blue on red): jerky motion risked the hardware. It is not in any total. Median logged-observation action cosine vs BF16 PyTorch — ALOHA: TRT BF16 0.99999 · W8A8 0.99999 · W4A4 0.99962 · W4A4 + o/d INT8 0.99975; SO-101: TRT BF16 1.00000 · ModelOpt SmoothQuant 0.99892 · W8A8 1.00000 · W4A4 0.99961 · W4A4 + o/d INT8 0.99988. * ModelOpt W8A8 SmoothQuant is run with NVIDIA’s TensorRT Model Optimizer (ModelOpt) repository."
+    "note": "Arms interleaved with matched object placements. W4A4 + o/d INT8 vs W4A4: +20 / +10 / +5 / +15 pp per task, +12.5 pp on average. ModelOpt W8A8 SmoothQuant stopped after one task (SO-101 blue on red): jerky motion risked the hardware. It is not in any total. ModelOpt W4A16 AWQ was also run on that task only: 8/20 (40%). Median logged-observation action cosine vs BF16 PyTorch — ALOHA: TRT BF16 0.99999 · W8A8 0.99999 · W4A4 0.99962 · W4A4 + o/d INT8 0.99975; SO-101: TRT BF16 1.00000 · ModelOpt SmoothQuant 0.99892 · W8A8 1.00000 · W4A4 0.99961 · W4A4 + o/d INT8 0.99988. * ModelOpt W8A8 SmoothQuant and ModelOpt W4A16 AWQ are run with NVIDIA’s TensorRT Model Optimizer (ModelOpt) repository."
   },
   "comparisons": [
     {
@@ -228,7 +243,7 @@
           "foldquant-w8a8": "success",
           "foldquant-w4a4": "success",
           "foldquant-w4a4-od-int8": "success",
-          "modelopt-w4a16-awq": "fail"
+          "modelopt-w4a16-awq": "success"
         },
         "2": {
           "bf16-pytorch": "success",
@@ -246,7 +261,7 @@
           "foldquant-w8a8": "success",
           "foldquant-w4a4-od-int8": "success",
           "foldquant-w4a4": "success",
-          "modelopt-w4a16-awq": "fail"
+          "modelopt-w4a16-awq": "success"
         },
         "4": {
           "trt-bf16": "success",
