@@ -237,21 +237,24 @@
           "trt-bf16": "success",
           "modelopt-w8a8-sq": "fail",
           "foldquant-w8a8": "success",
-          "foldquant-w4a4-od-int8": "success"
+          "foldquant-w4a4-od-int8": "success",
+          "foldquant-w4a4": "success"
         },
         "4": {
           "trt-bf16": "success",
           "modelopt-w8a8-sq": "fail",
           "foldquant-w8a8": "success",
           "foldquant-w4a4": "success",
-          "foldquant-w4a4-od-int8": "success"
+          "foldquant-w4a4-od-int8": "success",
+          "bf16-pytorch": "success"
         },
         "5": {
           "trt-bf16": "success",
           "modelopt-w8a8-sq": "fail",
           "foldquant-w8a8": "success",
           "foldquant-w4a4": "fail",
-          "foldquant-w4a4-od-int8": "success"
+          "foldquant-w4a4-od-int8": "success",
+          "bf16-pytorch": "success"
         }
       }
     },
@@ -555,7 +558,8 @@
         },
         "3": {
           "trt-bf16": "success",
-          "foldquant-w4a4": "success"
+          "foldquant-w4a4": "success",
+          "bf16-pytorch": "success"
         },
         "4": {
           "bf16-pytorch": "success",
