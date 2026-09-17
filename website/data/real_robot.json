@@ -409,7 +409,7 @@
     {
       "key": "aloha-banana",
       "title": "ALOHA · Banana into pot, then close the lid",
-      "meta": "All engines start together from a matched scene setup · high camera · 4× speed",
+      "meta": "One selected episode per engine in each scene · high camera · 4× speed",
       "task_index": 0,
       "arms": [
         {
@@ -442,7 +442,45 @@
         }
       ],
       "tab": "ALOHA · Banana",
-      "prompt": "Use the right gripper to pick up the banana and place it into the pot. Then pick up the lid with the right gripper and place it on top of the pot to close it."
+      "prompt": "Use the right gripper to pick up the banana and place it into the pot. Then pick up the lid with the right gripper and place it on top of the pot to close it.",
+      "scenes": 5,
+      "outcomes": {
+        "1": {
+          "bf16-pytorch": "success",
+          "trt-bf16": "success",
+          "foldquant-w8a8": "success",
+          "foldquant-w4a4": "success",
+          "foldquant-w4a4-od-int8": "success"
+        },
+        "2": {
+          "bf16-pytorch": "success",
+          "trt-bf16": "success",
+          "foldquant-w8a8": "success",
+          "foldquant-w4a4": "success",
+          "foldquant-w4a4-od-int8": "success"
+        },
+        "3": {
+          "bf16-pytorch": "success",
+          "trt-bf16": "success",
+          "foldquant-w8a8": "success",
+          "foldquant-w4a4": "success",
+          "foldquant-w4a4-od-int8": "success"
+        },
+        "4": {
+          "bf16-pytorch": "success",
+          "trt-bf16": "success",
+          "foldquant-w8a8": "success",
+          "foldquant-w4a4": "success",
+          "foldquant-w4a4-od-int8": "success"
+        },
+        "5": {
+          "bf16-pytorch": "success",
+          "trt-bf16": "success",
+          "foldquant-w8a8": "success",
+          "foldquant-w4a4": "success",
+          "foldquant-w4a4-od-int8": "success"
+        }
+      }
     }
   ],
   "results_pi05": {

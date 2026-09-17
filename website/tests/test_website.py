@@ -137,8 +137,8 @@ class BuildTests(unittest.TestCase):
         tabs = re.findall(r'data-task-panel="task-([a-z0-9-]+)"', self.html)
         self.assertEqual(tabs, ['so101-blue-on-red', 'so101-banana', 'so101-blocks-cup', 'aloha-banana', 'pi05-so101-blue-on-red'])
         self.assertEqual(self.html.count('class="benchmark-panel robot-compare"'), 2)
-        self.assertEqual(self.html.count('class="compare-scene-tabs"'), 4)
-        self.assertEqual(self.html.count('<button type="button" data-scene='), 20)
+        self.assertEqual(self.html.count('class="compare-scene-tabs"'), 5)
+        self.assertEqual(self.html.count('<button type="button" data-scene='), 25)
         media = self.output / 'media'
         published = sorted(x.relative_to(media).as_posix() for x in media.rglob('*') if x.is_file()) if media.exists() else []
         clip = re.compile(r'real-robot/[a-z0-9-]+/(scene-[0-9]+/)?[a-z0-9-]+\.mp4')

@@ -1,43 +1,6 @@
 {
   "tasks": [
     {
-      "key": "aloha-banana",
-      "dataset_root": "FoldQuantVLA_ALOHA",
-      "cameras": [
-        "observation.images.color.high"
-      ],
-      "episode": 0,
-      "speed": 4,
-      "height": 480,
-      "arms": [
-        {
-          "key": "bf16-pytorch",
-          "dir": "banana_pytorch",
-          "episode": 2
-        },
-        {
-          "key": "trt-bf16",
-          "dir": "banana_trt_bf16",
-          "episode": 2
-        },
-        {
-          "key": "foldquant-w8a8",
-          "dir": "banana_w8a8",
-          "episode": 0
-        },
-        {
-          "key": "foldquant-w4a4",
-          "dir": "banana_w4a4",
-          "episode": 2
-        },
-        {
-          "key": "foldquant-w4a4-od-int8",
-          "dir": "banana_w4a4res8",
-          "episode": 3
-        }
-      ]
-    },
-    {
       "key": "pi05-so101-blue-on-red",
       "scene": 1,
       "speed": 4,
@@ -281,7 +244,8 @@
         },
         {
           "key": "trt-bf16",
-          "src": "~/so101_processed/so101_banana/E_BF16_banana/IMG_5535.MOV"
+          "src": "~/so101_processed/so101_banana/E_BF16_banana/IMG_5535.MOV",
+          "end_s": 29.0
         },
         {
           "key": "foldquant-w8a8",
@@ -409,7 +373,8 @@
         },
         {
           "key": "foldquant-w4a4-od-int8",
-          "src": "~/so101_processed/so101_cup/E_W4A4res8_cup/IMG_5710.MOV"
+          "src": "~/so101_processed/so101_cup/E_W4A4res8_cup/IMG_5710.MOV",
+          "end_s": 33.8
         }
       ]
     },
@@ -607,6 +572,196 @@
         {
           "key": "foldquant-w4a4-od-int8",
           "src": "~/so101_processed/so101_block/E_W4A4res8_block/IMG_5849.MOV"
+        }
+      ]
+    },
+    {
+      "key": "aloha-banana",
+      "scene": 1,
+      "dataset_root": "FoldQuantVLA_ALOHA",
+      "cameras": [
+        "observation.images.color.high"
+      ],
+      "episode": 0,
+      "speed": 4,
+      "height": 480,
+      "arms": [
+        {
+          "key": "bf16-pytorch",
+          "dir": "banana_pytorch",
+          "episode": 0
+        },
+        {
+          "key": "trt-bf16",
+          "dir": "banana_trt_bf16",
+          "episode": 0
+        },
+        {
+          "key": "foldquant-w8a8",
+          "dir": "banana_w8a8",
+          "episode": 0
+        },
+        {
+          "key": "foldquant-w4a4",
+          "dir": "banana_w4a4",
+          "episode": 0
+        },
+        {
+          "key": "foldquant-w4a4-od-int8",
+          "dir": "banana_w4a4res8",
+          "episode": 0
+        }
+      ]
+    },
+    {
+      "key": "aloha-banana",
+      "scene": 2,
+      "dataset_root": "FoldQuantVLA_ALOHA",
+      "cameras": [
+        "observation.images.color.high"
+      ],
+      "episode": 0,
+      "speed": 4,
+      "height": 480,
+      "arms": [
+        {
+          "key": "bf16-pytorch",
+          "dir": "banana_pytorch",
+          "episode": 4
+        },
+        {
+          "key": "trt-bf16",
+          "dir": "banana_trt_bf16",
+          "episode": 5
+        },
+        {
+          "key": "foldquant-w8a8",
+          "dir": "banana_w8a8",
+          "episode": 4
+        },
+        {
+          "key": "foldquant-w4a4",
+          "dir": "banana_w4a4",
+          "episode": 4
+        },
+        {
+          "key": "foldquant-w4a4-od-int8",
+          "dir": "banana_w4a4res8",
+          "episode": 4
+        }
+      ]
+    },
+    {
+      "key": "aloha-banana",
+      "scene": 3,
+      "dataset_root": "FoldQuantVLA_ALOHA",
+      "cameras": [
+        "observation.images.color.high"
+      ],
+      "episode": 0,
+      "speed": 4,
+      "height": 480,
+      "arms": [
+        {
+          "key": "bf16-pytorch",
+          "dir": "banana_pytorch",
+          "episode": 8
+        },
+        {
+          "key": "trt-bf16",
+          "dir": "banana_trt_bf16",
+          "episode": 8
+        },
+        {
+          "key": "foldquant-w8a8",
+          "dir": "banana_w8a8",
+          "episode": 8
+        },
+        {
+          "key": "foldquant-w4a4",
+          "dir": "banana_w4a4",
+          "episode": 10
+        },
+        {
+          "key": "foldquant-w4a4-od-int8",
+          "dir": "banana_w4a4res8",
+          "episode": 8
+        }
+      ]
+    },
+    {
+      "key": "aloha-banana",
+      "scene": 4,
+      "dataset_root": "FoldQuantVLA_ALOHA",
+      "cameras": [
+        "observation.images.color.high"
+      ],
+      "episode": 0,
+      "speed": 4,
+      "height": 480,
+      "arms": [
+        {
+          "key": "bf16-pytorch",
+          "dir": "banana_pytorch",
+          "episode": 12
+        },
+        {
+          "key": "trt-bf16",
+          "dir": "banana_trt_bf16",
+          "episode": 12
+        },
+        {
+          "key": "foldquant-w8a8",
+          "dir": "banana_w8a8",
+          "episode": 12
+        },
+        {
+          "key": "foldquant-w4a4",
+          "dir": "banana_w4a4",
+          "episode": 12
+        },
+        {
+          "key": "foldquant-w4a4-od-int8",
+          "dir": "banana_w4a4res8",
+          "episode": 12
+        }
+      ]
+    },
+    {
+      "key": "aloha-banana",
+      "scene": 5,
+      "dataset_root": "FoldQuantVLA_ALOHA",
+      "cameras": [
+        "observation.images.color.high"
+      ],
+      "episode": 0,
+      "speed": 4,
+      "height": 480,
+      "arms": [
+        {
+          "key": "bf16-pytorch",
+          "dir": "banana_pytorch",
+          "episode": 16
+        },
+        {
+          "key": "trt-bf16",
+          "dir": "banana_trt_bf16",
+          "episode": 16
+        },
+        {
+          "key": "foldquant-w8a8",
+          "dir": "banana_w8a8",
+          "episode": 17
+        },
+        {
+          "key": "foldquant-w4a4",
+          "dir": "banana_w4a4",
+          "episode": 16
+        },
+        {
+          "key": "foldquant-w4a4-od-int8",
+          "dir": "banana_w4a4res8",
+          "episode": 16
         }
       ]
     }

@@ -19,7 +19,7 @@ def ok(path):
     return path.is_file() and path.stat().st_size > 0
 
 
-def cut(inputs, dest, speed, height, threads, aspect=None, rotate=''):
+def cut(inputs, dest, speed, height, threads, aspect=None, rotate='', start=None, end=None):
     dest.parent.mkdir(parents=True, exist_ok=True)
     args, labels = [], []
     # Optional centre crop (e.g. "4:3") so the clip fills its page cell instead of letterboxing.
@@ -28,7 +28,9 @@ def cut(inputs, dest, speed, height, threads, aspect=None, rotate=''):
         w, h = (int(x) for x in aspect.split(':'))
         crop = f'crop=w=\'2*trunc(min(iw,ih*{w}/{h})/2)\':h=\'2*trunc(min(ih,iw*{h}/{w})/2)\','
     for i, src in enumerate(inputs):
-        args += ['-i', str(src)]
+        # Optional source trim in seconds (e.g. to drop an operator's hand entering the frame).
+        trim = (['-ss', f'{start:.2f}'] if start else []) + (['-t', f'{end - (start or 0):.2f}'] if end else [])
+        args += [*trim, '-i', str(src)]
         # rotate: "cw" / "ccw" for phone recordings saved in portrait.
         turn = {'cw': 'transpose=1,', 'ccw': 'transpose=2,'}.get(rotate, '')
         labels.append(f'[{i}:v]setpts=(PTS-STARTPTS)/{speed},{turn}{crop}scale=-2:{height},setsar=1[v{i}]')
@@ -64,7 +66,8 @@ def main():
             if not all(ok(s) for s in srcs):
                 report[str(dest.relative_to(OUT))] = 'missing'
                 continue
-            cut(srcs, dest, task['speed'], task['height'], args.threads, task.get('aspect'), arm.get('rotate', ''))
+            cut(srcs, dest, task['speed'], task['height'], args.threads, task.get('aspect'), arm.get('rotate', ''),
+                arm.get('start_s'), arm.get('end_s'))
             report[str(dest.relative_to(OUT))] = f'{dest.stat().st_size / 1e6:.1f} MB'
     for k, v in report.items():
         print(f'{k}: {v}')
