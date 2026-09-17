@@ -214,7 +214,45 @@
       ],
       "prompt": "Pick blue cube and place on red cube",
       "scenes": 5,
-      "footnote": "* ModelOpt W8A8 SmoothQuant is run with NVIDIA’s TensorRT Model Optimizer (ModelOpt) repository."
+      "footnote": "* ModelOpt W8A8 SmoothQuant is run with NVIDIA’s TensorRT Model Optimizer (ModelOpt) repository.",
+      "outcomes": {
+        "1": {
+          "bf16-pytorch": "success",
+          "foldquant-w8a8": "success",
+          "foldquant-w4a4": "success",
+          "foldquant-w4a4-od-int8": "success"
+        },
+        "2": {
+          "bf16-pytorch": "success",
+          "trt-bf16": "success",
+          "modelopt-w8a8-sq": "success",
+          "foldquant-w8a8": "success",
+          "foldquant-w4a4": "success",
+          "foldquant-w4a4-od-int8": "success"
+        },
+        "3": {
+          "bf16-pytorch": "success",
+          "trt-bf16": "success",
+          "modelopt-w8a8-sq": "success",
+          "foldquant-w8a8": "success",
+          "foldquant-w4a4": "success"
+        },
+        "4": {
+          "bf16-pytorch": "fail",
+          "trt-bf16": "success",
+          "modelopt-w8a8-sq": "success",
+          "foldquant-w8a8": "success",
+          "foldquant-w4a4": "success",
+          "foldquant-w4a4-od-int8": "success"
+        },
+        "5": {
+          "trt-bf16": "success",
+          "modelopt-w8a8-sq": "fail",
+          "foldquant-w8a8": "success",
+          "foldquant-w4a4": "fail",
+          "foldquant-w4a4-od-int8": "success"
+        }
+      }
     },
     {
       "key": "so101-banana",
@@ -253,7 +291,44 @@
         }
       ],
       "prompt": "Pick up the banana and place it in the pot, then close the lid",
-      "scenes": 5
+      "scenes": 5,
+      "outcomes": {
+        "1": {
+          "bf16-pytorch": "success",
+          "trt-bf16": "success",
+          "foldquant-w8a8": "success",
+          "foldquant-w4a4": "success",
+          "foldquant-w4a4-od-int8": "success"
+        },
+        "2": {
+          "bf16-pytorch": "success",
+          "trt-bf16": "success",
+          "foldquant-w8a8": "success",
+          "foldquant-w4a4": "success",
+          "foldquant-w4a4-od-int8": "success"
+        },
+        "3": {
+          "bf16-pytorch": "success",
+          "trt-bf16": "success",
+          "foldquant-w8a8": "success",
+          "foldquant-w4a4": "success",
+          "foldquant-w4a4-od-int8": "success"
+        },
+        "4": {
+          "bf16-pytorch": "success",
+          "trt-bf16": "success",
+          "foldquant-w8a8": "success",
+          "foldquant-w4a4": "success",
+          "foldquant-w4a4-od-int8": "fail"
+        },
+        "5": {
+          "bf16-pytorch": "success",
+          "trt-bf16": "success",
+          "foldquant-w8a8": "success",
+          "foldquant-w4a4": "success",
+          "foldquant-w4a4-od-int8": "success"
+        }
+      }
     },
     {
       "key": "so101-blocks-cup",
@@ -292,7 +367,44 @@
         }
       ],
       "prompt": "Pick all cubes and place into cup",
-      "scenes": 5
+      "scenes": 5,
+      "outcomes": {
+        "1": {
+          "bf16-pytorch": "success",
+          "trt-bf16": "success",
+          "foldquant-w8a8": "success",
+          "foldquant-w4a4": "success",
+          "foldquant-w4a4-od-int8": "success"
+        },
+        "2": {
+          "bf16-pytorch": "success",
+          "trt-bf16": "success",
+          "foldquant-w8a8": "success",
+          "foldquant-w4a4": "success",
+          "foldquant-w4a4-od-int8": "success"
+        },
+        "3": {
+          "bf16-pytorch": "success",
+          "trt-bf16": "success",
+          "foldquant-w8a8": "success",
+          "foldquant-w4a4": "success",
+          "foldquant-w4a4-od-int8": "success"
+        },
+        "4": {
+          "bf16-pytorch": "success",
+          "trt-bf16": "success",
+          "foldquant-w8a8": "success",
+          "foldquant-w4a4": "success",
+          "foldquant-w4a4-od-int8": "success"
+        },
+        "5": {
+          "bf16-pytorch": "success",
+          "trt-bf16": "success",
+          "foldquant-w8a8": "success",
+          "foldquant-w4a4": "success",
+          "foldquant-w4a4-od-int8": "success"
+        }
+      }
     },
     {
       "key": "aloha-banana",

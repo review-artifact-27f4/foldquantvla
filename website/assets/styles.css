@@ -158,3 +158,5 @@
 .nowrap{white-space:nowrap}
 /* Phones: the wide metrics ("1.20–1.33×", "0.46 → 0.85") overflow a 111px column, so stack metric above its text. */
 @media(max-width:700px){.highlights>div{grid-template-columns:1fr;row-gap:6px}.highlights .metric{grid-row:auto;align-self:start}}
+.compare-screen{position:relative}.outcome-badge{position:absolute;top:8px;right:8px;padding:3px 9px;border-radius:999px;font-size:12px;font-weight:700;line-height:1.4;color:#fff;box-shadow:0 2px 8px rgba(0,0,0,.25)}.outcome-badge.success{background:#18864b}.outcome-badge.fail{background:#b9141a}
+@media(max-width:700px){.outcome-badge{top:5px;right:5px;padding:2px 7px;font-size:10px}}

@@ -369,7 +369,13 @@ def make_robot_compare(comparisons, title, subtitle):
                 else:
                     screen = '<div class="robot-placeholder" role="img" aria-label="Video forthcoming"><span class="placeholder-message"><i aria-hidden="true">▶</i><strong>Video forthcoming</strong></span></div>'
                 pid = f'compare-{comp["key"]}-{arm["key"]}' + (f'-s{scene}' if scenes > 1 else '')
-                panels.append(f'<figure class="compare-clip{" ours" if arm.get("ours") else ""}" id="{pid}"><div class="compare-screen">{screen}</div>'
+                # Verified episode outcome, revealed by app.js when the clip finishes.
+                outcome = comp.get('outcomes', {}).get(str(scene), {}).get(arm['key'])
+                if outcome not in (None, 'success', 'fail'):
+                    raise ValueError(f'Unknown outcome {outcome!r} for {pid}')
+                badge = (f'<span class="outcome-badge {outcome}" hidden>{"✓ Success" if outcome == "success" else "✗ Fail"}</span>'
+                         if src and outcome else '')
+                panels.append(f'<figure class="compare-clip{" ours" if arm.get("ours") else ""}" id="{pid}"><div class="compare-screen">{screen}{badge}</div>'
                               f'<figcaption><strong>{esc(arm["label"])}</strong></figcaption></figure>')
             rows.append(f'<div class="compare-grid" data-scene="{scene}" style="--cols:{len(comp["arms"])}">{"".join(panels)}</div>')
         if scenes > 1:

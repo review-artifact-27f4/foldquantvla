@@ -217,13 +217,16 @@
       let videos = [...row.querySelectorAll('video')];
       let done = new Set();
       let timer = null;
+      const badgeOf = v => v.closest('.compare-screen')?.querySelector('.outcome-badge');
       const restart = () => {
         if (active !== task) return;
         done = new Set();
-        videos.forEach(v => { v.currentTime = 0; v.play().catch(() => {}); });
+        videos.forEach(v => { const b = badgeOf(v); if (b) b.hidden = true; v.currentTime = 0; v.play().catch(() => {}); });
       };
       rows.forEach(r => r.querySelectorAll('video').forEach(v => v.addEventListener('ended', () => {
         if (r !== row) return;
+        const b = badgeOf(v);
+        if (b) b.hidden = false;
         done.add(v);
         if (done.size === videos.length) setTimeout(restart, 800);
       })));
