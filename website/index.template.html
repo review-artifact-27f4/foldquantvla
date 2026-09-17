@@ -38,6 +38,9 @@
       <p class="paper-title">{{subtitle}}</p>
       <p class="authors">Anonymous Authors</p>
       <nav class="resource-links" id="resources" aria-label="Research resources">{{resource_links}}</nav>
+      <figure class="overview-video">
+        {{overview_media}}
+      </figure>
     </div>
   </section>
   <section class="highlights container" aria-label="Research highlights">
@@ -55,7 +58,6 @@
       <article><span class="contribution-symbol" aria-hidden="true">▦</span><h3>Native low-bit execution</h3><p>Custom TensorRT plugins fuse activation transforms and quantization with integer tensor-core GEMMs on desktop and Jetson GPUs.</p></article>
       <article><span class="contribution-symbol" aria-hidden="true">↻</span><h3>Measured end to end</h3><p>Compiled controls, device measurements, and closed-loop outcomes reveal both the gains and the configurations that fail.</p></article>
     </div>
-    <figure class="overview-video">{{overview_media}}</figure>
     <div class="model-strip" aria-label="Evaluated checkpoints"><span>Evaluated on</span><strong>GR00T N1.5 / N1.6 / N1.7</strong><strong>π0.5</strong></div>
   </section>
   <section class="section method-section" id="method" aria-labelledby="method-title">
