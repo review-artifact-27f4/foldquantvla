@@ -568,7 +568,8 @@
         },
         "5": {
           "bf16-pytorch": "success",
-          "trt-bf16": "success"
+          "trt-bf16": "success",
+          "foldquant-w4a4": "success"
         }
       }
     }
