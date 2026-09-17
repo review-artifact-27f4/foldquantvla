@@ -495,6 +495,11 @@
           "start_s": 3.75
         },
         {
+          "key": "modelopt-w4a16-awq",
+          "src": "~/so101/modelopt_w4a16_awq_processed/IMG_3683.MOV",
+          "start_s": 1.0
+        },
+        {
           "key": "foldquant-w8a8",
           "src": "~/so101_processed/so101_block/E_W8A8_block/IMG_5785.MOV",
           "start_s": 6.0
@@ -533,6 +538,11 @@
           "src": "~/so101_processed/so101_block/ModelOpt_SQ_block/IMG_3601.MOV",
           "start_s": 1.0,
           "rotate": "cw"
+        },
+        {
+          "key": "modelopt-w4a16-awq",
+          "src": "~/so101/modelopt_w4a16_awq_processed/IMG_3687.MOV",
+          "start_s": 0.3
         },
         {
           "key": "foldquant-w8a8",
@@ -575,6 +585,11 @@
           "rotate": "cw"
         },
         {
+          "key": "modelopt-w4a16-awq",
+          "src": "~/so101/modelopt_w4a16_awq_processed/IMG_3694.MOV",
+          "start_s": 0.9
+        },
+        {
           "key": "foldquant-w8a8",
           "src": "~/so101_processed/so101_block/E_W8A8_block/IMG_5795.MOV",
           "start_s": 4.0
@@ -615,6 +630,11 @@
           "rotate": "cw"
         },
         {
+          "key": "modelopt-w4a16-awq",
+          "src": "~/so101/modelopt_w4a16_awq_processed/IMG_3700.MOV",
+          "start_s": 0.3
+        },
+        {
           "key": "foldquant-w8a8",
           "src": "~/so101_processed/so101_block/E_W8A8_block/IMG_5798.MOV",
           "start_s": 5.75
@@ -652,6 +672,11 @@
           "key": "modelopt-w8a8-sq",
           "src": "~/so101_processed/so101_block/ModelOpt_SQ_block/IMG_3612.MOV",
           "rotate": "cw"
+        },
+        {
+          "key": "modelopt-w4a16-awq",
+          "src": "~/so101/modelopt_w4a16_awq_processed/IMG_3706.MOV",
+          "start_s": 0.8
         },
         {
           "key": "foldquant-w8a8",

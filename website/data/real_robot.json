@@ -194,6 +194,11 @@
           "result_label": "ModelOpt W8A8 SmoothQuant*"
         },
         {
+          "key": "modelopt-w4a16-awq",
+          "label": "ModelOpt W4A16 AWQ*",
+          "result_label": "ModelOpt W4A16 AWQ*"
+        },
+        {
           "key": "foldquant-w8a8",
           "label": "FoldQuant W8A8",
           "result_label": "FoldQuant W8A8",
@@ -214,7 +219,7 @@
       ],
       "prompt": "Pick blue cube and place on red cube",
       "scenes": 5,
-      "footnote": "* ModelOpt W8A8 SmoothQuant is run with NVIDIA’s TensorRT Model Optimizer (ModelOpt) repository.",
+      "footnote": "* ModelOpt W8A8 SmoothQuant and ModelOpt W4A16 AWQ are run with NVIDIA’s TensorRT Model Optimizer (ModelOpt) repository.",
       "outcomes": {
         "1": {
           "bf16-pytorch": "success",
@@ -222,7 +227,8 @@
           "modelopt-w8a8-sq": "fail",
           "foldquant-w8a8": "success",
           "foldquant-w4a4": "success",
-          "foldquant-w4a4-od-int8": "success"
+          "foldquant-w4a4-od-int8": "success",
+          "modelopt-w4a16-awq": "fail"
         },
         "2": {
           "bf16-pytorch": "success",
@@ -230,7 +236,8 @@
           "modelopt-w8a8-sq": "fail",
           "foldquant-w8a8": "success",
           "foldquant-w4a4": "success",
-          "foldquant-w4a4-od-int8": "success"
+          "foldquant-w4a4-od-int8": "success",
+          "modelopt-w4a16-awq": "fail"
         },
         "3": {
           "bf16-pytorch": "success",
@@ -238,7 +245,8 @@
           "modelopt-w8a8-sq": "fail",
           "foldquant-w8a8": "success",
           "foldquant-w4a4-od-int8": "success",
-          "foldquant-w4a4": "success"
+          "foldquant-w4a4": "success",
+          "modelopt-w4a16-awq": "fail"
         },
         "4": {
           "trt-bf16": "success",
@@ -246,7 +254,8 @@
           "foldquant-w8a8": "success",
           "foldquant-w4a4": "success",
           "foldquant-w4a4-od-int8": "success",
-          "bf16-pytorch": "success"
+          "bf16-pytorch": "success",
+          "modelopt-w4a16-awq": "fail"
         },
         "5": {
           "trt-bf16": "success",
@@ -254,7 +263,8 @@
           "foldquant-w8a8": "success",
           "foldquant-w4a4": "fail",
           "foldquant-w4a4-od-int8": "success",
-          "bf16-pytorch": "success"
+          "bf16-pytorch": "success",
+          "modelopt-w4a16-awq": "fail"
         }
       }
     },
