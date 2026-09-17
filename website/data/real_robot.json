@@ -540,7 +540,32 @@
           "ours": true
         }
       ],
-      "prompt": "Pick blue cube and place on red cube"
+      "prompt": "Pick blue cube and place on red cube",
+      "outcomes": {
+        "1": {
+          "bf16-pytorch": "success",
+          "trt-bf16": "success",
+          "foldquant-w4a4": "success"
+        },
+        "2": {
+          "trt-bf16": "success",
+          "foldquant-w4a4": "success"
+        },
+        "3": {
+          "bf16-pytorch": "fail",
+          "trt-bf16": "success",
+          "foldquant-w4a4": "success"
+        },
+        "4": {
+          "bf16-pytorch": "fail",
+          "trt-bf16": "success",
+          "foldquant-w4a4": "success"
+        },
+        "5": {
+          "bf16-pytorch": "success",
+          "trt-bf16": "success"
+        }
+      }
     }
   ]
 }
