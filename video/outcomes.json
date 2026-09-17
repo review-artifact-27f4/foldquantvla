@@ -1,0 +1,5 @@
+{
+  "_note": "Overrides for the outcome badges of the submission video grids. The verified per-episode outcomes live in website/data/real_robot.json (comparisons[].outcomes); this file only fills or overrides cells. Lookup: task -> scene -> arm key; then _default_by_arm; then _default. true = success, false = fail, null = no badge.",
+  "_default": null,
+  "_default_by_arm": {}
+}
